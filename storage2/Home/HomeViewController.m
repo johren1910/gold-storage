@@ -60,7 +60,7 @@
 - (void)getData {
     __weak HomeViewController *weakself = self;
     
-    [self.viewModel getData:^(NSArray<ChatModel *> * _Nonnull chats){
+    [self.viewModel getData:^(NSMutableArray<ChatModel *> * _Nonnull chats){
         
         [weakself.adapter reloadDataWithCompletion:nil];
         
@@ -71,7 +71,7 @@
 
 #pragma mark - IGListAdapterDataSource
 
-- (NSArray<id<IGListDiffable>> *)objectsForListAdapter:(IGListAdapter *)listAdapter {
+- (NSMutableArray<id<IGListDiffable>> *)objectsForListAdapter:(IGListAdapter *)listAdapter {
     return self.viewModel.chats;
 }
 
@@ -88,13 +88,42 @@
 #pragma mark - ChatSectionControllerDelegate
 
 - (void) didSelect: (ChatModel*) chat {
-    NSLog(@"GOOOOOD %@", chat);
-    
-    
+
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"ChatDetailView" bundle:nil];
     ChatDetailViewController *ivc = [storyboard instantiateViewControllerWithIdentifier:@"ChatDetailViewController"];
     
     [self.navigationController pushViewController:ivc animated:true];
+}
+- (IBAction)onCreateBtnTouch:(id)sender {
+    [self createAlert];
+}
+
+- (void) createAlert {
+    UIAlertController * alertController = [UIAlertController alertControllerWithTitle: @"Create new chat"
+                                                                                     message: @"Input chat name:"
+                                                                                 preferredStyle:UIAlertControllerStyleAlert];
+       [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+           textField.placeholder = @"Name";
+           textField.textColor = [UIColor blueColor];
+           textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+           textField.borderStyle = UITextBorderStyleRoundedRect;
+       }];
+    
+        __weak HomeViewController *weakSelf = self;
+       [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+           NSArray * textfields = alertController.textFields;
+           UITextField * namefield = textfields[0];
+           NSString *name = namefield.text;
+           if ([name length] != 0) {
+               [weakSelf.viewModel createNewChat:name];
+               
+               [weakSelf.adapter reloadDataWithCompletion:nil];
+           }
+           
+       }]];
+    
+    [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler: nil]];
+       [self presentViewController:alertController animated:YES completion:nil];
 }
 
 

@@ -11,11 +11,12 @@
 
 @interface HomeViewModel : NSObject
 
-- (void)getData:(void (^)(NSArray<ChatModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion;
+- (void)getData:(void (^)(NSMutableArray<ChatModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion;
 
 - (ChatModel *)itemAtIndexPath:(NSIndexPath *)indexPath;
 - (NSUInteger) numberOfSections;
+- (void)createNewChat: (NSString *) name;
 
-@property (copy,nonatomic) NSArray<ChatModel *> *chats;
+@property (copy,nonatomic) NSMutableArray<ChatModel *> *chats;
 
 @end
