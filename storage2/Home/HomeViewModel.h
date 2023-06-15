@@ -10,6 +10,11 @@
 
 @interface HomeViewModel : NSObject
 
-- (instancetype)initWithChats:(__weak ChatModel *[])chats;
+- (void)getData:(void (^)(NSArray<ChatModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion;
+
+- (ChatModel *)itemAtIndexPath:(NSIndexPath *)indexPath;
+- (NSUInteger) numberOfSections;
+
+@property (copy,nonatomic) NSArray<ChatModel *> *chats;
 
 @end

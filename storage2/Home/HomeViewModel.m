@@ -12,24 +12,49 @@
 
 @interface HomeViewModel ()
 
-//@property (nonatomic, strong, readonly) [ChatModel] *chats;
-
 @end
 
 @implementation HomeViewModel
 
-#pragma mark - Lifecycle
+- (instancetype)init {
+    self = [super init];
+    if (self) {
+        self.chats = @[];
+    }
+    
+    return self;
+}
 
-//- (instancetype)initWithChats:(ChatModel *[])chats {
-//    self = [super init];
-//    if (!self) return nil;
-//
-//    self.chats = chats;
-//
-//    return self;
-//}
+- (void)getData:(void (^)(NSArray<ChatModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion {
+    
+    //TODO: FETCH DATA HERE
+    
+    NSArray *testData = [[NSArray alloc] init];
+    testData = @[[[ChatModel alloc] initWithName:@"nice name" chatId:@"1"],
+                   [[ChatModel alloc] initWithName:@"anothoer name" chatId:@"2"],
+                   [[ChatModel alloc] initWithName:@"nice bye" chatId:@"3"],
+                   [[ChatModel alloc] initWithName:@"nice ba" chatId:@"4"],
+                   [[ChatModel alloc] initWithName:@"nice bubo" chatId:@"5"]
+    ];
+    
+    _chats = testData;
+    successCompletion(testData);
+}
 
-#pragma mark - Data Source
+- (ChatModel *)itemAtIndexPath:(NSIndexPath *)indexPath {
+    if (indexPath.row >= self.chats.count) {
+        return nil;
+    }
+    
+    return self.chats[indexPath.row];
+}
 
+- (NSUInteger) numberOfSections {
+    return 1;
+}
+
+- (NSArray<ChatModel*>*) items {
+    return _chats;
+}
 
 @end

@@ -10,13 +10,13 @@
 #import "ChatModel.h"
 #import "ChatCell.h"
 #import "ChatSectionController.h"
+#import "HomeViewModel.h"
 
 
 @interface HomeViewController () <IGListAdapterDataSource>
 
 @property (nonatomic, strong) IGListAdapter *adapter;
-@property (nonatomic, copy) NSArray<ChatModel *> *chats;
-@property (nonatomic, strong, readonly) HomeViewModel *viewModel;
+@property (nonatomic, strong) HomeViewModel *viewModel;
 
 
 @end
@@ -24,26 +24,31 @@
 
 @implementation HomeViewController
 
+#pragma mark - View Lifecycle
+
+- (instancetype)initWithCoder:(NSCoder *)coder
+{
+    self = [super initWithCoder:coder];
+    if (self) {
+        self.viewModel = [[HomeViewModel alloc] init];
+    }
+    return self;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
-    // Do any additional setup after loading the view.
-    
-    self.chats = @[[[ChatModel alloc] initWithName:@"nice name" chatId:@"1"],
-                   [[ChatModel alloc] initWithName:@"anothoer name" chatId:@"2"],
-                   [[ChatModel alloc] initWithName:@"nice bye" chatId:@"3"],
-                   [[ChatModel alloc] initWithName:@"nice ba" chatId:@"4"],
-                   [[ChatModel alloc] initWithName:@"nice bubo" chatId:@"5"]
-    ];
     self.adapter = [[IGListAdapter alloc] initWithUpdater:[[IGListAdapterUpdater alloc] init] viewController:self];
     
     self.adapter.collectionView = self.homeCollectionView;
     self.adapter.dataSource = self;
+    [self getData];
 }
 
 - (instancetype)initWithViewModel:(HomeViewModel *)viewModel {
     if (!self) return nil;
     
     _viewModel = viewModel;
+    
     return self;
 }
 
@@ -51,10 +56,22 @@
     
 }
 
+- (void)getData {
+    __weak HomeViewController *weakself = self;
+    
+    [self.viewModel getData:^(NSArray<ChatModel *> * _Nonnull chats){
+        
+        [weakself.adapter reloadDataWithCompletion:nil];
+        
+    } error:^(NSError * _Nonnull error) {
+        
+    }];
+}
+
 #pragma mark - IGListAdapterDataSource
 
 - (NSArray<id<IGListDiffable>> *)objectsForListAdapter:(IGListAdapter *)listAdapter {
-    return self.chats;
+    return self.viewModel.chats;
 }
 
 - (IGListSectionController *)listAdapter:(IGListAdapter *)listAdapter sectionControllerForObject:(id)object {
@@ -66,3 +83,8 @@
 }
 
 @end
+
+#pragma mark -Bindings
+//- (void) bindViewModel {
+//    @weakify(self);
+//}
