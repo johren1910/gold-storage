@@ -16,5 +16,5 @@
 
 
 @interface ChatSectionController : IGListSectionController
-@property (nonatomic, weak) id <ChatSectionControllerDelegate>  delegate;
+@property (nonatomic, strong) id <ChatSectionControllerDelegate>  delegate;
 @end
