@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="Y6W-OH-hqX">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment version="4096" identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Home View Controller-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController storyboardIdentifier="HomeViewController" id="Y6W-OH-hqX" customClass="HomeViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="cCf-Ei-GW5">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ljw-TQ-REb">
+                                <rect key="frame" x="0.0" y="59" width="393" height="44"/>
+                                <items>
+                                    <navigationItem title="Home" id="Lev-ok-oWw"/>
+                                </items>
+                            </navigationBar>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="C5N-it-93C">
+                                <rect key="frame" x="0.0" y="103" width="393" height="64"/>
+                                <subviews>
+                                    <stackView opaque="NO" contentMode="scaleToFill" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="NkP-RA-F5M">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="64"/>
+                                        <subviews>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="nc0-Sy-OBt">
+                                                <rect key="frame" x="0.0" y="0.0" width="120" height="64"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="120" id="XnX-HX-mu5"/>
+                                                </constraints>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Create"/>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PQ0-uA-3bM">
+                                                <rect key="frame" x="136.66666666666666" y="0.0" width="119.99999999999997" height="64"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="120" id="Yqf-1E-p2D"/>
+                                                </constraints>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Edit"/>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZFc-qP-pQs">
+                                                <rect key="frame" x="273" y="0.0" width="120" height="64"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="120" id="iSb-I8-ySO"/>
+                                                </constraints>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Setting"/>
+                                            </button>
+                                        </subviews>
+                                    </stackView>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="NkP-RA-F5M" secondAttribute="trailing" id="BBv-Ff-dgc"/>
+                                    <constraint firstAttribute="height" constant="64" id="DPR-GD-bF1"/>
+                                    <constraint firstAttribute="bottom" secondItem="NkP-RA-F5M" secondAttribute="bottom" id="Ibt-hh-bBc"/>
+                                    <constraint firstItem="NkP-RA-F5M" firstAttribute="leading" secondItem="C5N-it-93C" secondAttribute="leading" id="QZp-fs-Ehm"/>
+                                    <constraint firstItem="NkP-RA-F5M" firstAttribute="top" secondItem="C5N-it-93C" secondAttribute="top" id="vrm-nK-uf6"/>
+                                </constraints>
+                            </view>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="O7b-uN-7Yh" userLabel="Seperator">
+                                <rect key="frame" x="0.0" y="167" width="393" height="1"/>
+                                <color key="backgroundColor" systemColor="separatorColor"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="1" id="L4V-pV-WtA"/>
+                                </constraints>
+                            </view>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="CcJ-ff-FNY">
+                                <rect key="frame" x="0.0" y="168" width="393" height="650"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="4af-aE-WHO">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="dic-CN-3cG">
+                                        <rect key="frame" x="0.0" y="0.0" width="127.99999999999997" height="128"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="vcE-hi-Jk1">
+                                            <rect key="frame" x="0.0" y="0.0" width="127.99999999999997" height="128"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </collectionViewCellContentView>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="CyJ-ex-eyi"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="ljw-TQ-REb" firstAttribute="top" secondItem="CyJ-ex-eyi" secondAttribute="top" id="2NI-Sv-0HV"/>
+                            <constraint firstItem="O7b-uN-7Yh" firstAttribute="top" secondItem="C5N-it-93C" secondAttribute="bottom" id="43F-Jt-LMg"/>
+                            <constraint firstItem="O7b-uN-7Yh" firstAttribute="leading" secondItem="C5N-it-93C" secondAttribute="leading" id="51h-OJ-APJ"/>
+                            <constraint firstItem="ljw-TQ-REb" firstAttribute="leading" secondItem="CyJ-ex-eyi" secondAttribute="leading" id="D0w-e4-d99"/>
+                            <constraint firstItem="C5N-it-93C" firstAttribute="leading" secondItem="CyJ-ex-eyi" secondAttribute="leading" id="G7Y-4h-fHJ"/>
+                            <constraint firstItem="CcJ-ff-FNY" firstAttribute="leading" secondItem="CyJ-ex-eyi" secondAttribute="leading" id="Idb-zV-hsU"/>
+                            <constraint firstItem="CcJ-ff-FNY" firstAttribute="top" secondItem="O7b-uN-7Yh" secondAttribute="bottom" id="Lu0-qs-J5N"/>
+                            <constraint firstItem="CyJ-ex-eyi" firstAttribute="trailing" secondItem="C5N-it-93C" secondAttribute="trailing" id="M7f-kk-dPb"/>
+                            <constraint firstItem="CyJ-ex-eyi" firstAttribute="bottom" secondItem="CcJ-ff-FNY" secondAttribute="bottom" id="RdO-Zn-clf"/>
+                            <constraint firstItem="CyJ-ex-eyi" firstAttribute="trailing" secondItem="ljw-TQ-REb" secondAttribute="trailing" id="aRc-Hc-JqK"/>
+                            <constraint firstItem="C5N-it-93C" firstAttribute="top" secondItem="ljw-TQ-REb" secondAttribute="bottom" id="hDN-2e-etE"/>
+                            <constraint firstItem="CyJ-ex-eyi" firstAttribute="trailing" secondItem="CcJ-ff-FNY" secondAttribute="trailing" id="jko-eR-sG6"/>
+                            <constraint firstItem="O7b-uN-7Yh" firstAttribute="trailing" secondItem="C5N-it-93C" secondAttribute="trailing" id="sJ9-LE-JLL"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="homeCollectionView" destination="CcJ-ff-FNY" id="x9F-uj-QFQ"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="33" y="-27"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="separatorColor">
+            <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.28999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
