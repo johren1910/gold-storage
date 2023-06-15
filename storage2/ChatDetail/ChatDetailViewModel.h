@@ -11,12 +11,11 @@
 @interface ChatDetailViewModel : NSObject
 
 - (void)getData:(void (^)(NSArray<ChatDetailModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion;
+- (void)changeSegment: (NSUInteger*) index;
 
 - (ChatDetailModel *)itemAtIndexPath:(NSIndexPath *)indexPath;
 - (NSUInteger) numberOfSections;
 
-- (NSUInteger) numberOfSections;
-
-@property (copy,nonatomic) NSArray<ChatDetailModel *> *chats;
+@property (copy,nonatomic) NSArray<ChatDetailModel *> *filteredChats;
 
 @end

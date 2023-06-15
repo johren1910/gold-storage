@@ -86,6 +86,7 @@
                     </view>
                     <connections>
                         <outlet property="collectionView" destination="la0-Rz-Zut" id="OHh-jo-hWI"/>
+                        <outlet property="segmentBar" destination="49b-8G-5pp" id="OZd-1f-kBx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

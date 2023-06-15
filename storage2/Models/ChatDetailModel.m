@@ -9,14 +9,26 @@
 
 @implementation ChatDetailModel
 
-- (instancetype)initWithName:(NSString *)name chatId:(NSString *)chatId
+- (instancetype)initWithName:(NSString *)name chatId:(NSString *)chatId type:(MediaType)type
 {
   if ((self = [super init])) {
     _name = [name copy];
     _chatId = [chatId copy];
+    _type = type;
   }
 
   return self;
+}
+
+- (instancetype)initWithName:(NSString *)name chatId:(NSString *)chatId
+{
+ if ((self = [super init])) {
+   _name = [name copy];
+   _chatId = [chatId copy];
+     _type = File;
+ }
+
+ return self;
 }
 
 - (id)copyWithZone:(nullable NSZone *)zone

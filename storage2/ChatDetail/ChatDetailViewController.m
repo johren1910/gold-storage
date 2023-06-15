@@ -15,6 +15,7 @@
 
 @property (nonatomic, strong) IGListAdapter *adapter;
 @property (nonatomic, strong) ChatDetailViewModel *viewModel;
+@property (nonatomic, readonly) NSUInteger *selectedIndex;
 
 @end
 
@@ -38,7 +39,15 @@
     
     self.adapter.collectionView = self.collectionView;
     self.adapter.dataSource = self;
+    [_segmentBar addTarget:self action:@selector(segmentChanged:) forControlEvents:UIControlEventValueChanged];
     [self getData];
+}
+
+- (void) segmentChanged: (UISegmentedControl*) sender {
+    NSLog(@"SEGMENT CHANGED %ld", (long)sender.selectedSegmentIndex);
+    _selectedIndex = sender.selectedSegmentIndex;
+    [_viewModel changeSegment:_selectedIndex];
+    [self.adapter reloadDataWithCompletion:nil];
 }
 
 - (instancetype)initWithViewModel:(ChatDetailViewModel *)viewModel {
@@ -68,7 +77,7 @@
 #pragma mark - IGListAdapterDataSource
 
 - (NSArray<id<IGListDiffable>> *)objectsForListAdapter:(IGListAdapter *)listAdapter {
-    return self.viewModel.chats;
+    return self.viewModel.filteredChats;
 }
 
 - (IGListSectionController *)listAdapter:(IGListAdapter *)listAdapter sectionControllerForObject:(id)object {

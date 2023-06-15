@@ -12,6 +12,7 @@
 
 @interface ChatDetailViewModel ()
 
+@property (copy,nonatomic) NSArray<ChatDetailModel *> *chats;
 @end
 
 @implementation ChatDetailViewModel
@@ -30,8 +31,8 @@
     //TODO: FETCH DATA HERE
     
     NSArray *testData = [[NSArray alloc] init];
-    testData = @[[[ChatDetailModel alloc] initWithName:@"nice name" chatId:@"1"],
-                   [[ChatDetailModel alloc] initWithName:@"anothoer name" chatId:@"2"],
+    testData = @[[[ChatDetailModel alloc] initWithName:@"VIDEO name" chatId:@"1" type: Video],
+                 [[ChatDetailModel alloc] initWithName:@"anothoer PICTURE" chatId:@"2" type: Picture],
                    [[ChatDetailModel alloc] initWithName:@"nice bye" chatId:@"3"],
                    [[ChatDetailModel alloc] initWithName:@"nice ba" chatId:@"4"],
                    [[ChatDetailModel alloc] initWithName:@"nice bubo" chatId:@"5"],
@@ -48,15 +49,39 @@
     ];
     
     _chats = testData;
+    _filteredChats = _chats;
     successCompletion(testData);
 }
 
 - (ChatDetailModel *)itemAtIndexPath:(NSIndexPath *)indexPath {
-    if (indexPath.row >= self.chats.count) {
+    if (indexPath.row >= self.filteredChats.count) {
         return nil;
     }
     
-    return self.chats[indexPath.row];
+    return self.filteredChats[indexPath.row];
+}
+
+- (void)changeSegment: (NSUInteger*) index {
+    
+    if (index == 0) {
+        _filteredChats = _chats;
+        return;
+    }
+    
+    NSString *predicateString = @"type =[c] %ld";
+    NSPredicate *predicate = [NSPredicate predicateWithFormat:predicateString, index];
+    
+    if (index == 1) {
+        predicateString = [predicateString stringByAppendingString:@"|| type =[c] %ld"];
+         predicate = [NSPredicate predicateWithFormat:predicateString, Video, Picture];
+    } else if (index == 2) {
+         predicate = [NSPredicate predicateWithFormat:predicateString, File];
+    } else {
+        predicate = [NSPredicate predicateWithFormat:predicateString, Other];
+    }
+    
+    NSArray *filteredArray = [_chats filteredArrayUsingPredicate:predicate];
+    _filteredChats = filteredArray;
 }
 
 - (NSUInteger) numberOfSections {
@@ -64,6 +89,6 @@
 }
 
 - (NSArray<ChatDetailModel*>*) items {
-    return _chats;
+    return _filteredChats;
 }
 @end

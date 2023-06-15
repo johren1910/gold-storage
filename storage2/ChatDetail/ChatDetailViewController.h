@@ -11,6 +11,7 @@
 
 @interface ChatDetailViewController : UIViewController <ChatSectionControllerDelegate>
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *segmentBar;
 
 //- (instancetype)initWithViewModel:(HomeViewModel *)viewModel;
 @end
