@@ -9,12 +9,8 @@
 #import "ChatModel.h"
 #import "HomeViewModel.h"
 
-NS_ASSUME_NONNULL_BEGIN
-
-@interface HomeViewController : UIViewController
+@interface HomeViewController : UIViewController <ChatSectionControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UICollectionView *homeCollectionView;
 - (instancetype)initWithViewModel:(HomeViewModel *)viewModel;
 @end
-
-NS_ASSUME_NONNULL_END

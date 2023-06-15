@@ -11,6 +11,7 @@
 #import "ChatCell.h"
 #import "ChatSectionController.h"
 #import "HomeViewModel.h"
+#import "ChatDetailViewController.h"
 
 
 @interface HomeViewController () <IGListAdapterDataSource>
@@ -76,7 +77,7 @@
 
 - (IGListSectionController *)listAdapter:(IGListAdapter *)listAdapter sectionControllerForObject:(id)object {
     ChatSectionController *chatSection = [ChatSectionController new];
-     chatSection.delegate = self.viewModel;
+    chatSection.delegate = self;
     return chatSection;
 }
 
@@ -84,11 +85,18 @@
     return nil;
 }
 
+#pragma mark - ChatSectionControllerDelegate
+
+- (void) didSelect: (ChatModel*) chat {
+    NSLog(@"GOOOOOD %@", chat);
+    
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"ChatDetailView" bundle:nil];
+    ChatDetailViewController *ivc = [storyboard instantiateViewControllerWithIdentifier:@"ChatDetailViewController"];
+    
+    [self.navigationController pushViewController:ivc animated:true];
+}
+
 
 
 @end
-
-#pragma mark -Bindings
-//- (void) bindViewModel {
-//    @weakify(self);
-//}

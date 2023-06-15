@@ -66,11 +66,4 @@
 - (NSArray<ChatModel*>*) items {
     return _chats;
 }
-
-#pragma mark - ChatSectionControllerDelegate
-
-- (void) didSelect: (ChatModel*) chat {
-    NSLog(@"GOOOOOD %@", chat);
-}
-
 @end

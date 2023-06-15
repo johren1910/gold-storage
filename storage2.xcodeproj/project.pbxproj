@@ -22,6 +22,11 @@
 		F6C43F272A3AF139001D8715 /* ChatCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F232A3AF139001D8715 /* ChatCell.m */; };
 		F6C43F282A3AF139001D8715 /* ChatCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F6C43F242A3AF139001D8715 /* ChatCell.xib */; };
 		F6C43F2C2A3B0D15001D8715 /* ChatDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F2B2A3B0D15001D8715 /* ChatDetailViewController.m */; };
+		F6C43F2F2A3B0D45001D8715 /* ChatDetailViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F2E2A3B0D45001D8715 /* ChatDetailViewModel.m */; };
+		F6C43F312A3B0D53001D8715 /* ChatDetailView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F6C43F302A3B0D53001D8715 /* ChatDetailView.storyboard */; };
+		F6C43F332A3B0E8C001D8715 /* ChatDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F322A3B0E8C001D8715 /* ChatDetailModel.m */; };
+		F6C43F372A3B10E3001D8715 /* ChatDetialSectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F362A3B10E3001D8715 /* ChatDetialSectionController.m */; };
+		F6C43F392A3B1159001D8715 /* ChatDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F382A3B1159001D8715 /* ChatDetailCell.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -52,6 +57,15 @@
 		F6C43F242A3AF139001D8715 /* ChatCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = ChatCell.xib; sourceTree = "<group>"; };
 		F6C43F2A2A3B0D0A001D8715 /* ChatDetailViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDetailViewController.h; sourceTree = "<group>"; };
 		F6C43F2B2A3B0D15001D8715 /* ChatDetailViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailViewController.m; sourceTree = "<group>"; };
+		F6C43F2D2A3B0D3A001D8715 /* ChatDetailViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDetailViewModel.h; sourceTree = "<group>"; };
+		F6C43F2E2A3B0D45001D8715 /* ChatDetailViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailViewModel.m; sourceTree = "<group>"; };
+		F6C43F302A3B0D53001D8715 /* ChatDetailView.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ChatDetailView.storyboard; sourceTree = "<group>"; };
+		F6C43F322A3B0E8C001D8715 /* ChatDetailModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailModel.m; sourceTree = "<group>"; };
+		F6C43F342A3B0E95001D8715 /* ChatDetailModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDetailModel.h; sourceTree = "<group>"; };
+		F6C43F352A3B10D8001D8715 /* ChatDetailSectionController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDetailSectionController.h; sourceTree = "<group>"; };
+		F6C43F362A3B10E3001D8715 /* ChatDetialSectionController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetialSectionController.m; sourceTree = "<group>"; };
+		F6C43F382A3B1159001D8715 /* ChatDetailCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailCell.m; sourceTree = "<group>"; };
+		F6C43F3A2A3B1162001D8715 /* ChatDetailCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDetailCell.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -155,6 +169,8 @@
 			children = (
 				F6C43F1C2A3AF139001D8715 /* ChatModel.h */,
 				F6C43F1D2A3AF139001D8715 /* ChatModel.m */,
+				F6C43F342A3B0E95001D8715 /* ChatDetailModel.h */,
+				F6C43F322A3B0E8C001D8715 /* ChatDetailModel.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -164,6 +180,8 @@
 			children = (
 				F6C43F1F2A3AF139001D8715 /* ChatSectionController.m */,
 				F6C43F202A3AF139001D8715 /* ChatSectionController.h */,
+				F6C43F352A3B10D8001D8715 /* ChatDetailSectionController.h */,
+				F6C43F362A3B10E3001D8715 /* ChatDetialSectionController.m */,
 			);
 			path = SectionControllers;
 			sourceTree = "<group>";
@@ -174,6 +192,8 @@
 				F6C43F222A3AF139001D8715 /* ChatCell.h */,
 				F6C43F232A3AF139001D8715 /* ChatCell.m */,
 				F6C43F242A3AF139001D8715 /* ChatCell.xib */,
+				F6C43F382A3B1159001D8715 /* ChatDetailCell.m */,
+				F6C43F3A2A3B1162001D8715 /* ChatDetailCell.h */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -183,6 +203,9 @@
 			children = (
 				F6C43F2A2A3B0D0A001D8715 /* ChatDetailViewController.h */,
 				F6C43F2B2A3B0D15001D8715 /* ChatDetailViewController.m */,
+				F6C43F2D2A3B0D3A001D8715 /* ChatDetailViewModel.h */,
+				F6C43F2E2A3B0D45001D8715 /* ChatDetailViewModel.m */,
+				F6C43F302A3B0D53001D8715 /* ChatDetailView.storyboard */,
 			);
 			path = ChatDetail;
 			sourceTree = "<group>";
@@ -246,6 +269,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6C43F312A3B0D53001D8715 /* ChatDetailView.storyboard in Resources */,
 				F6C43F022A3AEF0D001D8715 /* LaunchScreen.storyboard in Resources */,
 				F6C43F162A3AF0A1001D8715 /* HomeView.storyboard in Resources */,
 				F6C43F282A3AF139001D8715 /* ChatCell.xib in Resources */,
@@ -304,11 +328,15 @@
 			buildActionMask = 2147483647;
 			files = (
 				F6C43F2C2A3B0D15001D8715 /* ChatDetailViewController.m in Sources */,
+				F6C43F2F2A3B0D45001D8715 /* ChatDetailViewModel.m in Sources */,
 				F6C43EFA2A3AEF0D001D8715 /* HomeViewController.m in Sources */,
 				F6C43EF42A3AEF0D001D8715 /* AppDelegate.m in Sources */,
+				F6C43F332A3B0E8C001D8715 /* ChatDetailModel.m in Sources */,
 				F6C43F052A3AEF0D001D8715 /* main.m in Sources */,
+				F6C43F392A3B1159001D8715 /* ChatDetailCell.m in Sources */,
 				F6C43F252A3AF139001D8715 /* ChatModel.m in Sources */,
 				F6C43F192A3AF0D3001D8715 /* HomeViewModel.m in Sources */,
+				F6C43F372A3B10E3001D8715 /* ChatDetialSectionController.m in Sources */,
 				F6C43F272A3AF139001D8715 /* ChatCell.m in Sources */,
 				F6C43EF72A3AEF0D001D8715 /* SceneDelegate.m in Sources */,
 				F6C43F262A3AF139001D8715 /* ChatSectionController.m in Sources */,

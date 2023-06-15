@@ -9,7 +9,7 @@
 #import "ChatModel.h"
 #import "ChatSectionController.h"
 
-@interface HomeViewModel : NSObject <ChatSectionControllerDelegate>
+@interface HomeViewModel : NSObject
 
 - (void)getData:(void (^)(NSArray<ChatModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion;
 

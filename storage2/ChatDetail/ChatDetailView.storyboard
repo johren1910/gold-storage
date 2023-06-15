@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES">
+    <device id="retina6_12" orientation="portrait" appearance="light"/>
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
+        <capability name="Safe area layout guides" minToolsVersion="9.0"/>
+        <capability name="System colors in document resources" minToolsVersion="11.0"/>
+        <capability name="collection view cell content view" minToolsVersion="11.0"/>
+        <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
+    </dependencies>
+    <scenes>
+        <!--Chat Detail View Controller-->
+        <scene sceneID="s0d-6b-0kx">
+            <objects>
+                <viewController storyboardIdentifier="ChatDetailViewController" id="Y6W-OH-hqX" customClass="ChatDetailViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="5EZ-qb-Rvc">
+                        <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kez-Q5-CU3">
+                                <rect key="frame" x="0.0" y="698" width="393" height="120"/>
+                                <subviews>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HhN-VY-Ow1">
+                                        <rect key="frame" x="0.0" y="0.0" width="196.66666666666666" height="120"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Store Local"/>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qh4-Zn-9SE">
+                                        <rect key="frame" x="196.66666666666663" y="0.0" width="196.33333333333337" height="120"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Download Image"/>
+                                    </button>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="120" id="h24-tk-ElD"/>
+                                </constraints>
+                            </stackView>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="la0-Rz-Zut">
+                                <rect key="frame" x="0.0" y="123" width="393" height="575"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <collectionViewFlowLayout key="collectionViewLayout" automaticEstimatedItemSize="YES" minimumLineSpacing="10" minimumInteritemSpacing="10" id="LP1-nZ-7Sb">
+                                    <size key="itemSize" width="128" height="128"/>
+                                    <size key="headerReferenceSize" width="0.0" height="0.0"/>
+                                    <size key="footerReferenceSize" width="0.0" height="0.0"/>
+                                    <inset key="sectionInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
+                                </collectionViewFlowLayout>
+                                <cells>
+                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="Vgp-A4-RLu">
+                                        <rect key="frame" x="0.0" y="0.0" width="127.99999999999997" height="128"/>
+                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="tCJ-jy-mAP">
+                                            <rect key="frame" x="0.0" y="0.0" width="127.99999999999997" height="128"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                        </collectionViewCellContentView>
+                                    </collectionViewCell>
+                                </cells>
+                            </collectionView>
+                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="49b-8G-5pp">
+                                <rect key="frame" x="0.0" y="59" width="393" height="65"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="64" id="BFm-J5-mc4"/>
+                                </constraints>
+                                <segments>
+                                    <segment title="All"/>
+                                    <segment title="Video &amp; Pictures"/>
+                                    <segment title="Files"/>
+                                    <segment title="Other"/>
+                                </segments>
+                            </segmentedControl>
+                        </subviews>
+                        <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                        <constraints>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="la0-Rz-Zut" secondAttribute="trailing" id="2zO-cZ-gCd"/>
+                            <constraint firstItem="la0-Rz-Zut" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="5sE-QW-DFT"/>
+                            <constraint firstItem="Kez-Q5-CU3" firstAttribute="top" secondItem="la0-Rz-Zut" secondAttribute="bottom" id="9OP-Jy-hFQ"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="49b-8G-5pp" secondAttribute="trailing" id="AmA-QU-4pI"/>
+                            <constraint firstItem="la0-Rz-Zut" firstAttribute="top" secondItem="49b-8G-5pp" secondAttribute="bottom" id="E9e-zs-v9T"/>
+                            <constraint firstItem="49b-8G-5pp" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="EWN-8f-zS1"/>
+                            <constraint firstItem="Kez-Q5-CU3" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="Itc-gf-98u"/>
+                            <constraint firstItem="49b-8G-5pp" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="q1B-jh-AZE"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="Kez-Q5-CU3" secondAttribute="bottom" id="sZI-HW-gxJ"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="Kez-Q5-CU3" secondAttribute="trailing" id="tvR-Gi-uF7"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="collectionView" destination="la0-Rz-Zut" id="OHh-jo-hWI"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="117" y="-49"/>
+        </scene>
+    </scenes>
+    <resources>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+    </resources>
+</document>
