@@ -6,7 +6,15 @@
 //
 
 @import IGListKit;
+#import "ChatModel.h"
+
+@protocol ChatSectionControllerDelegate <NSObject>
+
+- (void) didSelect: (ChatModel*) chat;
+
+@end
+
 
 @interface ChatSectionController : IGListSectionController
-
+@property (nonatomic, weak) id <ChatSectionControllerDelegate>  delegate;
 @end

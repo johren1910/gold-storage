@@ -7,6 +7,10 @@
 
 @class ChatModel;
 
+@protocol ChatCellDelegate <NSObject>
+- (void) didSelectDelete: (ChatModel*) chat;
+@end
+
 @interface ChatCell : UICollectionViewCell
 @property (nonatomic, copy) ChatModel *chat;
 @end

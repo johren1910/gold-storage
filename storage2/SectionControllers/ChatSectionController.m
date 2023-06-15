@@ -39,4 +39,10 @@
     _chat = (ChatModel *)object;
 }
 
+// MARK: - ListSingleSectionControllerDelegate
+
+- (void)didSelectItemAtIndex:(NSInteger)index {
+//    NSLog(@"Ngon 1 %@", _chat);
+    [_delegate didSelect:_chat];
+}
 @end

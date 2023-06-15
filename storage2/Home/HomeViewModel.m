@@ -34,7 +34,17 @@
                    [[ChatModel alloc] initWithName:@"anothoer name" chatId:@"2"],
                    [[ChatModel alloc] initWithName:@"nice bye" chatId:@"3"],
                    [[ChatModel alloc] initWithName:@"nice ba" chatId:@"4"],
-                   [[ChatModel alloc] initWithName:@"nice bubo" chatId:@"5"]
+                   [[ChatModel alloc] initWithName:@"nice bubo" chatId:@"5"],
+                 [[ChatModel alloc] initWithName:@"nice ba 1 " chatId:@"6"],
+                 [[ChatModel alloc] initWithName:@"nice ba2 " chatId:@"7"],
+                 [[ChatModel alloc] initWithName:@"nice ba3" chatId:@"8"],
+                 [[ChatModel alloc] initWithName:@"nice b5a" chatId:@"9"],
+                 [[ChatModel alloc] initWithName:@"nice b6a" chatId:@"10"],
+                 [[ChatModel alloc] initWithName:@"nice b87a" chatId:@"11"],
+                 [[ChatModel alloc] initWithName:@"nice b9a" chatId:@"12"],
+                 [[ChatModel alloc] initWithName:@"nice b96a" chatId:@"13"],
+                 [[ChatModel alloc] initWithName:@"nice ba9" chatId:@"14"],
+                 [[ChatModel alloc] initWithName:@"nice ba43" chatId:@"15"]
     ];
     
     _chats = testData;
@@ -55,6 +65,12 @@
 
 - (NSArray<ChatModel*>*) items {
     return _chats;
+}
+
+#pragma mark - ChatSectionControllerDelegate
+
+- (void) didSelect: (ChatModel*) chat {
+    NSLog(@"GOOOOOD %@", chat);
 }
 
 @end

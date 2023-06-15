@@ -75,12 +75,16 @@
 }
 
 - (IGListSectionController *)listAdapter:(IGListAdapter *)listAdapter sectionControllerForObject:(id)object {
-    return [ChatSectionController new];
+    ChatSectionController *chatSection = [ChatSectionController new];
+     chatSection.delegate = self.viewModel;
+    return chatSection;
 }
 
 - (UIView *)emptyViewForListAdapter:(IGListAdapter *)listAdapter {
     return nil;
 }
+
+
 
 @end
 
