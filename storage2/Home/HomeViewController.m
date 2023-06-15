@@ -92,6 +92,8 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"ChatDetailView" bundle:nil];
     ChatDetailViewController *ivc = [storyboard instantiateViewControllerWithIdentifier:@"ChatDetailViewController"];
     
+    ivc.title = chat.name;
+    
     [self.navigationController pushViewController:ivc animated:true];
 }
 - (IBAction)onCreateBtnTouch:(id)sender {
