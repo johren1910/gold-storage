@@ -29,11 +29,18 @@
 }
 
 - (UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
-    const Class cellClass = [ChatCell class];
-    ChatCell *cell = (ChatCell *)[self.collectionContext dequeueReusableCellOfClass:cellClass forSectionController:self atIndex:index];
+    
+    ChatCell *cell = (ChatCell *)[self.collectionContext dequeueReusableCellWithNibName:@"ChatCell" bundle:nil forSectionController:self atIndex:index];
+   
     cell.chat = _chat;
     return cell;
 }
+
+- (UIEdgeInsets)inset {
+    UIEdgeInsets myInset = { 2, 0, 0, 0};
+    return myInset;
+}
+
 
 - (void)didUpdateToObject:(id)object {
     _chat = (ChatModel *)object;

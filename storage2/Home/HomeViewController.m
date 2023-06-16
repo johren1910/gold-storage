@@ -43,6 +43,9 @@
     
     self.adapter.collectionView = self.homeCollectionView;
     self.adapter.dataSource = self;
+    
+    UINib *cellNib = [UINib nibWithNibName:@"ChatCell" bundle:nil];
+    [self.homeCollectionView registerNib:cellNib forCellWithReuseIdentifier:@"ChatCell"];
     [self getData];
 }
 
