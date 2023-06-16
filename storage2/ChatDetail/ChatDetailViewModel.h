@@ -6,7 +6,7 @@
 //
 #import <Foundation/Foundation.h>
 #import "ChatDetailModel.h"
-#import "ChatSectionController.h"
+#import "ChatDetailSectionController.h"
 
 @interface ChatDetailViewModel : NSObject
 

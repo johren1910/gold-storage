@@ -18,11 +18,14 @@
 
 #pragma mark - IGListSectionController Overrides
 
+- (NSInteger)numberOfItems {
+    return 1;
+}
+
 - (CGSize)sizeForItemAtIndex:(NSInteger)index {
     const CGFloat width = self.collectionContext.containerSize.width;
-    const CGFloat itemSize = width/3;
-    
-    return CGSizeMake(itemSize, itemSize);
+    const CGFloat height = 74.0;
+    return CGSizeMake(width, height);
 }
 
 - (UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {

@@ -12,6 +12,7 @@
 #import "ChatSectionController.h"
 #import "HomeViewModel.h"
 #import "ChatDetailViewController.h"
+#import "StorageViewController.h"
 
 
 @interface HomeViewController () <IGListAdapterDataSource>
@@ -96,6 +97,9 @@
     
     [self.navigationController pushViewController:ivc animated:true];
 }
+
+#pragma mark - Action
+
 - (IBAction)onCreateBtnTouch:(id)sender {
     [self createAlert];
 }
@@ -127,7 +131,15 @@
     [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler: nil]];
        [self presentViewController:alertController animated:YES completion:nil];
 }
-
+- (IBAction)onSettingBtnTouched:(id)sender {
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"StorageView" bundle:nil];
+    StorageViewController *ivc = [storyboard instantiateViewControllerWithIdentifier:@"StorageViewController"];
+    
+    ivc.title = @"Storage";
+    
+    [self.navigationController pushViewController:ivc animated:true];
+}
 
 
 @end

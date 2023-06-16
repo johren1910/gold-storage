@@ -9,7 +9,7 @@
 #import "ChatDetailModel.h"
 #import "ChatDetailViewModel.h"
 
-@interface ChatDetailViewController : UIViewController <ChatSectionControllerDelegate>
+@interface ChatDetailViewController : UIViewController <ChatDetailSectionControllerDelegate>
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *segmentBar;
 

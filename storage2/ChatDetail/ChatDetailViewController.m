@@ -81,7 +81,7 @@
 }
 
 - (IGListSectionController *)listAdapter:(IGListAdapter *)listAdapter sectionControllerForObject:(id)object {
-    ChatSectionController *chatSection = [ChatSectionController new];
+    ChatDetailSectionController *chatSection = [ChatDetailSectionController new];
     chatSection.delegate = self;
     return chatSection;
 }
@@ -90,7 +90,7 @@
     return nil;
 }
 
-#pragma mark - ChatSectionControllerDelegate
+#pragma mark - ChatDetailSectionControllerDelegate
 
 - (void) didSelect: (ChatModel*) chat {
     NSLog(@"GOOOOOD %@", chat);
