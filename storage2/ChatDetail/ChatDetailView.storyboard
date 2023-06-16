@@ -20,16 +20,24 @@
                             <stackView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Kez-Q5-CU3">
                                 <rect key="frame" x="0.0" y="698" width="393" height="120"/>
                                 <subviews>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HhN-VY-Ow1">
-                                        <rect key="frame" x="0.0" y="0.0" width="196.66666666666666" height="120"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HhN-VY-Ow1" userLabel="Images &amp; Video">
+                                        <rect key="frame" x="0.0" y="0.0" width="131" height="120"/>
                                         <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" title="Store Local"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Video &amp; Images"/>
                                         <connections>
-                                            <action selector="onStoreLocalBtnTouched:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="5Rp-EO-yTP"/>
+                                            <action selector="onVideoImagesLocalBtnTouched:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="EqF-9I-6P6"/>
+                                        </connections>
+                                    </button>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HEh-zQ-9Mz" userLabel="Files">
+                                        <rect key="frame" x="131" y="0.0" width="131" height="120"/>
+                                        <state key="normal" title="Button"/>
+                                        <buttonConfiguration key="configuration" style="plain" title="Files"/>
+                                        <connections>
+                                            <action selector="onFileLocalBtnTouched:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="o6M-PF-pKl"/>
                                         </connections>
                                     </button>
                                     <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="qh4-Zn-9SE">
-                                        <rect key="frame" x="196.66666666666663" y="0.0" width="196.33333333333337" height="120"/>
+                                        <rect key="frame" x="262" y="0.0" width="131" height="120"/>
                                         <state key="normal" title="Button"/>
                                         <buttonConfiguration key="configuration" style="plain" title="Download Image"/>
                                     </button>

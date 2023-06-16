@@ -8,6 +8,15 @@
 #import <UIKit/UIKit.h>
 #import "ChatDetailModel.h"
 #import "ChatDetailViewModel.h"
+#import "ChatDetailViewController.h"
+@import IGListKit;
+#import "ChatModel.h"
+#import "ChatDetailViewModel.h"
+#import "MediaType.h"
+#import <MobileCoreServices/MobileCoreServices.h>
+#import "FileHelper.h"
+#import <Photos/Photos.h>
+#import <AssetsLibrary/AssetsLibrary.h>
 
 @interface ChatDetailViewController : UIViewController <ChatDetailSectionControllerDelegate>
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;

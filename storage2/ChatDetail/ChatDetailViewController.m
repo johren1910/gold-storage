@@ -6,12 +6,8 @@
 //
 
 #import "ChatDetailViewController.h"
-@import IGListKit;
-#import "ChatModel.h"
-#import "ChatDetailViewModel.h"
 
-
-@interface ChatDetailViewController () <IGListAdapterDataSource, UIDocumentPickerDelegate>
+@interface ChatDetailViewController () <IGListAdapterDataSource, UIDocumentPickerDelegate, UIImagePickerControllerDelegate, ChatDetailViewModelDelegate>
 
 @property (nonatomic, strong) IGListAdapter *adapter;
 @property (nonatomic, strong) ChatDetailViewModel *viewModel;
@@ -33,10 +29,14 @@
     return self;
 }
 
+- (void)didUpdateData {
+    [_adapter reloadDataWithCompletion:nil];
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.adapter = [[IGListAdapter alloc] initWithUpdater:[[IGListAdapterUpdater alloc] init] viewController:self];
-    
+    self.viewModel.delegate = self;
     self.adapter.collectionView = self.collectionView;
     self.adapter.dataSource = self;
     [_segmentBar addTarget:self action:@selector(segmentChanged:) forControlEvents:UIControlEventValueChanged];
@@ -101,57 +101,103 @@
 
 #pragma mark - Action
 
-- (IBAction)onStoreLocalBtnTouched:(id)sender {
-    
+- (IBAction)onFileLocalBtnTouched:(id)sender {
     // Import
-//    UIDocumentPickerViewController* documentPicker =
-//      [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[@"public.data"]
-//                                                             inMode:UIDocumentPickerModeImport];
+        UIDocumentPickerViewController* documentPicker =
+          [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[@"public.data"]
+                                                                 inMode:UIDocumentPickerModeImport];
     
-    // Choose folder
-    UIDocumentPickerViewController* documentPicker =
-          [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[@"public.folder"]
-                                                                 inMode:UIDocumentPickerModeOpen];
+        documentPicker.delegate = self;
     
-    documentPicker.delegate = self;
+        documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
     
-    documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
+        [self presentViewController:documentPicker animated:true completion:nil];
+}
+
+- (IBAction)onVideoImagesLocalBtnTouched:(id)sender {
     
-    [self presentViewController:documentPicker animated:true completion:nil];
+    [self requestAuthorizationWithRedirectionToSettings];
 }
 
 
 #pragma mark - DocumentPickerDelegate
 - (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls
 {
-   //Access folder
-    if ( [urls[0] startAccessingSecurityScopedResource] )
-    {
-        
-        //Construct the url: folder + name.extension
-        NSURL *destURLPath = [urls[0] URLByAppendingPathComponent:@"Test.txt"];
-        
-        NSString *dataToWrite = @"This text is going into the file!";
-        
-        NSError *error = nil;
-        
-        //Write the data
-        if( ![dataToWrite writeToURL:destURLPath atomically:true encoding:NSUTF8StringEncoding error:&error] )
-            NSLog(@"%@",[error localizedDescription]);
+    
+    NSURL* url = urls.firstObject;
+    NSFileCoordinator *coordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
+    NSError *error = nil;
+    
+    
+    __weak ChatDetailViewController *weakself = self;
+    [coordinator coordinateReadingItemAtURL:url options:0 error:&error byAccessor:^(NSURL *newURL) {
+        NSData *data = [NSData dataWithContentsOfURL:newURL];
+        NSLog(@"data %@", data);
+        [weakself.viewModel addFile:data];
+        // Do something
+    }];
+    if (error) {
+        // Do something else
+    }
+}
 
-        
-        //Read file case ---
-        NSData *fileData = [NSData dataWithContentsOfURL:destURLPath options:NSDataReadingUncached error:&error];
-        
-        if( fileData == nil )
-            NSLog(@"%@",[error localizedDescription]);
-        
-        [urls[0] stopAccessingSecurityScopedResource];
-    }
-    else
+#pragma mark - UIImagePickerControllerDelegate
+-(void)imagePickerController:(UIImagePickerController *)picker
+didFinishPickingMediaWithInfo:(NSDictionary *)info
+{
+    NSString *mediaType = [info objectForKey: UIImagePickerControllerMediaType];
+    [self dismissViewControllerAnimated:NO completion:nil];
+    if (CFStringCompare ((__bridge_retained CFStringRef)mediaType, kUTTypeImage, 0) == kCFCompareEqualTo)
     {
-        NSLog(@"startAccessingSecurityScopedResource failed");
+        UIImage *image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
+        [_viewModel addImage:image];
+        [picker dismissViewControllerAnimated:YES completion:nil];
+        [_adapter reloadDataWithCompletion:nil];
     }
+}
+
+- (void)requestAuthorizationWithRedirectionToSettings {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
+        if (status == PHAuthorizationStatusAuthorized)
+        {
+            UIImagePickerController *mediaUI = [[UIImagePickerController alloc] init];
+            mediaUI.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            mediaUI.mediaTypes =
+            [UIImagePickerController availableMediaTypesForSourceType:
+             UIImagePickerControllerSourceTypeSavedPhotosAlbum];
+            mediaUI.delegate = self;
+            
+            [self presentViewController:mediaUI animated:YES completion:NULL];
+        }
+        else
+        {
+            //No permission. Trying to normally request it
+            [PHPhotoLibrary requestAuthorization:^(PHAuthorizationStatus status) {
+                if (status != PHAuthorizationStatusAuthorized)
+                {
+                    //User don't give us permission. Showing alert with redirection to settings
+                    //Getting description string from info.plist file
+                    NSString *accessDescription = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"NSPhotoLibraryUsageDescription"];
+                    UIAlertController * alertController = [UIAlertController alertControllerWithTitle:accessDescription message:@"To give permissions tap on 'Change Settings' button" preferredStyle:UIAlertControllerStyleAlert];
+                    
+                    UIAlertAction *cancelAction = [UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleCancel handler:nil];
+                    [alertController addAction:cancelAction];
+                    
+                    UIAlertAction *settingsAction = [UIAlertAction actionWithTitle:@"Change Settings" style:UIAlertActionStyleDefault handler:^(UIAlertAction * _Nonnull action) {
+                        [[UIApplication sharedApplication] openURL:[NSURL URLWithString:UIApplicationOpenSettingsURLString]];
+                    }];
+                    [alertController addAction:settingsAction];
+                    
+                    [[UIApplication sharedApplication].keyWindow.rootViewController presentViewController:alertController animated:YES completion:nil];
+                }
+            }];
+        }
+    });
+}
+-(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
+{
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
 
 @end

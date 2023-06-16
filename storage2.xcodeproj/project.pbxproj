@@ -31,6 +31,7 @@
 		F6C43F412A3B2A53001D8715 /* StorageViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F402A3B2A53001D8715 /* StorageViewModel.m */; };
 		F6C43F432A3B2A5F001D8715 /* StorageView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F6C43F422A3B2A5F001D8715 /* StorageView.storyboard */; };
 		F6C43F482A3C07A5001D8715 /* ChatDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F6C43F472A3C07A5001D8715 /* ChatDetailCell.xib */; };
+		F6C43F4C2A3C39EA001D8715 /* FileHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F4B2A3C39EA001D8715 /* FileHelper.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -76,6 +77,9 @@
 		F6C43F402A3B2A53001D8715 /* StorageViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StorageViewModel.m; sourceTree = "<group>"; };
 		F6C43F422A3B2A5F001D8715 /* StorageView.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = StorageView.storyboard; sourceTree = "<group>"; };
 		F6C43F472A3C07A5001D8715 /* ChatDetailCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatDetailCell.xib; sourceTree = "<group>"; };
+		F6C43F4A2A3C39DC001D8715 /* FileHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileHelper.h; sourceTree = "<group>"; };
+		F6C43F4B2A3C39EA001D8715 /* FileHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileHelper.m; sourceTree = "<group>"; };
+		F6C43F4E2A3C425C001D8715 /* MediaType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MediaType.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +132,7 @@
 		F6C43EF12A3AEF0D001D8715 /* storage2 */ = {
 			isa = PBXGroup;
 			children = (
+				F6C43F492A3C39C9001D8715 /* Helpers */,
 				F6C43F3B2A3B2A12001D8715 /* StorageOverview */,
 				F6C43F292A3B0CF2001D8715 /* ChatDetail */,
 				F6C43F1B2A3AF139001D8715 /* Models */,
@@ -155,6 +160,7 @@
 		F6C43F0C2A3AEF9C001D8715 /* App */ = {
 			isa = PBXGroup;
 			children = (
+				F6C43F032A3AEF0D001D8715 /* Info.plist */,
 				F6C43EF22A3AEF0D001D8715 /* AppDelegate.h */,
 				F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */,
 				F6C43EF52A3AEF0D001D8715 /* SceneDelegate.h */,
@@ -162,7 +168,6 @@
 				F6C43EFB2A3AEF0D001D8715 /* Main.storyboard */,
 				F6C43EFE2A3AEF0D001D8715 /* Assets.xcassets */,
 				F6C43F002A3AEF0D001D8715 /* LaunchScreen.storyboard */,
-				F6C43F032A3AEF0D001D8715 /* Info.plist */,
 				F6C43F042A3AEF0D001D8715 /* main.m */,
 			);
 			path = App;
@@ -178,6 +183,7 @@
 		F6C43F1B2A3AF139001D8715 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				F6C43F4E2A3C425C001D8715 /* MediaType.h */,
 				F6C43F1C2A3AF139001D8715 /* ChatModel.h */,
 				F6C43F1D2A3AF139001D8715 /* ChatModel.m */,
 				F6C43F342A3B0E95001D8715 /* ChatDetailModel.h */,
@@ -232,6 +238,23 @@
 				F6C43F422A3B2A5F001D8715 /* StorageView.storyboard */,
 			);
 			path = StorageOverview;
+			sourceTree = "<group>";
+		};
+		F6C43F492A3C39C9001D8715 /* Helpers */ = {
+			isa = PBXGroup;
+			children = (
+				F6C43F4D2A3C39ED001D8715 /* FileHelper */,
+			);
+			path = Helpers;
+			sourceTree = "<group>";
+		};
+		F6C43F4D2A3C39ED001D8715 /* FileHelper */ = {
+			isa = PBXGroup;
+			children = (
+				F6C43F4A2A3C39DC001D8715 /* FileHelper.h */,
+				F6C43F4B2A3C39EA001D8715 /* FileHelper.m */,
+			);
+			path = FileHelper;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -360,6 +383,7 @@
 				F6C43F332A3B0E8C001D8715 /* ChatDetailModel.m in Sources */,
 				F6C43F052A3AEF0D001D8715 /* main.m in Sources */,
 				F6C43F392A3B1159001D8715 /* ChatDetailCell.m in Sources */,
+				F6C43F4C2A3C39EA001D8715 /* FileHelper.m in Sources */,
 				F6C43F412A3B2A53001D8715 /* StorageViewModel.m in Sources */,
 				F6C43F3E2A3B2A39001D8715 /* StorageViewController.m in Sources */,
 				F6C43F252A3AF139001D8715 /* ChatModel.m in Sources */,
@@ -513,7 +537,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 38Z2ARUML2;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = storage2/Info.plist;
+				INFOPLIST_FILE = storage2/App/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -542,7 +566,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 38Z2ARUML2;
 				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_FILE = storage2/Info.plist;
+				INFOPLIST_FILE = storage2/App/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

@@ -19,9 +19,9 @@
                 <rect key="frame" x="0.0" y="0.0" width="170" height="149"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
-                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6G3-iN-LWo">
+                    <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="6G3-iN-LWo">
                         <rect key="frame" x="0.0" y="0.0" width="170" height="149"/>
-                        <color key="backgroundColor" systemColor="systemBrownColor"/>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                     </imageView>
                     <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="HnK-OO-tAh">
                         <rect key="frame" x="8" y="8" width="32" height="32"/>
@@ -50,21 +50,24 @@
                         </buttonConfiguration>
                     </button>
                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" usesAttributedText="YES" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4JD-tg-Tgk">
-                        <rect key="frame" x="8" y="121" width="43.333333333333336" height="20"/>
+                        <rect key="frame" x="8" y="121" width="44.333333333333336" height="20"/>
                         <attributedString key="attributedText">
                             <fragment content="25KB">
                                 <attributes>
+                                    <color key="NSColor" red="0.9769402497911811" green="0.97180884647444499" blue="1" alpha="0.84705882352941175" colorSpace="custom" customColorSpace="displayP3"/>
                                     <font key="NSFont" size="18" name=".SFNS-Regular"/>
                                     <paragraphStyle key="NSParagraphStyle" alignment="left" lineBreakMode="wordWrapping" baseWritingDirection="natural" tighteningFactorForTruncation="0.0"/>
                                 </attributes>
                             </fragment>
                         </attributedString>
                         <nil key="highlightedColor"/>
+                        <color key="shadowColor" systemColor="labelColor"/>
+                        <size key="shadowOffset" width="1" height="0.0"/>
                     </label>
-                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x4H-Lh-7Yk">
+                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="249" verticalHuggingPriority="251" horizontalCompressionResistancePriority="749" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x4H-Lh-7Yk">
                         <rect key="frame" x="120" y="120" width="42" height="21"/>
                         <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                        <nil key="textColor"/>
+                        <color key="textColor" red="0.97694024980000005" green="0.97180884649999999" blue="1" alpha="0.84705882349999995" colorSpace="custom" customColorSpace="displayP3"/>
                         <nil key="highlightedColor"/>
                     </label>
                 </subviews>
@@ -72,7 +75,7 @@
                     <constraint firstAttribute="trailing" secondItem="hTr-eX-eZs" secondAttribute="trailing" id="8nJ-sY-U7C"/>
                     <constraint firstAttribute="bottom" secondItem="4JD-tg-Tgk" secondAttribute="bottom" constant="8" id="A0N-ye-gzu"/>
                     <constraint firstAttribute="bottom" secondItem="x4H-Lh-7Yk" secondAttribute="bottom" constant="8" id="KWe-8l-tZV"/>
-                    <constraint firstItem="x4H-Lh-7Yk" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="4JD-tg-Tgk" secondAttribute="trailing" constant="16" id="NO3-Hk-AG0"/>
+                    <constraint firstItem="x4H-Lh-7Yk" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="4JD-tg-Tgk" secondAttribute="trailing" constant="8" id="NO3-Hk-AG0"/>
                     <constraint firstItem="hTr-eX-eZs" firstAttribute="top" secondItem="a6y-On-fa7" secondAttribute="top" id="Up4-J4-Yec"/>
                     <constraint firstItem="HnK-OO-tAh" firstAttribute="top" secondItem="a6y-On-fa7" secondAttribute="top" constant="8" id="btV-P6-yz3"/>
                     <constraint firstItem="6G3-iN-LWo" firstAttribute="top" secondItem="a6y-On-fa7" secondAttribute="top" id="cpR-cP-k7q"/>
@@ -97,14 +100,17 @@
     </objects>
     <resources>
         <image name="circle" catalog="system" width="128" height="123"/>
+        <systemColor name="labelColor">
+            <color red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="secondaryLabelColor">
             <color red="0.23529411764705882" green="0.23529411764705882" blue="0.2627450980392157" alpha="0.59999999999999998" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
         <systemColor name="secondarySystemBackgroundColor">
             <color red="0.94901960784313721" green="0.94901960784313721" blue="0.96862745098039216" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
-        <systemColor name="systemBrownColor">
-            <color red="0.63529411764705879" green="0.51764705882352946" blue="0.36862745098039218" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        <systemColor name="systemBackgroundColor">
+            <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
         </systemColor>
         <systemColor name="systemPinkColor">
             <color red="1" green="0.17647058823529413" blue="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>

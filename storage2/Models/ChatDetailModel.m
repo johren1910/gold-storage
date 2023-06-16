@@ -6,8 +6,9 @@
 //
 
 #import "ChatDetailModel.h"
-
+#import "MediaType.h"
 @implementation ChatDetailModel
+
 
 - (instancetype)initWithName:(NSString *)name chatId:(NSString *)chatId type:(MediaType)type
 {

@@ -36,6 +36,7 @@
 }
 
 - (void)setupSubviews {
+    _thumbnailImageView.contentMode = UIViewContentModeScaleAspectFill;
 }
 
 - (void)layoutSubviews {
@@ -47,8 +48,8 @@
     
     _chat = [chat copy];
     
-    self.sizeLabel.text = [NSString stringWithFormat:@"%lu Kb", (unsigned long)_chat.size];
-    self.thumbnailImageView.image = [UIImage imageNamed: @"info.circle"];
+    self.sizeLabel.text = [NSString stringWithFormat:@"%.1f Mb", _chat.size];
+    self.thumbnailImageView.image = chat.image;
     [self.selectBtn.titleLabel setText:nil];
     
     switch (_chat.type) {
