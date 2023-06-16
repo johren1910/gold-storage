@@ -25,11 +25,12 @@
 		F6C43F2F2A3B0D45001D8715 /* ChatDetailViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F2E2A3B0D45001D8715 /* ChatDetailViewModel.m */; };
 		F6C43F312A3B0D53001D8715 /* ChatDetailView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F6C43F302A3B0D53001D8715 /* ChatDetailView.storyboard */; };
 		F6C43F332A3B0E8C001D8715 /* ChatDetailModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F322A3B0E8C001D8715 /* ChatDetailModel.m */; };
-		F6C43F372A3B10E3001D8715 /* ChatDetialSectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F362A3B10E3001D8715 /* ChatDetialSectionController.m */; };
+		F6C43F372A3B10E3001D8715 /* ChatDetailSectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F362A3B10E3001D8715 /* ChatDetailSectionController.m */; };
 		F6C43F392A3B1159001D8715 /* ChatDetailCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F382A3B1159001D8715 /* ChatDetailCell.m */; };
 		F6C43F3E2A3B2A39001D8715 /* StorageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F3D2A3B2A39001D8715 /* StorageViewController.m */; };
 		F6C43F412A3B2A53001D8715 /* StorageViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F402A3B2A53001D8715 /* StorageViewModel.m */; };
 		F6C43F432A3B2A5F001D8715 /* StorageView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F6C43F422A3B2A5F001D8715 /* StorageView.storyboard */; };
+		F6C43F482A3C07A5001D8715 /* ChatDetailCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F6C43F472A3C07A5001D8715 /* ChatDetailCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -66,7 +67,7 @@
 		F6C43F322A3B0E8C001D8715 /* ChatDetailModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailModel.m; sourceTree = "<group>"; };
 		F6C43F342A3B0E95001D8715 /* ChatDetailModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDetailModel.h; sourceTree = "<group>"; };
 		F6C43F352A3B10D8001D8715 /* ChatDetailSectionController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDetailSectionController.h; sourceTree = "<group>"; };
-		F6C43F362A3B10E3001D8715 /* ChatDetialSectionController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetialSectionController.m; sourceTree = "<group>"; };
+		F6C43F362A3B10E3001D8715 /* ChatDetailSectionController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailSectionController.m; sourceTree = "<group>"; };
 		F6C43F382A3B1159001D8715 /* ChatDetailCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailCell.m; sourceTree = "<group>"; };
 		F6C43F3A2A3B1162001D8715 /* ChatDetailCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDetailCell.h; sourceTree = "<group>"; };
 		F6C43F3C2A3B2A29001D8715 /* StorageViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StorageViewController.h; sourceTree = "<group>"; };
@@ -74,6 +75,7 @@
 		F6C43F3F2A3B2A48001D8715 /* StorageViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StorageViewModel.h; sourceTree = "<group>"; };
 		F6C43F402A3B2A53001D8715 /* StorageViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StorageViewModel.m; sourceTree = "<group>"; };
 		F6C43F422A3B2A5F001D8715 /* StorageView.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = StorageView.storyboard; sourceTree = "<group>"; };
+		F6C43F472A3C07A5001D8715 /* ChatDetailCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatDetailCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -190,7 +192,7 @@
 				F6C43F1F2A3AF139001D8715 /* ChatSectionController.m */,
 				F6C43F202A3AF139001D8715 /* ChatSectionController.h */,
 				F6C43F352A3B10D8001D8715 /* ChatDetailSectionController.h */,
-				F6C43F362A3B10E3001D8715 /* ChatDetialSectionController.m */,
+				F6C43F362A3B10E3001D8715 /* ChatDetailSectionController.m */,
 			);
 			path = SectionControllers;
 			sourceTree = "<group>";
@@ -203,6 +205,7 @@
 				F6C43F242A3AF139001D8715 /* ChatCell.xib */,
 				F6C43F382A3B1159001D8715 /* ChatDetailCell.m */,
 				F6C43F3A2A3B1162001D8715 /* ChatDetailCell.h */,
+				F6C43F472A3C07A5001D8715 /* ChatDetailCell.xib */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -296,6 +299,7 @@
 				F6C43F162A3AF0A1001D8715 /* HomeView.storyboard in Resources */,
 				F6C43F282A3AF139001D8715 /* ChatCell.xib in Resources */,
 				F6C43EFF2A3AEF0D001D8715 /* Assets.xcassets in Resources */,
+				F6C43F482A3C07A5001D8715 /* ChatDetailCell.xib in Resources */,
 				F6C43EFD2A3AEF0D001D8715 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -360,7 +364,7 @@
 				F6C43F3E2A3B2A39001D8715 /* StorageViewController.m in Sources */,
 				F6C43F252A3AF139001D8715 /* ChatModel.m in Sources */,
 				F6C43F192A3AF0D3001D8715 /* HomeViewModel.m in Sources */,
-				F6C43F372A3B10E3001D8715 /* ChatDetialSectionController.m in Sources */,
+				F6C43F372A3B10E3001D8715 /* ChatDetailSectionController.m in Sources */,
 				F6C43F272A3AF139001D8715 /* ChatCell.m in Sources */,
 				F6C43EF72A3AEF0D001D8715 /* SceneDelegate.m in Sources */,
 				F6C43F262A3AF139001D8715 /* ChatSectionController.m in Sources */,
@@ -507,6 +511,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 38Z2ARUML2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = storage2/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
@@ -535,6 +540,7 @@
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 38Z2ARUML2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = storage2/Info.plist;
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;

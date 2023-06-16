@@ -20,16 +20,26 @@
 
 - (CGSize)sizeForItemAtIndex:(NSInteger)index {
     const CGFloat width = self.collectionContext.containerSize.width;
-    const CGFloat itemSize = width/3;
+    const CGFloat itemSize = width/3 - self.minimumInteritemSpacing;
     
     return CGSizeMake(itemSize, itemSize);
 }
 
+- (UIEdgeInsets)inset {
+    UIEdgeInsets myLabelInsets = {self.minimumInteritemSpacing, 0, 0, 0};
+    return myLabelInsets;
+}
+
+
 - (UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
-    const Class cellClass = [ChatDetailCell class];
-    ChatDetailCell *cell = (ChatDetailCell *)[self.collectionContext dequeueReusableCellOfClass:cellClass forSectionController:self atIndex:index];
+    
+    ChatDetailCell *cell = (ChatDetailCell *)[self.collectionContext dequeueReusableCellWithNibName:@"ChatDetailCell" bundle:nil forSectionController:self atIndex:index];
     cell.chat = _chat;
     return cell;
+}
+
+- (CGFloat)minimumInteritemSpacing {
+    return 2;
 }
 
 - (void)didUpdateToObject:(id)object {

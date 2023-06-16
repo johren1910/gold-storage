@@ -11,7 +11,7 @@
 #import "ChatDetailViewModel.h"
 
 
-@interface ChatDetailViewController () <IGListAdapterDataSource>
+@interface ChatDetailViewController () <IGListAdapterDataSource, UIDocumentPickerDelegate>
 
 @property (nonatomic, strong) IGListAdapter *adapter;
 @property (nonatomic, strong) ChatDetailViewModel *viewModel;
@@ -41,6 +41,9 @@
     self.adapter.dataSource = self;
     [_segmentBar addTarget:self action:@selector(segmentChanged:) forControlEvents:UIControlEventValueChanged];
     [self getData];
+    
+    UINib *cellNib = [UINib nibWithNibName:@"ChatDetailCell" bundle:nil];
+    [self.collectionView registerNib:cellNib forCellWithReuseIdentifier:@"ChatDetailCell"];
 }
 
 - (void) segmentChanged: (UISegmentedControl*) sender {
@@ -96,6 +99,59 @@
     NSLog(@"GOOOOOD %@", chat);
 }
 
+#pragma mark - Action
 
+- (IBAction)onStoreLocalBtnTouched:(id)sender {
+    
+    // Import
+//    UIDocumentPickerViewController* documentPicker =
+//      [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[@"public.data"]
+//                                                             inMode:UIDocumentPickerModeImport];
+    
+    // Choose folder
+    UIDocumentPickerViewController* documentPicker =
+          [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[@"public.folder"]
+                                                                 inMode:UIDocumentPickerModeOpen];
+    
+    documentPicker.delegate = self;
+    
+    documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
+    
+    [self presentViewController:documentPicker animated:true completion:nil];
+}
+
+
+#pragma mark - DocumentPickerDelegate
+- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls
+{
+   //Access folder
+    if ( [urls[0] startAccessingSecurityScopedResource] )
+    {
+        
+        //Construct the url: folder + name.extension
+        NSURL *destURLPath = [urls[0] URLByAppendingPathComponent:@"Test.txt"];
+        
+        NSString *dataToWrite = @"This text is going into the file!";
+        
+        NSError *error = nil;
+        
+        //Write the data
+        if( ![dataToWrite writeToURL:destURLPath atomically:true encoding:NSUTF8StringEncoding error:&error] )
+            NSLog(@"%@",[error localizedDescription]);
+
+        
+        //Read file case ---
+        NSData *fileData = [NSData dataWithContentsOfURL:destURLPath options:NSDataReadingUncached error:&error];
+        
+        if( fileData == nil )
+            NSLog(@"%@",[error localizedDescription]);
+        
+        [urls[0] stopAccessingSecurityScopedResource];
+    }
+    else
+    {
+        NSLog(@"startAccessingSecurityScopedResource failed");
+    }
+}
 
 @end

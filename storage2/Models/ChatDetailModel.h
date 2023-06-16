@@ -20,7 +20,12 @@ typedef NS_ENUM(NSInteger, MediaType) {
 
 @property (nonatomic,readonly,copy) NSString* name;
 @property (nonatomic,readonly,copy) NSString* chatId;
+@property (nonatomic,readonly, copy) NSString* extenion;
+@property (nonatomic,readonly, copy) NSDate* timeCreated;
+@property (nonatomic,readonly) NSUInteger* size;
 @property (nonatomic,readonly) MediaType type;
+@property (nonatomic,readonly) NSUInteger* duration;
+
 
 + (instancetype)new NS_UNAVAILABLE;
 
