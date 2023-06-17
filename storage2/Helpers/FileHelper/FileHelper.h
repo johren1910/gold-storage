@@ -36,8 +36,6 @@
 
 +(UIImage *)readFileAtPathAsImage:(NSString *)path;
 
-+(NSMutableArray *)readFileAtPathAsMutableArray:(NSString *)path;
-
 +(BOOL)removeItemAtPath:(NSString *)path;
 
 +(NSString *)sizeFormattedOfFileAtPath:(NSString *)path;

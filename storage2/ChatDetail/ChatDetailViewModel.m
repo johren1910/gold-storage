@@ -49,7 +49,6 @@
 //                 [[ChatDetailModel alloc] initWithName:@"nice ba43" chatId:@"15"]
 //    ];
     
-//    _chats = testData;
     _filteredChats = _chats;
     successCompletion(_filteredChats);
 }
@@ -95,7 +94,7 @@
 
 - (void)addImage:(UIImage *)image {
     __weak ChatDetailViewModel *weakself = self;
-    dispatch_queue_t myQueue = dispatch_queue_create("com.image.data", DISPATCH_QUEUE_SERIAL);
+    dispatch_queue_t myQueue = dispatch_queue_create("storage.image.data", DISPATCH_QUEUE_CONCURRENT);
     dispatch_async(myQueue, ^{
         
         NSData *data = UIImagePNGRepresentation(image);

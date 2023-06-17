@@ -9,6 +9,12 @@
 #import "ChatModel.h"
 #import "ChatSectionController.h"
 
+@protocol HomeViewModelDelegate
+
+- (void) didUpdateData;
+
+@end
+
 @interface HomeViewModel : NSObject
 
 - (void)getData:(void (^)(NSMutableArray<ChatModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion;
@@ -17,6 +23,8 @@
 - (NSUInteger) numberOfSections;
 - (void)createNewChat: (NSString *) name;
 
-@property (copy,nonatomic) NSMutableArray<ChatModel *> *chats;
+@property (strong,nonatomic) NSMutableArray<ChatModel *> *chats;
+
+@property (nonatomic, weak) id <HomeViewModelDelegate>  delegate;
 
 @end

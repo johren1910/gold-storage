@@ -11,13 +11,10 @@
 
 @interface ChatModel: NSObject <IGListDiffable, NSCopying>
 
-@property (nonatomic,readonly,copy) NSString* name;
-@property (nonatomic,readonly,copy) NSString* chatId;
+@property (nonatomic,readwrite,copy) NSString* name;
+@property (nonatomic,readwrite, copy) NSString* chatId;
 
 + (instancetype)new NS_UNAVAILABLE;
-
-- (instancetype)init NS_UNAVAILABLE;
-
 - (instancetype)initWithName:(NSString *)name chatId:(NSString *)chatId NS_DESIGNATED_INITIALIZER;
 
 @end

@@ -15,7 +15,7 @@
 #import "StorageViewController.h"
 
 
-@interface HomeViewController () <IGListAdapterDataSource>
+@interface HomeViewController () <IGListAdapterDataSource, HomeViewModelDelegate>
 
 @property (nonatomic, strong) IGListAdapter *adapter;
 @property (nonatomic, strong) HomeViewModel *viewModel;
@@ -33,6 +33,7 @@
     self = [super initWithCoder:coder];
     if (self) {
         self.viewModel = [[HomeViewModel alloc] init];
+        self.viewModel.delegate = self;
     }
     return self;
 }
@@ -45,6 +46,8 @@
     self.adapter.dataSource = self;
     
     UINib *cellNib = [UINib nibWithNibName:@"ChatCell" bundle:nil];
+    
+    
     [self.homeCollectionView registerNib:cellNib forCellWithReuseIdentifier:@"ChatCell"];
     [self getData];
 }
@@ -53,7 +56,7 @@
     if (!self) return nil;
     
     _viewModel = viewModel;
-    
+    _viewModel.delegate = self;
     return self;
 }
 
@@ -144,5 +147,9 @@
     [self.navigationController pushViewController:ivc animated:true];
 }
 
+#pragma mark - HomeViewModelDelegate
+- (void) didUpdateData {
+    [self.adapter reloadDataWithCompletion:nil];
+}
 
 @end
