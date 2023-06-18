@@ -10,10 +10,10 @@
 #import "ChatDetailSectionController.h"
 
 #import "ChatDetailCell.h"
-#import "ChatDetailModel.h"
+#import "ChatMessageModel.h"
 
 @implementation ChatDetailSectionController {
-    ChatDetailModel *_chat;
+    ChatMessageModel *_chat;
 }
 
 #pragma mark - IGListSectionController Overrides
@@ -43,7 +43,7 @@
 }
 
 - (void)didUpdateToObject:(id)object {
-    _chat = (ChatDetailModel *)object;
+    _chat = (ChatMessageModel *)object;
 }
 
 // MARK: - ListSingleSectionControllerDelegate

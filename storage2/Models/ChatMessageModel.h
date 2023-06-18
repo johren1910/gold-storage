@@ -1,5 +1,5 @@
 //
-//  ChatDetailModel.h
+//  ChatMessageModel.h
 //  storage2
 //
 //  Created by LAP14885 on 15/06/2023.
@@ -10,18 +10,14 @@
 @import IGListDiffKit;
 #import "MediaType.h"
 
-@interface ChatDetailModel: NSObject <IGListDiffable, NSCopying>
+@interface ChatMessageModel: NSObject <IGListDiffable, NSCopying>
 
 @property (nonatomic,readwrite,copy) NSString* name;
-@property (nonatomic,readonly,copy) NSString* chatId;
-@property (nonatomic,readwrite, copy) NSString* extenion;
-@property (nonatomic,readwrite, copy) NSDate* timeCreated;
+@property (nonatomic,readonly,copy) NSString* messageId;
+@property (nonatomic,readwrite, copy) NSDate* createdAt;
+@property (nonatomic,readwrite) NSUInteger* duration;
 @property (nonatomic,readwrite) float size;
 @property (nonatomic,readwrite) MediaType type;
-@property (nonatomic,readwrite) NSUInteger* duration;
-@property (nonatomic,readwrite) NSData* data;
-@property (nonatomic,readwrite) UIImage* image;
-
 
 + (instancetype)new NS_UNAVAILABLE;
 

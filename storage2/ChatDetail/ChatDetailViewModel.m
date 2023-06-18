@@ -8,12 +8,12 @@
 #import <Foundation/Foundation.h>
 
 #import "ChatDetailViewModel.h"
-#import "ChatDetailModel.h"
+#import "ChatMessageModel.h"
 #import "MediaType.h"
 
 @interface ChatDetailViewModel ()
 
-@property (retain,nonatomic) NSMutableArray<ChatDetailModel *> *chats;
+@property (retain,nonatomic) NSMutableArray<ChatMessageModel *> *chats;
 @end
 
 @implementation ChatDetailViewModel
@@ -27,33 +27,33 @@
     return self;
 }
 
-- (void)getData:(void (^)(NSArray<ChatDetailModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion {
+- (void)getData:(void (^)(NSArray<ChatMessageModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion {
     
     //TODO: FETCH DATA HERE
     
 //    NSArray *testData = [[NSArray alloc] init];
-//    testData = @[[[ChatDetailModel alloc] initWithName:@"VIDEO name" chatId:@"1" type: Video],
-//                 [[ChatDetailModel alloc] initWithName:@"anothoer PICTURE" chatId:@"2" type: Picture],
-//                   [[ChatDetailModel alloc] initWithName:@"nice bye" chatId:@"3"],
-//                   [[ChatDetailModel alloc] initWithName:@"nice ba" chatId:@"4"],
-//                   [[ChatDetailModel alloc] initWithName:@"nice bubo" chatId:@"5"],
-//                 [[ChatDetailModel alloc] initWithName:@"nice ba 1 " chatId:@"6"],
-//                 [[ChatDetailModel alloc] initWithName:@"nice ba2 " chatId:@"7"],
-//                 [[ChatDetailModel alloc] initWithName:@"nice ba3" chatId:@"8"],
-//                 [[ChatDetailModel alloc] initWithName:@"nice b5a" chatId:@"9"],
-//                 [[ChatDetailModel alloc] initWithName:@"nice b6a" chatId:@"10"],
-//                 [[ChatDetailModel alloc] initWithName:@"nice b87a" chatId:@"11"],
-//                 [[ChatDetailModel alloc] initWithName:@"nice b9a" chatId:@"12"],
-//                 [[ChatDetailModel alloc] initWithName:@"nice b96a" chatId:@"13"],
-//                 [[ChatDetailModel alloc] initWithName:@"nice ba9" chatId:@"14"],
-//                 [[ChatDetailModel alloc] initWithName:@"nice ba43" chatId:@"15"]
+//    testData = @[[[ChatMessageModel alloc] initWithName:@"VIDEO name" chatId:@"1" type: Video],
+//                 [[ChatMessageModel alloc] initWithName:@"anothoer PICTURE" chatId:@"2" type: Picture],
+//                   [[ChatMessageModel alloc] initWithName:@"nice bye" chatId:@"3"],
+//                   [[ChatMessageModel alloc] initWithName:@"nice ba" chatId:@"4"],
+//                   [[ChatMessageModel alloc] initWithName:@"nice bubo" chatId:@"5"],
+//                 [[ChatMessageModel alloc] initWithName:@"nice ba 1 " chatId:@"6"],
+//                 [[ChatMessageModel alloc] initWithName:@"nice ba2 " chatId:@"7"],
+//                 [[ChatMessageModel alloc] initWithName:@"nice ba3" chatId:@"8"],
+//                 [[ChatMessageModel alloc] initWithName:@"nice b5a" chatId:@"9"],
+//                 [[ChatMessageModel alloc] initWithName:@"nice b6a" chatId:@"10"],
+//                 [[ChatMessageModel alloc] initWithName:@"nice b87a" chatId:@"11"],
+//                 [[ChatMessageModel alloc] initWithName:@"nice b9a" chatId:@"12"],
+//                 [[ChatMessageModel alloc] initWithName:@"nice b96a" chatId:@"13"],
+//                 [[ChatMessageModel alloc] initWithName:@"nice ba9" chatId:@"14"],
+//                 [[ChatMessageModel alloc] initWithName:@"nice ba43" chatId:@"15"]
 //    ];
     
     _filteredChats = _chats;
     successCompletion(_filteredChats);
 }
 
-- (ChatDetailModel *)itemAtIndexPath:(NSIndexPath *)indexPath {
+- (ChatMessageModel *)itemAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row >= self.filteredChats.count) {
         return nil;
     }
@@ -88,7 +88,7 @@
     return 1;
 }
 
-- (NSArray<ChatDetailModel*>*) items {
+- (NSArray<ChatMessageModel*>*) items {
     return _filteredChats;
 }
 
@@ -99,11 +99,11 @@
         
         NSData *data = UIImagePNGRepresentation(image);
         float size = ((float)data.length/1024.0f)/1024.0f; // MB
-        ChatDetailModel *new = [[ChatDetailModel alloc] initWithName:[[NSUUID UUID] UUIDString] chatId:[[NSUUID UUID] UUIDString]];
+        ChatMessageModel *new = [[ChatMessageModel alloc] initWithName:[[NSUUID UUID] UUIDString] chatId:[[NSUUID UUID] UUIDString]];
         new.size = size;
         new.type = Picture;
-        new.data = data;
-        new.image = image;
+//        new.data = data;
+//        new.image = image;
         [weakself.chats insertObject:new atIndex:0];
         weakself.filteredChats = weakself.chats;
         // Reload data
@@ -116,13 +116,13 @@
 - (void)addFile:(NSData *)data {
     __weak ChatDetailViewModel *weakself = self;
     float size = ((float)data.length/1024.0f)/1024.0f; // MB
-    ChatDetailModel *new = [[ChatDetailModel alloc] initWithName:[[NSUUID UUID] UUIDString] chatId:[[NSUUID UUID] UUIDString]];
+    ChatMessageModel *new = [[ChatMessageModel alloc] initWithName:[[NSUUID UUID] UUIDString] chatId:[[NSUUID UUID] UUIDString]];
     new.size = size;
-    new.type = File;
-    new.data = data;
+//    new.type = File;
+//    new.data = data;
     //TEMP IMAGE
     if (@available(iOS 13.0, *)) {
-        new.image = [UIImage systemImageNamed:@"doc"];
+//        new.image = [UIImage systemImageNamed:@"doc"];
     } else {
         // Fallback on earlier versions
     }

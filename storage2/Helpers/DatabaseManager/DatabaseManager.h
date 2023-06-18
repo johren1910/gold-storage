@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import <sqlite3.h>
-#import "ChatModel.h"
+#import "ChatRoomModel.h"
 
 @interface DatabaseManager : NSObject {
    NSString *databasePath;
@@ -15,8 +15,8 @@
 
 +(DatabaseManager*)getSharedInstance;
 -(BOOL)createChatDatabase;
--(BOOL) saveChatData:(NSString*)chatId name:(NSString*)name;
--(ChatModel*) findChatsById:(NSString*)chatId;
--(NSArray<ChatModel*>*) getChatsByPage:(int)page;
+-(BOOL) saveChatRoomData:(NSString*)chatId name:(NSString*)name;
+-(ChatRoomModel*) findChatsById:(NSString*)chatId;
+-(NSArray<ChatRoomModel*>*) getChatsByPage:(int)page;
 
 @end

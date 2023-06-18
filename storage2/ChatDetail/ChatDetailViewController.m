@@ -68,7 +68,7 @@
 - (void)getData {
     __weak ChatDetailViewController *weakself = self;
     
-    [self.viewModel getData:^(NSArray<ChatDetailModel *> * _Nonnull chats){
+    [self.viewModel getData:^(NSArray<ChatMessageModel *> * _Nonnull chats){
         
         [weakself.adapter reloadDataWithCompletion:nil];
         
@@ -95,7 +95,7 @@
 
 #pragma mark - ChatDetailSectionControllerDelegate
 
-- (void) didSelect: (ChatModel*) chat {
+- (void) didSelect: (ChatRoomModel*) chat {
     NSLog(@"GOOOOOD %@", chat);
 }
 

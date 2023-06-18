@@ -7,12 +7,13 @@
 
 #import "HomeViewController.h"
 @import IGListKit;
-#import "ChatModel.h"
+#import "ChatRoomModel.h"
 #import "ChatCell.h"
 #import "ChatSectionController.h"
 #import "HomeViewModel.h"
 #import "ChatDetailViewController.h"
 #import "StorageViewController.h"
+#import "Coordinator.h"
 
 
 @interface HomeViewController () <IGListAdapterDataSource, HomeViewModelDelegate>
@@ -28,14 +29,9 @@
 
 #pragma mark - View Lifecycle
 
-- (instancetype)initWithCoder:(NSCoder *)coder
-{
-    self = [super initWithCoder:coder];
-    if (self) {
-        self.viewModel = [[HomeViewModel alloc] init];
-        self.viewModel.delegate = self;
-    }
-    return self;
+- (void)setViewModel:(HomeViewModel *)viewModel {
+    _viewModel = viewModel;
+    _viewModel.delegate = self;
 }
 
 - (void)viewDidLoad {
@@ -52,14 +48,6 @@
     [self getData];
 }
 
-- (instancetype)initWithViewModel:(HomeViewModel *)viewModel {
-    if (!self) return nil;
-    
-    _viewModel = viewModel;
-    _viewModel.delegate = self;
-    return self;
-}
-
 - (void)viewWillAppear:(BOOL)animated {
     
 }
@@ -67,7 +55,7 @@
 - (void)getData {
     __weak HomeViewController *weakself = self;
     
-    [self.viewModel getData:^(NSMutableArray<ChatModel *> * _Nonnull chats){
+    [self.viewModel getData:^(NSMutableArray<ChatRoomModel *> * _Nonnull chats){
         
         [weakself.adapter reloadDataWithCompletion:nil];
         
@@ -94,7 +82,7 @@
 
 #pragma mark - ChatSectionControllerDelegate
 
-- (void) didSelect: (ChatModel*) chat {
+- (void) didSelect: (ChatRoomModel*) chat {
 
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"ChatDetailView" bundle:nil];
     ChatDetailViewController *ivc = [storyboard instantiateViewControllerWithIdentifier:@"ChatDetailViewController"];
@@ -139,12 +127,15 @@
 }
 - (IBAction)onSettingBtnTouched:(id)sender {
     
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"StorageView" bundle:nil];
-    StorageViewController *ivc = [storyboard instantiateViewControllerWithIdentifier:@"StorageViewController"];
+    [_viewModel.coordinatorDelegate didTapSetting];
     
-    ivc.title = @"Storage";
-    
-    [self.navigationController pushViewController:ivc animated:true];
+    // Migrate to coordinator
+//    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"StorageView" bundle:nil];
+//    StorageViewController *ivc = [storyboard instantiateViewControllerWithIdentifier:@"StorageViewController"];
+//
+//    ivc.title = @"Storage";
+//
+//    [self.navigationController pushViewController:ivc animated:true];
 }
 
 #pragma mark - HomeViewModelDelegate

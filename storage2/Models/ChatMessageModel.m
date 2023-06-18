@@ -1,22 +1,34 @@
 //
-//  ChatModel.m
-//  storage
+//  ChatMessageModel.m
+//  storage2
 //
 //  Created by LAP14885 on 15/06/2023.
 //
 
-#import "ChatModel.h"
+#import "ChatMessageModel.h"
+#import "MediaType.h"
+@implementation ChatMessageModel
 
-@implementation ChatModel
-
-- (instancetype)initWithName:(NSString *)name chatId:(NSString *)chatId
+- (instancetype)initWithName:(NSString *)name chatId:(NSString *)chatId type:(MediaType)type
 {
   if ((self = [super init])) {
     _name = [name copy];
-    _chatId = [chatId copy];
+    _messageId = [chatId copy];
+    _type = type;
   }
 
   return self;
+}
+
+- (instancetype)initWithName:(NSString *)name chatId:(NSString *)chatId
+{
+ if ((self = [super init])) {
+   _name = [name copy];
+   _messageId = [chatId copy];
+     _type = File;
+ }
+
+ return self;
 }
 
 - (id)copyWithZone:(nullable NSZone *)zone
@@ -26,17 +38,17 @@
 
 - (NSString *)description
 {
-  return [NSString stringWithFormat:@"%@ - \n\t name: %@; \n\t chatId: %@; \n", [super description], _name, _chatId];
+  return [NSString stringWithFormat:@"%@ - \n\t name: %@; \n\t chatId: %@; \n type: @type", [super description], _name, _messageId, _type];
 }
 
 - (id<NSObject>)diffIdentifier
 {
-  return _chatId;
+  return _messageId;
 }
 
 - (NSUInteger)hash
 {
-  NSUInteger subhashes[] = {[_name hash], [_chatId hash]};
+  NSUInteger subhashes[] = {[_name hash], [_messageId hash]};
   NSUInteger result = subhashes[0];
   for (int ii = 1; ii < 3; ++ii) {
     unsigned long long base = (((unsigned long long)result) << 32 | subhashes[ii]);
@@ -51,7 +63,7 @@
   return result;
 }
 
-- (BOOL)isEqual:(ChatModel *)object
+- (BOOL)isEqual:(ChatMessageModel *)object
 {
   if (self == object) {
     return YES;
@@ -60,7 +72,7 @@
   }
   return
     (_name == object->_name ? YES : [_name isEqual:object->_name]) &&
-    (_chatId == object->_chatId ? YES : [_chatId isEqual:object->_chatId]);
+    (_messageId == object->_messageId ? YES : [_messageId isEqual:object->_messageId]);
 }
 
 - (BOOL)isEqualToDiffableObject:(nullable id<IGListDiffable>)object

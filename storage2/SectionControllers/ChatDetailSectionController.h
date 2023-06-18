@@ -6,11 +6,11 @@
 //
 
 @import IGListKit;
-#import "ChatDetailModel.h"
+#import "ChatMessageModel.h"
 
 @protocol ChatDetailSectionControllerDelegate <NSObject>
 
-- (void) didSelect: (ChatDetailModel*) chat;
+- (void) didSelect: (ChatMessageModel*) chat;
 
 @end
 

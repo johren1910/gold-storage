@@ -10,10 +10,10 @@
 #import "ChatSectionController.h"
 
 #import "ChatCell.h"
-#import "ChatModel.h"
+#import "ChatRoomModel.h"
 
 @implementation ChatSectionController {
-    ChatModel *_chat;
+    ChatRoomModel *_chat;
 }
 
 #pragma mark - IGListSectionController Overrides
@@ -43,7 +43,7 @@
 
 
 - (void)didUpdateToObject:(id)object {
-    _chat = (ChatModel *)object;
+    _chat = (ChatRoomModel *)object;
 }
 
 // MARK: - ListSingleSectionControllerDelegate

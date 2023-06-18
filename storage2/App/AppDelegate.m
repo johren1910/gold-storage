@@ -7,9 +7,10 @@
 
 #import "AppDelegate.h"
 #import "HomeViewController.h"
+#import "AppCoordinator.h"
 
 @interface AppDelegate ()
-
+@property (strong,nonatomic) AppCoordinator * appCoordinator;
 @end
 
 @implementation AppDelegate
@@ -20,12 +21,8 @@
     
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen]bounds]];
     
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"HomeView" bundle:nil];
-    HomeViewController *ivc = [storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"];
-    UINavigationController *navigationController=[[UINavigationController alloc] initWithRootViewController:ivc];
-    
-    self.window.rootViewController = navigationController;
-    [self.window makeKeyAndVisible];
+    _appCoordinator = [[AppCoordinator alloc] init:_window];
+    [_appCoordinator start];
     
     return YES;
 }

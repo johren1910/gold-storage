@@ -6,11 +6,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ChatDetailModel.h"
+#import "ChatMessageModel.h"
 #import "ChatDetailViewModel.h"
 #import "ChatDetailViewController.h"
 @import IGListKit;
-#import "ChatModel.h"
+#import "ChatRoomModel.h"
 #import "ChatDetailViewModel.h"
 #import "MediaType.h"
 #import <MobileCoreServices/MobileCoreServices.h>

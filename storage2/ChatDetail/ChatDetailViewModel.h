@@ -5,7 +5,7 @@
 //  Created by LAP14885 on 15/06/2023.
 //
 #import <Foundation/Foundation.h>
-#import "ChatDetailModel.h"
+#import "ChatMessageModel.h"
 #import "ChatDetailSectionController.h"
 
 @protocol ChatDetailViewModelDelegate <NSObject>
@@ -16,14 +16,14 @@
 
 @interface ChatDetailViewModel : NSObject
 
-- (void)getData:(void (^)(NSArray<ChatDetailModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion;
+- (void)getData:(void (^)(NSArray<ChatMessageModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion;
 - (void)changeSegment: (NSUInteger*) index;
-- (ChatDetailModel *)itemAtIndexPath:(NSIndexPath *)indexPath;
+- (ChatMessageModel *)itemAtIndexPath:(NSIndexPath *)indexPath;
 - (NSUInteger) numberOfSections;
 - (void)addImage:(UIImage *)image;
 - (void)addFile:(NSData *)data;
 
 @property (nonatomic, weak) id <ChatDetailViewModelDelegate>  delegate;
-@property (copy,nonatomic) NSArray<ChatDetailModel *> *filteredChats;
+@property (copy,nonatomic) NSArray<ChatMessageModel *> *filteredChats;
 
 @end

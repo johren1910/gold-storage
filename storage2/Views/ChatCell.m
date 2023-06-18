@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ChatModel.h"
+#import "ChatRoomModel.h"
 #import "ChatCell.h"
 
 @interface ChatCell ()
@@ -46,14 +46,14 @@
     [super layoutSubviews];
 }
 
-static NSAttributedString *AttributedStringForChat(ChatModel *chat) {
+static NSAttributedString *AttributedStringForChat(ChatRoomModel *chat) {
     NSMutableAttributedString *string = [NSMutableAttributedString new];
     [string appendAttributedString:[[NSAttributedString alloc] initWithString:chat.name
                                                                    attributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:15.0]}]];
     return string;
 }
 
-- (void)setChat:(ChatModel *)chat {
+- (void)setChat:(ChatRoomModel *)chat {
     
     _chat = [chat copy];
 

@@ -1,35 +1,28 @@
 //
-//  ChatDetailModel.m
-//  storage2
+//  ChatRoomModel.m
+//  storage
 //
 //  Created by LAP14885 on 15/06/2023.
 //
 
-#import "ChatDetailModel.h"
-#import "MediaType.h"
-@implementation ChatDetailModel
+#import "ChatRoomModel.h"
 
+@implementation ChatRoomModel
 
-- (instancetype)initWithName:(NSString *)name chatId:(NSString *)chatId type:(MediaType)type
+- (instancetype)initWithName:(NSString *)name chatId:(NSString *)chatId
+{
+    return [self initWithName:name chatId:chatId messages:@[]];
+}
+
+- (instancetype)initWithName:(NSString *)name chatId:(NSString *)chatId messages:(NSArray<ChatMessageModel*>*) messages
 {
   if ((self = [super init])) {
     _name = [name copy];
     _chatId = [chatId copy];
-    _type = type;
+      _messages = [messages copy];
   }
 
   return self;
-}
-
-- (instancetype)initWithName:(NSString *)name chatId:(NSString *)chatId
-{
- if ((self = [super init])) {
-   _name = [name copy];
-   _chatId = [chatId copy];
-     _type = File;
- }
-
- return self;
 }
 
 - (id)copyWithZone:(nullable NSZone *)zone
@@ -64,7 +57,7 @@
   return result;
 }
 
-- (BOOL)isEqual:(ChatDetailModel *)object
+- (BOOL)isEqual:(ChatRoomModel *)object
 {
   if (self == object) {
     return YES;
@@ -82,4 +75,3 @@
 }
 
 @end
-

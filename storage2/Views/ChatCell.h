@@ -5,12 +5,12 @@
 //  Created by LAP14885 on 15/06/2023.
 //
 
-@class ChatModel;
+@class ChatRoomModel;
 
 @protocol ChatCellDelegate <NSObject>
-- (void) didSelectDelete: (ChatModel*) chat;
+- (void) didSelectDelete: (ChatRoomModel*) chat;
 @end
 
 @interface ChatCell : UICollectionViewCell
-@property (nonatomic, copy) ChatModel *chat;
+@property (nonatomic, copy) ChatRoomModel *chat;
 @end

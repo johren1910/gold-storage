@@ -6,11 +6,11 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ChatModel.h"
+#import "ChatRoomModel.h"
 #import "HomeViewModel.h"
 
 @interface HomeViewController : UIViewController <ChatSectionControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UICollectionView *homeCollectionView;
-- (instancetype)initWithViewModel:(HomeViewModel *)viewModel;
+- (void)setViewModel:(HomeViewModel *)viewModel;
 @end

@@ -40,7 +40,7 @@ static sqlite3_stmt *statement = nil;
         if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
             char *errMsg;
             const char *sql_stmt =
-            "create table if not exists chatDetail (chatId integer primary key, name text)";
+            "create table if not exists chatRoom (chatId integer primary key, name text)";
             
             if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg) != SQLITE_OK) {
                 isSuccess = NO;
@@ -56,16 +56,52 @@ static sqlite3_stmt *statement = nil;
     return isSuccess;
 }
 
-- (BOOL) saveChatData:(NSString*)chatId name:(NSString*)name; {
+-(BOOL)createChatDetailDatabase {
+    NSString *docsDir;
+    NSArray *dirPaths;
+    
+    // Get the documents directory
+    dirPaths = NSSearchPathForDirectoriesInDomains
+    (NSDocumentDirectory, NSUserDomainMask, YES);
+    docsDir = dirPaths[0];
+    
+    // Build the path to the database file
+    databasePath = [[NSString alloc] initWithString:
+                    [docsDir stringByAppendingPathComponent: @"chat.db"]];
+    BOOL isSuccess = YES;
+    NSFileManager *filemgr = [NSFileManager defaultManager];
+    
+    if ([filemgr fileExistsAtPath: databasePath ] == NO) {
+        const char *dbpath = [databasePath UTF8String];
+        if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
+            char *errMsg;
+            const char *sql_stmt =
+            "create table if not exists chat (chatId integer primary key, name text)";
+            
+            if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg) != SQLITE_OK) {
+                isSuccess = NO;
+                NSLog(@"Failed to create table");
+            }
+            sqlite3_close(database);
+            return  isSuccess;
+        } else {
+            isSuccess = NO;
+            NSLog(@"Failed to open/create database");
+        }
+    }
+    return isSuccess;
+}
+
+
+- (BOOL) saveChatRoomData:(NSString*)chatId name:(NSString*)name; {
     
     BOOL result = NO;
     const char *dbpath = [databasePath UTF8String];
     
     if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
-        NSString *insertSQL = [NSString stringWithFormat:@"insert into chatDetail (chatId,name) values (\"%@\",\"%@\")",chatId, name];
+        NSString *insertSQL = [NSString stringWithFormat:@"insert into chatRoom (chatId,name) values (\"%@\",\"%@\")",chatId, name];
         const char *insert_stmt = [insertSQL UTF8String];
         sqlite3_prepare_v2(database, insert_stmt,-1, &statement, NULL);
-        
         
         if (sqlite3_step(statement) == SQLITE_DONE) {
             result = YES;
@@ -79,13 +115,13 @@ static sqlite3_stmt *statement = nil;
     return result;
 }
 
-- (ChatModel*) findChatById:(NSString*)chatId {
+- (ChatRoomModel*) findChatById:(NSString*)chatId {
     const char *dbpath = [databasePath UTF8String];
     
-    ChatModel* result = nil;
+    ChatRoomModel* result = nil;
     if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
         NSString *querySQL = [NSString stringWithFormat:
-                              @"select chatId, name from chatDetail where chatId=\"%@\"",chatId];
+                              @"select chatId, name from chatRoom where chatId=\"%@\"",chatId];
         const char *query_stmt = [querySQL UTF8String];
         
         if (sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK) {
@@ -98,7 +134,7 @@ static sqlite3_stmt *statement = nil;
                                   (const char *) sqlite3_column_text(statement, 1)];
                 
                 
-                result = [[ChatModel alloc] initWithName:name chatId:chatId];
+                result = [[ChatRoomModel alloc] initWithName:name chatId:chatId];
                 
             } else {
                 NSLog(@"Not found");
@@ -113,20 +149,20 @@ static sqlite3_stmt *statement = nil;
     return nil;
 }
 
-- (NSArray<ChatModel*>*) getChatsByPage:(int)page; {
+- (NSArray<ChatRoomModel*>*) getChatsByPage:(int)page; {
     const char *dbpath = [databasePath UTF8String];
     int limit = page * 10;
-    NSMutableArray<ChatModel*>* result = [@[] mutableCopy] ;
+    NSMutableArray<ChatRoomModel*>* result = [@[] mutableCopy] ;
     
     if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
         NSString *querySQL = [NSString stringWithFormat:
-                              @"select * from chatDetail order by chatId DESC limit %d ", limit];
+                              @"select * from chatRoom order by chatId DESC limit %d ", limit];
         const char *query_stmt = [querySQL UTF8String];
         if (sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK) {
             
             while (sqlite3_step(statement)==SQLITE_ROW)
             {
-                ChatModel *chat = [[ChatModel alloc] init];
+                ChatRoomModel *chat = [[ChatRoomModel alloc] init];
                 chat.chatId = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 0)];
                 chat.name = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 1)];
                 [result addObject:chat];

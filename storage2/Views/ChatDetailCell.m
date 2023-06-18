@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ChatDetailModel.h"
+#import "ChatMessageModel.h"
 #import "ChatDetailCell.h"
 
 @interface ChatDetailCell ()
@@ -44,12 +44,12 @@
    
 }
 
-- (void)setChat:(ChatDetailModel *)chat {
+- (void)setChat:(ChatMessageModel *)chat {
     
     _chat = [chat copy];
     
     self.sizeLabel.text = [NSString stringWithFormat:@"%.1f Mb", _chat.size];
-    self.thumbnailImageView.image = chat.image;
+//    self.thumbnailImageView.image = chat.image;
     [self.selectBtn.titleLabel setText:nil];
     
     switch (_chat.type) {

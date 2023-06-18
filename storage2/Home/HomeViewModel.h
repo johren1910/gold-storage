@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ChatModel.h"
+#import "ChatRoomModel.h"
 #import "ChatSectionController.h"
 
 @protocol HomeViewModelDelegate
@@ -15,16 +15,23 @@
 
 @end
 
+@protocol HomeViewModelCoordinatorDelegate <NSObject>
+
+-(void)didTapSetting;
+
+@end
+
 @interface HomeViewModel : NSObject
 
-- (void)getData:(void (^)(NSMutableArray<ChatModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion;
+- (void)getData:(void (^)(NSMutableArray<ChatRoomModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion;
 
-- (ChatModel *)itemAtIndexPath:(NSIndexPath *)indexPath;
+- (ChatRoomModel *)itemAtIndexPath:(NSIndexPath *)indexPath;
 - (NSUInteger) numberOfSections;
 - (void)createNewChat: (NSString *) name;
 
-@property (strong,nonatomic) NSMutableArray<ChatModel *> *chats;
+@property (strong,nonatomic) NSMutableArray<ChatRoomModel *> *chats;
 
 @property (nonatomic, weak) id <HomeViewModelDelegate>  delegate;
+@property (nonatomic, strong) id <HomeViewModelCoordinatorDelegate>  coordinatorDelegate;
 
 @end
