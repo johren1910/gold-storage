@@ -95,6 +95,7 @@
     [self.selectBtn.titleLabel setText:nil];
     [self.typeIconView setHidden:true];
     [self.timeLabel setHidden:true];
+    [self.thumbnailImageView setImage:nil];
     
     switch (_chat.type) {
         case Video:

@@ -21,7 +21,7 @@
 #pragma mark - View Lifecycle
 
 - (void)didUpdateData {
-    [_adapter reloadDataWithCompletion:nil];
+    [_adapter performUpdatesAnimated:true completion:nil];
 }
 
 - (void)viewDidLoad {
@@ -40,8 +40,16 @@
 - (void) segmentChanged: (UISegmentedControl*) sender {
     NSLog(@"SEGMENT CHANGED %ld", (long)sender.selectedSegmentIndex);
     _selectedIndex = sender.selectedSegmentIndex;
+    
+    __weak ChatDetailViewController *weakself = self;
+    dispatch_queue_t myQueue = dispatch_queue_create("storage.image.data", DISPATCH_QUEUE_CONCURRENT);
+    
+    dispatch_async(myQueue, ^{
+        [weakself.viewModel changeSegment:_selectedIndex];
+    });
+                
     [_viewModel changeSegment:_selectedIndex];
-    [self.adapter reloadDataWithCompletion:nil];
+    [self.adapter performUpdatesAnimated:true completion:nil];
 }
 
 - (instancetype)initWithViewModel:(ChatDetailViewModel *)viewModel {
@@ -61,7 +69,7 @@
     
     [self.viewModel getData:^(NSArray<ChatMessageModel *> * _Nonnull chats){
         
-        [weakself.adapter reloadDataWithCompletion:nil];
+        [weakself.adapter performUpdatesAnimated:true completion:nil];
         
     } error:^(NSError * _Nonnull error) {
         
@@ -137,18 +145,15 @@
 didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
     NSString *mediaType = [info objectForKey: UIImagePickerControllerMediaType];
-    [self dismissViewControllerAnimated:NO completion:nil];
     if (CFStringCompare ((__bridge_retained CFStringRef)mediaType, kUTTypeImage, 0) == kCFCompareEqualTo)
     {
         UIImage *image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
         [_viewModel addImage:image];
         [picker dismissViewControllerAnimated:YES completion:nil];
-        [_adapter reloadDataWithCompletion:nil];
     }
 }
 
 - (void)requestAuthorizationWithRedirectionToSettings {
-    dispatch_async(dispatch_get_main_queue(), ^{
         PHAuthorizationStatus status = [PHPhotoLibrary authorizationStatus];
         if (status == PHAuthorizationStatusAuthorized)
         {
@@ -184,7 +189,6 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
                 }
             }];
         }
-    });
 }
 -(void)imagePickerControllerDidCancel:(UIImagePickerController *)picker
 {

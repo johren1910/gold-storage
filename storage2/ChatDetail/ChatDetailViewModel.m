@@ -72,9 +72,12 @@
 }
 
 - (void)changeSegment: (NSUInteger*) index {
-    
+    __weak ChatDetailViewModel *weakself = self;
     if (index == 0) {
         _filteredChats = _messages;
+        dispatch_async( dispatch_get_main_queue(), ^{
+            [weakself.delegate didUpdateData];
+        });
         return;
     }
     
@@ -92,6 +95,11 @@
     
     NSArray *filteredArray = [_messages filteredArrayUsingPredicate:predicate];
     _filteredChats = filteredArray;
+    
+   
+    dispatch_async( dispatch_get_main_queue(), ^{
+        [weakself.delegate didUpdateData];
+    });
 }
 
 - (NSUInteger) numberOfSections {

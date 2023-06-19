@@ -56,7 +56,7 @@
     
     [self.viewModel getData:^(NSMutableArray<ChatRoomModel *> * _Nonnull chats){
         
-        [weakself.adapter reloadDataWithCompletion:nil];
+        [weakself.adapter performUpdatesAnimated:true completion:nil];
         
     } error:^(NSError * _Nonnull error) {
         
@@ -111,7 +111,7 @@
            if ([name length] != 0) {
                [weakSelf.viewModel createNewChat:name];
                
-               [weakSelf.adapter reloadDataWithCompletion:nil];
+               [weakSelf.adapter performUpdatesAnimated:true completion:nil];
            }
            
        }]];
@@ -134,7 +134,7 @@
 
 #pragma mark - HomeViewModelDelegate
 - (void) didUpdateData {
-    [self.adapter reloadDataWithCompletion:nil];
+    [self.adapter performUpdatesAnimated:true completion:nil];
 }
 
 @end
