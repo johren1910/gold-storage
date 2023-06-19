@@ -26,6 +26,8 @@
     }
     _rootViewController = [[UINavigationController alloc] init];
     
+    _databaseManager = [DatabaseManager getSharedInstance];
+    
     _window.rootViewController = _rootViewController;
     [_window makeKeyAndVisible];
     [self homeFLow];
@@ -34,6 +36,7 @@
 - (void) homeFLow {
     HomeCoordinator* homeCoordinator = [[HomeCoordinator alloc] init:_rootViewController];
     
+    homeCoordinator.databaseManager = _databaseManager;
     homeCoordinator.delegate = self;
     [self store:homeCoordinator];
     [homeCoordinator start];

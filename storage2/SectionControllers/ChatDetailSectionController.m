@@ -9,7 +9,7 @@
 
 #import "ChatDetailSectionController.h"
 
-#import "ChatDetailCell.h"
+#import "ChatMessageCell.h"
 #import "ChatMessageModel.h"
 
 @implementation ChatDetailSectionController {
@@ -33,7 +33,7 @@
 
 - (UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
     
-    ChatDetailCell *cell = (ChatDetailCell *)[self.collectionContext dequeueReusableCellWithNibName:@"ChatDetailCell" bundle:nil forSectionController:self atIndex:index];
+    ChatMessageCell *cell = (ChatMessageCell *)[self.collectionContext dequeueReusableCellWithNibName:@"ChatMessageCell" bundle:nil forSectionController:self atIndex:index];
     cell.chat = _chat;
     return cell;
 }

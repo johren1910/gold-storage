@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "ChatRoomModel.h"
 #import "ChatSectionController.h"
+#import "DatabaseManager.h"
 
 @protocol HomeViewModelDelegate
 
@@ -18,6 +19,7 @@
 @protocol HomeViewModelCoordinatorDelegate <NSObject>
 
 -(void)didTapSetting;
+-(void)didTapChatRoom: (ChatRoomModel*) chatRoom;
 
 @end
 
@@ -33,5 +35,6 @@
 
 @property (nonatomic, weak) id <HomeViewModelDelegate>  delegate;
 @property (nonatomic, strong) id <HomeViewModelCoordinatorDelegate>  coordinatorDelegate;
+@property (nonatomic, strong) DatabaseManager* databaseManager;
 
 @end

@@ -10,6 +10,7 @@
 #import "HomeViewModel.h"
 #import "ChatRoomModel.h"
 #import "DatabaseManager.h"
+#import "HashHelper.h"
 
 @interface HomeViewModel ()
 
@@ -31,10 +32,10 @@
     _chats = [[NSMutableArray alloc] init];
     dispatch_queue_t databaseQueue = dispatch_queue_create("storage.database", DISPATCH_QUEUE_CONCURRENT);
     
-    __weak DatabaseManager *weakDatabaseManager = [DatabaseManager getSharedInstance];
+    __weak DatabaseManager *weakDatabaseManager = _databaseManager;
     __weak HomeViewModel *weakself = self;
     dispatch_async(databaseQueue, ^{
-        NSArray<ChatRoomModel*>* result = [weakDatabaseManager getChatsByPage:1];
+        NSArray<ChatRoomModel*>* result = [weakDatabaseManager getChatRoomsByPage:1];
         NSLog(@"Nice %@", result);
         if (result != nil) {
             weakself.chats = [result mutableCopy];
@@ -65,17 +66,21 @@
 - (void)createNewChat: (NSString *) name {
 
     NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
-    NSString *chatId = [NSString stringWithFormat:@"%.0f", timeStamp];
+    NSString *chatRoomFormat = [NSString stringWithFormat:@"%lf-%@", timeStamp, name];
+    
+    NSString *chatRoomId = [HashHelper hashStringMD5:chatRoomFormat];
    
-    ChatRoomModel *newChat = [[ChatRoomModel alloc] initWithName:name chatId: chatId];
+    ChatRoomModel *newChat = [[ChatRoomModel alloc] initWithName:name chatRoomId: chatRoomId];
+    newChat.createdAt = timeStamp;
+    newChat.size = 0;
     [_chats insertObject:newChat atIndex: 0];
     
     dispatch_queue_t databaseQueue = dispatch_queue_create("storage.database", DISPATCH_QUEUE_CONCURRENT);
     
-    __weak DatabaseManager *weakDatabaseManager = [DatabaseManager getSharedInstance];
+    __weak DatabaseManager *weakDatabaseManager = [self databaseManager];
     dispatch_async(databaseQueue, ^{
         
-        [weakDatabaseManager saveChatRoomData:chatId name:name];
+        [weakDatabaseManager saveChatRoomData:newChat];
     });
 }
 @end

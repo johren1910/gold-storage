@@ -20,15 +20,6 @@
 
 #pragma mark - View Lifecycle
 
-- (instancetype)initWithCoder:(NSCoder *)coder
-{
-    self = [super initWithCoder:coder];
-    if (self) {
-        self.viewModel = [[ChatDetailViewModel alloc] init];
-    }
-    return self;
-}
-
 - (void)didUpdateData {
     [_adapter reloadDataWithCompletion:nil];
 }
@@ -42,8 +33,8 @@
     [_segmentBar addTarget:self action:@selector(segmentChanged:) forControlEvents:UIControlEventValueChanged];
     [self getData];
     
-    UINib *cellNib = [UINib nibWithNibName:@"ChatDetailCell" bundle:nil];
-    [self.collectionView registerNib:cellNib forCellWithReuseIdentifier:@"ChatDetailCell"];
+    UINib *cellNib = [UINib nibWithNibName:@"ChatMessageCell" bundle:nil];
+    [self.collectionView registerNib:cellNib forCellWithReuseIdentifier:@"ChatMessageCell"];
 }
 
 - (void) segmentChanged: (UISegmentedControl*) sender {

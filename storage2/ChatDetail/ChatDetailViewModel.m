@@ -10,18 +10,31 @@
 #import "ChatDetailViewModel.h"
 #import "ChatMessageModel.h"
 #import "MediaType.h"
+#import "FileHelper.h"
+#import "HashHelper.h"
 
 @interface ChatDetailViewModel ()
 
-@property (retain,nonatomic) NSMutableArray<ChatMessageModel *> *chats;
+@property (retain,nonatomic) NSMutableArray<ChatMessageModel *> *messages;
+@property (nonatomic, copy) ChatRoomModel *chatRoom;
 @end
 
 @implementation ChatDetailViewModel
 
+-(instancetype) initWithChatRoom: (ChatRoomModel*) chatRoom {
+    self = [super init];
+    if (self) {
+        self.messages = [[NSMutableArray alloc] init];
+    }
+    _chatRoom = chatRoom;
+    
+    return self;
+}
+
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.chats = [[NSMutableArray alloc] init];
+        self.messages = [[NSMutableArray alloc] init];
     }
     
     return self;
@@ -31,26 +44,23 @@
     
     //TODO: FETCH DATA HERE
     
-//    NSArray *testData = [[NSArray alloc] init];
-//    testData = @[[[ChatMessageModel alloc] initWithName:@"VIDEO name" chatId:@"1" type: Video],
-//                 [[ChatMessageModel alloc] initWithName:@"anothoer PICTURE" chatId:@"2" type: Picture],
-//                   [[ChatMessageModel alloc] initWithName:@"nice bye" chatId:@"3"],
-//                   [[ChatMessageModel alloc] initWithName:@"nice ba" chatId:@"4"],
-//                   [[ChatMessageModel alloc] initWithName:@"nice bubo" chatId:@"5"],
-//                 [[ChatMessageModel alloc] initWithName:@"nice ba 1 " chatId:@"6"],
-//                 [[ChatMessageModel alloc] initWithName:@"nice ba2 " chatId:@"7"],
-//                 [[ChatMessageModel alloc] initWithName:@"nice ba3" chatId:@"8"],
-//                 [[ChatMessageModel alloc] initWithName:@"nice b5a" chatId:@"9"],
-//                 [[ChatMessageModel alloc] initWithName:@"nice b6a" chatId:@"10"],
-//                 [[ChatMessageModel alloc] initWithName:@"nice b87a" chatId:@"11"],
-//                 [[ChatMessageModel alloc] initWithName:@"nice b9a" chatId:@"12"],
-//                 [[ChatMessageModel alloc] initWithName:@"nice b96a" chatId:@"13"],
-//                 [[ChatMessageModel alloc] initWithName:@"nice ba9" chatId:@"14"],
-//                 [[ChatMessageModel alloc] initWithName:@"nice ba43" chatId:@"15"]
-//    ];
+    __weak ChatDetailViewModel *weakself = self;
+    dispatch_queue_t myQueue = dispatch_queue_create("storage.chat.data", DISPATCH_QUEUE_CONCURRENT);
+    dispatch_async(myQueue, ^{
+        NSArray<ChatMessageModel*>* result = [weakself.databaseManager getChatMessagesByRoomId:weakself.chatRoom.chatRoomId];
+        
+        
+        if (result != nil) {
+            weakself.messages = [result mutableCopy];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                weakself.filteredChats = weakself.messages;
+                successCompletion(weakself.filteredChats);
+            });
+        }
+    });
     
-    _filteredChats = _chats;
-    successCompletion(_filteredChats);
+    
 }
 
 - (ChatMessageModel *)itemAtIndexPath:(NSIndexPath *)indexPath {
@@ -64,7 +74,7 @@
 - (void)changeSegment: (NSUInteger*) index {
     
     if (index == 0) {
-        _filteredChats = _chats;
+        _filteredChats = _messages;
         return;
     }
     
@@ -80,7 +90,7 @@
         predicate = [NSPredicate predicateWithFormat:predicateString, Other];
     }
     
-    NSArray *filteredArray = [_chats filteredArrayUsingPredicate:predicate];
+    NSArray *filteredArray = [_messages filteredArrayUsingPredicate:predicate];
     _filteredChats = filteredArray;
 }
 
@@ -94,18 +104,35 @@
 
 - (void)addImage:(UIImage *)image {
     __weak ChatDetailViewModel *weakself = self;
+    NSString* chatRoomId = _chatRoom.chatRoomId;
     dispatch_queue_t myQueue = dispatch_queue_create("storage.image.data", DISPATCH_QUEUE_CONCURRENT);
     dispatch_async(myQueue, ^{
         
-        NSData *data = UIImagePNGRepresentation(image);
-        float size = ((float)data.length/1024.0f)/1024.0f; // MB
-        ChatMessageModel *new = [[ChatMessageModel alloc] initWithName:[[NSUUID UUID] UUIDString] chatId:[[NSUUID UUID] UUIDString]];
+        NSData *pngData = UIImagePNGRepresentation(image);
+        
+        NSString *messageId = [HashHelper hashDataMD5:pngData];
+        
+        double size = ((double)pngData.length/1024.0f)/1024.0f; // MB
+        
+        NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
+        
+        ChatMessageModel *new = [[ChatMessageModel alloc] initWithMessage:messageId messageId:messageId chatRoomId:chatRoomId];
+        
+        NSString *fileName = [NSString stringWithFormat:@"%@.png", new.messageId];
+        
+        NSString *filePath = [FileHelper documentsPathForFileName:fileName];
+        
+        //TODO: -Check storage space, not enough space?
+        [pngData writeToFile:filePath atomically:YES];
         new.size = size;
         new.type = Picture;
-//        new.data = data;
-//        new.image = image;
-        [weakself.chats insertObject:new atIndex:0];
-        weakself.filteredChats = weakself.chats;
+        new.filePath = filePath;
+        new.createdAt = timeStamp;
+        
+        [weakself.databaseManager saveChatMessageData:new totalRoomSize:weakself.chatRoom.size];
+        
+        [weakself.messages insertObject:new atIndex:0];
+        weakself.filteredChats = weakself.messages;
         // Reload data
         dispatch_async( dispatch_get_main_queue(), ^{
             [weakself.delegate didUpdateData];
@@ -115,8 +142,12 @@
 
 - (void)addFile:(NSData *)data {
     __weak ChatDetailViewModel *weakself = self;
-    float size = ((float)data.length/1024.0f)/1024.0f; // MB
-    ChatMessageModel *new = [[ChatMessageModel alloc] initWithName:[[NSUUID UUID] UUIDString] chatId:[[NSUUID UUID] UUIDString]];
+    double size = ((double)data.length/1024.0f)/1024.0f; // MB
+    
+    NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
+    NSString *messageId = [NSString stringWithFormat:@"%.0f", timeStamp];
+    
+    ChatMessageModel *new = [[ChatMessageModel alloc] initWithMessage:messageId messageId:messageId chatRoomId:_chatRoom.chatRoomId];
     new.size = size;
 //    new.type = File;
 //    new.data = data;
@@ -126,8 +157,8 @@
     } else {
         // Fallback on earlier versions
     }
-    [weakself.chats insertObject:new atIndex:0];
-    weakself.filteredChats = weakself.chats;
+    [weakself.messages insertObject:new atIndex:0];
+    weakself.filteredChats = weakself.messages;
     // Reload data
     dispatch_async( dispatch_get_main_queue(), ^{
         [weakself.delegate didUpdateData];

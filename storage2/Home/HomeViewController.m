@@ -8,7 +8,7 @@
 #import "HomeViewController.h"
 @import IGListKit;
 #import "ChatRoomModel.h"
-#import "ChatCell.h"
+#import "ChatRoomCell.h"
 #import "ChatSectionController.h"
 #import "HomeViewModel.h"
 #import "ChatDetailViewController.h"
@@ -41,10 +41,9 @@
     self.adapter.collectionView = self.homeCollectionView;
     self.adapter.dataSource = self;
     
-    UINib *cellNib = [UINib nibWithNibName:@"ChatCell" bundle:nil];
+    UINib *cellNib = [UINib nibWithNibName:@"ChatRoomCell" bundle:nil];
     
-    
-    [self.homeCollectionView registerNib:cellNib forCellWithReuseIdentifier:@"ChatCell"];
+    [self.homeCollectionView registerNib:cellNib forCellWithReuseIdentifier:@"ChatRoomCell"];
     [self getData];
 }
 
@@ -83,13 +82,8 @@
 #pragma mark - ChatSectionControllerDelegate
 
 - (void) didSelect: (ChatRoomModel*) chat {
-
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"ChatDetailView" bundle:nil];
-    ChatDetailViewController *ivc = [storyboard instantiateViewControllerWithIdentifier:@"ChatDetailViewController"];
     
-    ivc.title = chat.name;
-    
-    [self.navigationController pushViewController:ivc animated:true];
+    [_viewModel.coordinatorDelegate didTapChatRoom:chat];
 }
 
 #pragma mark - Action

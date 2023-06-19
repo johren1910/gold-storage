@@ -13,11 +13,13 @@
 @interface ChatRoomModel: NSObject <IGListDiffable, NSCopying>
 
 @property (nonatomic,readwrite,copy) NSString* name;
-@property (nonatomic,readwrite, copy) NSString* chatId;
+@property (nonatomic,readwrite, copy) NSString* chatRoomId;
 @property (nonatomic,readwrite, copy) NSArray<ChatMessageModel *>* messages;
+@property (nonatomic,readwrite) double size;
+@property (nonatomic,readwrite) double createdAt;
 
 + (instancetype)new NS_UNAVAILABLE;
-- (instancetype)initWithName:(NSString *)name chatId:(NSString *)chatId;
-- (instancetype)initWithName:(NSString *)name chatId:(NSString *)chatId messages:(NSArray<ChatMessageModel*>*) messages;
+- (instancetype)initWithName:(NSString *)name chatRoomId:(NSString *)chatRoomId;
+- (instancetype)initWithName:(NSString *)name chatRoomId:(NSString *)chatRoomId messages:(NSArray<ChatMessageModel*>*) messages;
 
 @end

@@ -9,23 +9,25 @@
 #import "MediaType.h"
 @implementation ChatMessageModel
 
-- (instancetype)initWithName:(NSString *)name chatId:(NSString *)chatId type:(MediaType)type
+- (instancetype)initWithMessage:(NSString *)message messageId:(NSString *)messageId chatRoomId:(NSString *)chatRoomId type:(MediaType)type
 {
   if ((self = [super init])) {
-    _name = [name copy];
-    _messageId = [chatId copy];
+    _message = [message copy];
+    _messageId = [messageId copy];
     _type = type;
+      _chatRoomId = [chatRoomId copy];
   }
 
   return self;
 }
 
-- (instancetype)initWithName:(NSString *)name chatId:(NSString *)chatId
+- (instancetype)initWithMessage:(NSString *)message messageId:(NSString *)messageId chatRoomId:(NSString *)chatRoomId
 {
  if ((self = [super init])) {
-   _name = [name copy];
-   _messageId = [chatId copy];
-     _type = File;
+   _message = [message copy];
+   _messageId = [messageId copy];
+     _type = Other;
+     _chatRoomId = [chatRoomId copy];
  }
 
  return self;
@@ -38,7 +40,7 @@
 
 - (NSString *)description
 {
-  return [NSString stringWithFormat:@"%@ - \n\t name: %@; \n\t chatId: %@; \n type: @type", [super description], _name, _messageId, _type];
+  return [NSString stringWithFormat:@"%@ - \n\t name: %@; \n\t messageId: %@; \n type: @type", [super description], _message, _messageId, _type];
 }
 
 - (id<NSObject>)diffIdentifier
@@ -48,7 +50,7 @@
 
 - (NSUInteger)hash
 {
-  NSUInteger subhashes[] = {[_name hash], [_messageId hash]};
+  NSUInteger subhashes[] = {[_message hash], [_messageId hash]};
   NSUInteger result = subhashes[0];
   for (int ii = 1; ii < 3; ++ii) {
     unsigned long long base = (((unsigned long long)result) << 32 | subhashes[ii]);
@@ -71,7 +73,7 @@
     return NO;
   }
   return
-    (_name == object->_name ? YES : [_name isEqual:object->_name]) &&
+    (_message == object->_message ? YES : [_message isEqual:object->_message]) &&
     (_messageId == object->_messageId ? YES : [_messageId isEqual:object->_messageId]);
 }
 

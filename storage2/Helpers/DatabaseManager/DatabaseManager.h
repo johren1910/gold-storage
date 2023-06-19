@@ -15,8 +15,10 @@
 
 +(DatabaseManager*)getSharedInstance;
 -(BOOL)createChatDatabase;
--(BOOL) saveChatRoomData:(NSString*)chatId name:(NSString*)name;
--(ChatRoomModel*) findChatsById:(NSString*)chatId;
--(NSArray<ChatRoomModel*>*) getChatsByPage:(int)page;
+- (BOOL) saveChatRoomData:(ChatRoomModel*)chatRoome;
+-(ChatRoomModel*) findChatsById:(NSString*)chatRoomId;
+-(NSArray<ChatRoomModel*>*) getChatRoomsByPage:(int)page;
+- (BOOL)saveChatMessageData:(ChatMessageModel*) chatMessage totalRoomSize:(double)totalRoomSize;
+- (NSArray<ChatMessageModel*>*) getChatMessagesByRoomId:(NSString*)chatRoomId;
 
 @end

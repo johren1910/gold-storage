@@ -11,6 +11,8 @@
 
 @interface FileHelper : NSObject
 
++(NSString *)documentsPathForFileName:(NSString *)name;
+
 +(id)attributeOfItemAtPath:(NSString *)path forKey:(NSString *)key;
 +(NSDictionary *)attributesOfItemAtPath:(NSString *)path;
 

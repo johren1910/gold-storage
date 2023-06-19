@@ -9,16 +9,16 @@
 
 @implementation ChatRoomModel
 
-- (instancetype)initWithName:(NSString *)name chatId:(NSString *)chatId
+- (instancetype)initWithName:(NSString *)name chatRoomId:(NSString *)chatRoomId
 {
-    return [self initWithName:name chatId:chatId messages:@[]];
+    return [self initWithName:name chatRoomId:chatRoomId messages:@[]];
 }
 
-- (instancetype)initWithName:(NSString *)name chatId:(NSString *)chatId messages:(NSArray<ChatMessageModel*>*) messages
+- (instancetype)initWithName:(NSString *)name chatRoomId:(NSString *)chatRoomId messages:(NSArray<ChatMessageModel*>*) messages
 {
   if ((self = [super init])) {
     _name = [name copy];
-    _chatId = [chatId copy];
+    _chatRoomId = [chatRoomId copy];
       _messages = [messages copy];
   }
 
@@ -32,17 +32,17 @@
 
 - (NSString *)description
 {
-  return [NSString stringWithFormat:@"%@ - \n\t name: %@; \n\t chatId: %@; \n", [super description], _name, _chatId];
+  return [NSString stringWithFormat:@"%@ - \n\t name: %@; \n\t chatRoomId: %@; \n", [super description], _name, _chatRoomId];
 }
 
 - (id<NSObject>)diffIdentifier
 {
-  return _chatId;
+  return _chatRoomId;
 }
 
 - (NSUInteger)hash
 {
-  NSUInteger subhashes[] = {[_name hash], [_chatId hash]};
+  NSUInteger subhashes[] = {[_name hash], [_chatRoomId hash]};
   NSUInteger result = subhashes[0];
   for (int ii = 1; ii < 3; ++ii) {
     unsigned long long base = (((unsigned long long)result) << 32 | subhashes[ii]);
@@ -66,7 +66,7 @@
   }
   return
     (_name == object->_name ? YES : [_name isEqual:object->_name]) &&
-    (_chatId == object->_chatId ? YES : [_chatId isEqual:object->_chatId]);
+    (_chatRoomId == object->_chatRoomId ? YES : [_chatRoomId isEqual:object->_chatRoomId]);
 }
 
 - (BOOL)isEqualToDiffableObject:(nullable id<IGListDiffable>)object

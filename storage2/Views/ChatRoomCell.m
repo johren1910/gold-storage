@@ -1,5 +1,5 @@
 //
-//  ChatCell.m
+//  ChatRoomCell.m
 //  storage
 //
 //  Created by LAP14885 on 15/06/2023.
@@ -7,14 +7,14 @@
 
 #import <UIKit/UIKit.h>
 #import "ChatRoomModel.h"
-#import "ChatCell.h"
+#import "ChatRoomCell.h"
 
-@interface ChatCell ()
+@interface ChatRoomCell ()
 @property (strong, nonatomic) IBOutlet UILabel *nameLabel;
 @property (strong, nonatomic) IBOutlet UIImageView *circleImageView;
 @end
 
-@implementation ChatCell
+@implementation ChatRoomCell
 
 - (instancetype)init {
     if (self = [super init]) {

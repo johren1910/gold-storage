@@ -7,12 +7,13 @@
 
 #import "StorageViewController.h"
 @import IGListKit;
-
+#import "CircleGraphView.h"
 
 @interface StorageViewController () <IGListAdapterDataSource>
 
 @property (nonatomic, strong) IGListAdapter *adapter;
 @property (nonatomic, strong) StorageViewModel *viewModel;
+@property (strong, nonatomic) IBOutlet UIView *circleGraphHolder;
 
 @end
 
@@ -36,6 +37,26 @@
     
 //    self.adapter.collectionView = self.collectionView;
     self.adapter.dataSource = self;
+    
+    CircleGraphComponent *component1 = [[CircleGraphComponent alloc] initWithOpenDegree:0 closeDegree:30 color:[UIColor redColor]];
+    
+    CircleGraphComponent *component2 = [[CircleGraphComponent alloc] initWithOpenDegree:30 closeDegree:300 color:[UIColor blueColor]];
+    
+    CircleGraphComponent *component3 = [[CircleGraphComponent alloc] initWithOpenDegree:300 closeDegree:360 color:[UIColor greenColor]];
+
+       NSArray *circleComponents = [[NSArray alloc] initWithObjects:component1, component2, component3, nil];
+
+    CGPoint holderCenter = [_circleGraphHolder convertPoint:_circleGraphHolder.center fromView:self.view];
+    
+       CGRect rect = CGRectMake(holderCenter.x/2, holderCenter.y/2, 200, 200);
+       CGPoint circleCenter = CGPointMake(rect.size.width / 2, rect.size.height / 2);
+
+       CircleGraphView *circleGraphView = [[CircleGraphView alloc] initWithFrame:rect centerPoint:circleCenter radius:80 lineWidth:2 circleComponents:circleComponents];
+    circleGraphView.backgroundColor = [UIColor whiteColor];
+    circleGraphView.layer.borderColor = [UIColor redColor].CGColor;
+    circleGraphView.layer.borderWidth = 1.0f;
+
+       [self.circleGraphHolder addSubview:circleGraphView];
 }
 
 

@@ -5,8 +5,9 @@
 //  Created by LAP14885 on 15/06/2023.
 //
 #import <Foundation/Foundation.h>
-#import "ChatMessageModel.h"
 #import "ChatDetailSectionController.h"
+#import "ChatRoomModel.h"
+#import "DatabaseManager.h"
 
 @protocol ChatDetailViewModelDelegate <NSObject>
 
@@ -25,5 +26,7 @@
 
 @property (nonatomic, weak) id <ChatDetailViewModelDelegate>  delegate;
 @property (copy,nonatomic) NSArray<ChatMessageModel *> *filteredChats;
+@property (nonatomic, strong) DatabaseManager* databaseManager;
 
+-(instancetype) initWithChatRoom: (ChatRoomModel*) chatRoom;
 @end
