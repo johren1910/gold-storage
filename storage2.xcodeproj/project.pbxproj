@@ -20,6 +20,7 @@
 		F64BABB42A429A39002B923F /* StorageInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABB32A429A38002B923F /* StorageInfoCell.m */; };
 		F64BABB82A42DB46002B923F /* CacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABB72A42DB46002B923F /* CacheManager.m */; };
 		F64BABBC2A42DF25002B923F /* CompressorHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABBB2A42DF25002B923F /* CompressorHelper.m */; };
+		F64BABBF2A42F08B002B923F /* ChatMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABBE2A42F08B002B923F /* ChatMessageModel.m */; };
 		F6C43EF42A3AEF0D001D8715 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */; };
 		F6C43EF72A3AEF0D001D8715 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF62A3AEF0D001D8715 /* SceneDelegate.m */; };
 		F6C43EFA2A3AEF0D001D8715 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF92A3AEF0D001D8715 /* HomeViewController.m */; };
@@ -36,7 +37,7 @@
 		F6C43F2C2A3B0D15001D8715 /* ChatDetailViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F2B2A3B0D15001D8715 /* ChatDetailViewController.m */; };
 		F6C43F2F2A3B0D45001D8715 /* ChatDetailViewModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F2E2A3B0D45001D8715 /* ChatDetailViewModel.m */; };
 		F6C43F312A3B0D53001D8715 /* ChatDetailView.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F6C43F302A3B0D53001D8715 /* ChatDetailView.storyboard */; };
-		F6C43F332A3B0E8C001D8715 /* ChatMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F322A3B0E8C001D8715 /* ChatMessageModel.m */; };
+		F6C43F332A3B0E8C001D8715 /* ChatMessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F322A3B0E8C001D8715 /* ChatMessageData.m */; };
 		F6C43F372A3B10E3001D8715 /* ChatDetailSectionController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F362A3B10E3001D8715 /* ChatDetailSectionController.m */; };
 		F6C43F392A3B1159001D8715 /* ChatMessageCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F382A3B1159001D8715 /* ChatMessageCell.m */; };
 		F6C43F3E2A3B2A39001D8715 /* StorageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F3D2A3B2A39001D8715 /* StorageViewController.m */; };
@@ -73,6 +74,8 @@
 		F64BABB72A42DB46002B923F /* CacheManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CacheManager.m; sourceTree = "<group>"; };
 		F64BABBA2A42DF1B002B923F /* CompressorHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CompressorHelper.h; sourceTree = "<group>"; };
 		F64BABBB2A42DF25002B923F /* CompressorHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CompressorHelper.m; sourceTree = "<group>"; };
+		F64BABBD2A42F080002B923F /* ChatMessageModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatMessageModel.h; sourceTree = "<group>"; };
+		F64BABBE2A42F08B002B923F /* ChatMessageModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatMessageModel.m; sourceTree = "<group>"; };
 		F6C43EEF2A3AEF0D001D8715 /* storage2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = storage2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6C43EF22A3AEF0D001D8715 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -100,8 +103,8 @@
 		F6C43F2D2A3B0D3A001D8715 /* ChatDetailViewModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDetailViewModel.h; sourceTree = "<group>"; };
 		F6C43F2E2A3B0D45001D8715 /* ChatDetailViewModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailViewModel.m; sourceTree = "<group>"; };
 		F6C43F302A3B0D53001D8715 /* ChatDetailView.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = ChatDetailView.storyboard; sourceTree = "<group>"; };
-		F6C43F322A3B0E8C001D8715 /* ChatMessageModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatMessageModel.m; sourceTree = "<group>"; };
-		F6C43F342A3B0E95001D8715 /* ChatMessageModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatMessageModel.h; sourceTree = "<group>"; };
+		F6C43F322A3B0E8C001D8715 /* ChatMessageData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatMessageData.m; sourceTree = "<group>"; };
+		F6C43F342A3B0E95001D8715 /* ChatMessageData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatMessageData.h; sourceTree = "<group>"; };
 		F6C43F352A3B10D8001D8715 /* ChatDetailSectionController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDetailSectionController.h; sourceTree = "<group>"; };
 		F6C43F362A3B10E3001D8715 /* ChatDetailSectionController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailSectionController.m; sourceTree = "<group>"; };
 		F6C43F382A3B1159001D8715 /* ChatMessageCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatMessageCell.m; sourceTree = "<group>"; };
@@ -284,8 +287,10 @@
 				F6C43F4E2A3C425C001D8715 /* MediaType.h */,
 				F6C43F1C2A3AF139001D8715 /* ChatRoomModel.h */,
 				F6C43F1D2A3AF139001D8715 /* ChatRoomModel.m */,
-				F6C43F342A3B0E95001D8715 /* ChatMessageModel.h */,
-				F6C43F322A3B0E8C001D8715 /* ChatMessageModel.m */,
+				F6C43F342A3B0E95001D8715 /* ChatMessageData.h */,
+				F6C43F322A3B0E8C001D8715 /* ChatMessageData.m */,
+				F64BABBD2A42F080002B923F /* ChatMessageModel.h */,
+				F64BABBE2A42F08B002B923F /* ChatMessageModel.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -488,7 +493,7 @@
 				F6C43EFA2A3AEF0D001D8715 /* HomeViewController.m in Sources */,
 				F64BAB862A4040F3002B923F /* HashHelper.m in Sources */,
 				F6C43EF42A3AEF0D001D8715 /* AppDelegate.m in Sources */,
-				F6C43F332A3B0E8C001D8715 /* ChatMessageModel.m in Sources */,
+				F6C43F332A3B0E8C001D8715 /* ChatMessageData.m in Sources */,
 				F6C43F052A3AEF0D001D8715 /* main.m in Sources */,
 				F64BABB42A429A39002B923F /* StorageInfoCell.m in Sources */,
 				F64BAB742A3F05CA002B923F /* Coordinator.m in Sources */,
@@ -510,6 +515,7 @@
 				F64BAB822A3F0F06002B923F /* HomeCoordinator.m in Sources */,
 				F6C43EF72A3AEF0D001D8715 /* SceneDelegate.m in Sources */,
 				F6C43F262A3AF139001D8715 /* ChatSectionController.m in Sources */,
+				F64BABBF2A42F08B002B923F /* ChatMessageModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

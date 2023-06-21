@@ -8,6 +8,8 @@
 #import <UIKit/UIKit.h>
 #import "ChatMessageModel.h"
 #import "ChatMessageCell.h"
+#import "CacheManager.h"
+#import "CompressorHelper.h"
 
 @interface ChatMessageCell ()
 @property (strong, nonatomic) IBOutlet UIImageView *thumbnailImageView;
@@ -47,13 +49,11 @@
      [indicator setCenter:_thumbnailImageView.center];
      [_thumbnailImageView addSubview:indicator];
 
-//    BuildingIcon_ImageView.image=image;
     [indicator removeFromSuperview];
 }
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-   
 }
 
 - (void) handleLoadingImageWithUrl:(NSString*) filePath {
@@ -62,6 +62,9 @@
     dispatch_queue_t myQueue = dispatch_queue_create("storage.image.load", DISPATCH_QUEUE_CONCURRENT);
     dispatch_async(myQueue, ^{
         
+        //TODO: Read disk-cache
+        
+        //Read origin filePath
         NSError* error = nil;
         NSData *pngData = [NSData dataWithContentsOfFile:filePath options: 0 error: &error];
 
@@ -76,6 +79,8 @@
         
         UIImage *image = [UIImage imageWithData:pngData];
         
+        [weakself compressThenCache:image  withKey:weakself.chat.messageData.messageId];
+        
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakself.thumbnailImageView setImage:image];
             [weakself.loadingIndicator stopAnimating];
@@ -83,29 +88,46 @@
         });
     });
 }
+
+- (void)compressThenCache: (UIImage*) image withKey:(NSString*)key {
+    __weak ChatMessageCell *weakself = self;
+    dispatch_queue_t myQueue = dispatch_queue_create("storage.cache.image", DISPATCH_QUEUE_CONCURRENT);
+    dispatch_async(myQueue, ^{
+        [CompressorHelper compressImage:image quality:Thumbnail completionBlock:^(UIImage* compressedImage){
+            
+            [weakself.delegate updateRamCache:compressedImage withKey:key];
+        }];
+    });
+}
+
 - (void)setChat:(ChatMessageModel *)chat {
-    if (chat.messageId == _cachedMessageModel.messageId) {
+    if (chat.messageData.messageId == _cachedMessageModel.messageData.messageId) {
         
         return;
     }
     _chat = [chat copy];
     _cachedMessageModel = chat;
     
-    self.sizeLabel.text = [NSString stringWithFormat:@"%.1f Mb", _chat.size];
+    self.sizeLabel.text = [NSString stringWithFormat:@"%.1f Mb", _chat.messageData.size];
     [self.selectBtn.titleLabel setText:nil];
     [self.typeIconView setHidden:true];
     [self.timeLabel setHidden:true];
     [self.thumbnailImageView setImage:nil];
     
-    switch (_chat.type) {
+    switch (_chat.messageData.type) {
         case Video:
             self.typeIconView.image = [UIImage imageNamed:@"camera"];
             [self.typeIconView setHidden:false];
             [self.timeLabel setHidden:false];
-            self.timeLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)_chat.duration];
+            self.timeLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)_chat.messageData.duration];
             break;
         case Picture:
-            [self handleLoadingImageWithUrl:chat.filePath];
+            // Read ram-cache
+            if (_chat.thumbnail != nil) {
+                [_thumbnailImageView setImage:_chat.thumbnail];
+            } else {
+                [self handleLoadingImageWithUrl:chat.messageData.filePath];
+            }
             break;
         default:
             [self.timeLabel setHidden:true];

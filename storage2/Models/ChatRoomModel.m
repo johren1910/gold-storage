@@ -14,7 +14,7 @@
     return [self initWithName:name chatRoomId:chatRoomId messages:@[]];
 }
 
-- (instancetype)initWithName:(NSString *)name chatRoomId:(NSString *)chatRoomId messages:(NSArray<ChatMessageModel*>*) messages
+- (instancetype)initWithName:(NSString *)name chatRoomId:(NSString *)chatRoomId messages:(NSArray<ChatMessageData*>*) messages
 {
   if ((self = [super init])) {
     _name = [name copy];

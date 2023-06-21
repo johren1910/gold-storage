@@ -2,35 +2,20 @@
 //  ChatMessageModel.m
 //  storage2
 //
-//  Created by LAP14885 on 15/06/2023.
+//  Created by LAP14885 on 21/06/2023.
 //
-
 #import "ChatMessageModel.h"
-#import "MediaType.h"
+
 @implementation ChatMessageModel
 
-- (instancetype)initWithMessage:(NSString *)message messageId:(NSString *)messageId chatRoomId:(NSString *)chatRoomId type:(MediaType)type
+- (instancetype)initWithMessageData:(ChatMessageData *)messageData thumbnail:(UIImage *)thumbnail
 {
   if ((self = [super init])) {
-    _message = [message copy];
-    _messageId = [messageId copy];
-    _type = type;
-      _chatRoomId = [chatRoomId copy];
+    _messageData = [messageData copy];
+    _thumbnail = [thumbnail copy];
   }
 
   return self;
-}
-
-- (instancetype)initWithMessage:(NSString *)message messageId:(NSString *)messageId chatRoomId:(NSString *)chatRoomId
-{
- if ((self = [super init])) {
-   _message = [message copy];
-   _messageId = [messageId copy];
-     _type = Other;
-     _chatRoomId = [chatRoomId copy];
- }
-
- return self;
 }
 
 - (id)copyWithZone:(nullable NSZone *)zone
@@ -38,19 +23,14 @@
   return self;
 }
 
-- (NSString *)description
-{
-  return [NSString stringWithFormat:@"%@ - \n\t name: %@; \n\t messageId: %@; \n type: @type", [super description], _message, _messageId, _type];
-}
-
 - (id<NSObject>)diffIdentifier
 {
-  return _messageId;
+  return _messageData.messageId;
 }
 
 - (NSUInteger)hash
 {
-  NSUInteger subhashes[] = {[_message hash], [_messageId hash]};
+  NSUInteger subhashes[] = {[_messageData.message hash], [_messageData.messageId hash]};
   NSUInteger result = subhashes[0];
   for (int ii = 1; ii < 3; ++ii) {
     unsigned long long base = (((unsigned long long)result) << 32 | subhashes[ii]);
@@ -73,8 +53,8 @@
     return NO;
   }
   return
-    (_message == object->_message ? YES : [_message isEqual:object->_message]) &&
-    (_messageId == object->_messageId ? YES : [_messageId isEqual:object->_messageId]);
+    (_messageData.message == object->_messageData.message ? YES : [_messageData.message isEqual:object->_messageData.message]) &&
+    (_messageData.messageId == object->_messageData.messageId ? YES : [_messageData.messageId isEqual:object->_messageData.messageId]);
 }
 
 - (BOOL)isEqualToDiffableObject:(nullable id<IGListDiffable>)object

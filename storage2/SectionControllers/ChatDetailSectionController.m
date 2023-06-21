@@ -12,6 +12,10 @@
 #import "ChatMessageCell.h"
 #import "ChatMessageModel.h"
 
+@interface ChatDetailSectionController () <ChatMessageCellDelegate>
+
+@end
+
 @implementation ChatDetailSectionController {
     ChatMessageModel *_chat;
 }
@@ -35,6 +39,7 @@
     
     ChatMessageCell *cell = (ChatMessageCell *)[self.collectionContext dequeueReusableCellWithNibName:@"ChatMessageCell" bundle:nil forSectionController:self atIndex:index];
     cell.chat = _chat;
+    cell.delegate = self;
     return cell;
 }
 
@@ -51,6 +56,11 @@
 - (void)didSelectItemAtIndex:(NSInteger)index {
 //    NSLog(@"Ngon 1 %@", _chat);
     [_delegate didSelect:_chat];
+}
+
+#pragma mark - ChatMessageCellDelegate
+- (void) updateRamCache: (UIImage*)image withKey:(NSString*)key {
+    [_delegate updateRamCache:image withKey:key];
 }
 @end
 

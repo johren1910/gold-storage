@@ -27,7 +27,9 @@
 }
 
 -(void)cacheImageByKey:(UIImage*)image withKey:(NSString*)key {
-    [_ramImageCaches setObject:image forKey:key];
+    if (image != nil && key != nil){
+        [_ramImageCaches setObject:image forKey:key];
+    }
 }
 
 -(UIImage*)getImageByKey:(NSString*)key {

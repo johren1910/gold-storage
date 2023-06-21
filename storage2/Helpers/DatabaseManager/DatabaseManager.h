@@ -18,7 +18,7 @@
 - (BOOL) saveChatRoomData:(ChatRoomModel*)chatRoome;
 -(ChatRoomModel*) findChatsById:(NSString*)chatRoomId;
 -(NSArray<ChatRoomModel*>*) getChatRoomsByPage:(int)page;
-- (BOOL)saveChatMessageData:(ChatMessageModel*) chatMessage totalRoomSize:(double)totalRoomSize;
-- (NSArray<ChatMessageModel*>*) getChatMessagesByRoomId:(NSString*)chatRoomId;
+- (BOOL)saveChatMessageData:(ChatMessageData*) chatMessage totalRoomSize:(double)totalRoomSize;
+- (NSArray<ChatMessageData*>*) getChatMessagesByRoomId:(NSString*)chatRoomId;
 
 @end

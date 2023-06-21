@@ -11,7 +11,7 @@
 @protocol ChatDetailSectionControllerDelegate <NSObject>
 
 - (void) didSelect: (ChatMessageModel*) chat;
-
+- (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
 @end
 
 

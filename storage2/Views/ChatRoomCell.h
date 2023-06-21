@@ -8,9 +8,10 @@
 @class ChatRoomModel;
 
 @protocol ChatRoomCellDelegate <NSObject>
-- (void) didSelectDelete: (ChatRoomModel*) chat;
+- (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
 @end
 
 @interface ChatRoomCell : UICollectionViewCell
 @property (nonatomic, copy) ChatRoomModel *chat;
+@property (nonatomic, weak) id <ChatRoomCellDelegate>  delegate;
 @end

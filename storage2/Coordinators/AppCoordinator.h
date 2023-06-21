@@ -7,11 +7,11 @@
 #import "BaseCoordinator.h"
 #import <UIKit/UIKit.h>
 #import "DatabaseManager.h"
+#import "CacheManager.h"
 
 @interface AppCoordinator : BaseCoordinator
 
 @property (strong, nonatomic) UIWindow * window;
-@property (strong, nonatomic) DatabaseManager * databaseManager;
 
 @property (strong, nonatomic) UINavigationController* rootViewController;
 

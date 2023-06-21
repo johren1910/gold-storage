@@ -13,7 +13,6 @@ typedef NS_ENUM(NSInteger, CompressQuality) {
     Usable
 };
 
-
 @interface CompressorHelper: NSObject
--(void)compressImage:(UIImage *)image quality:(CompressQuality)quality completionBlock: (void (^)(UIImage* compressedImage))block;
++(void)compressImage:(UIImage *)image quality:(CompressQuality)quality completionBlock: (void (^)(UIImage* compressedImage))completionBlock;
 @end

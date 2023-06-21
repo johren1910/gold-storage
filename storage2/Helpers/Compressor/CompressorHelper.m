@@ -9,7 +9,7 @@
 
 @implementation CompressorHelper
 
--(void)compressImage:(UIImage *)image quality:(CompressQuality)quality completionBlock: (void (^)(UIImage* compressedImage))block; {
++(void)compressImage:(UIImage *)image quality:(CompressQuality)quality completionBlock: (void (^)(UIImage* compressedImage))completionBlock; {
     
     dispatch_queue_t myQueue = dispatch_queue_create("storage.compressor.image", DISPATCH_QUEUE_CONCURRENT);
     dispatch_async(myQueue, ^{
@@ -65,7 +65,7 @@
 
         NSLog(@"Size of Image(bytes):%ld",(unsigned long)[imageData length]);
         
-        block([UIImage imageWithData:imageData]);
+        completionBlock([UIImage imageWithData:imageData]);
     });
 }
 @end

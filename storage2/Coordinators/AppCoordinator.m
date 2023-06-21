@@ -11,6 +11,8 @@
 #import "HomeViewController.h"
 
 @interface AppCoordinator () <HomeCoordinatorDelegate>
+@property (strong, nonatomic) DatabaseManager * databaseManager;
+@property (strong, nonatomic) CacheManager * cacheManager;
 @end
 
 @implementation AppCoordinator
@@ -27,6 +29,7 @@
     _rootViewController = [[UINavigationController alloc] init];
     
     _databaseManager = [DatabaseManager getSharedInstance];
+    _cacheManager = [[CacheManager alloc] init];
     
     _window.rootViewController = _rootViewController;
     [_window makeKeyAndVisible];
@@ -37,6 +40,7 @@
     HomeCoordinator* homeCoordinator = [[HomeCoordinator alloc] init:_rootViewController];
     
     homeCoordinator.databaseManager = _databaseManager;
+    homeCoordinator.cacheManager = _cacheManager;
     homeCoordinator.delegate = self;
     [self store:homeCoordinator];
     [homeCoordinator start];

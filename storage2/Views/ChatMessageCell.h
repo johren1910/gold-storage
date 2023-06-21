@@ -5,12 +5,12 @@
 //  Created by LAP14885 on 15/06/2023.
 //
 
-@class ChatMessageModel;
-
 @protocol ChatMessageCellDelegate <NSObject>
-- (void) didSelectDelete: (ChatMessageModel*) chat;
+//- (void) didSelectDelete: (ChatMessageModel*) chat;
+- (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
 @end
 
 @interface ChatMessageCell : UICollectionViewCell
 @property (nonatomic, copy) ChatMessageModel *chat;
+@property (nonatomic, weak) id <ChatMessageCellDelegate> delegate;
 @end

@@ -11,7 +11,6 @@
 @protocol ChatSectionControllerDelegate <NSObject>
 
 - (void) didSelect: (ChatRoomModel*) chat;
-
 @end
 
 

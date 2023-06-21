@@ -35,6 +35,7 @@ static sqlite3_stmt *statement = nil;
     // Build the path to the database file
     databasePath = [[NSString alloc] initWithString:
                     [docsDir stringByAppendingPathComponent: @"chat.db"]];
+    NSLog(@"Database path: %@", databasePath);
     BOOL isSuccess = YES;
     NSFileManager *filemgr = [NSFileManager defaultManager];
     
@@ -95,7 +96,7 @@ static sqlite3_stmt *statement = nil;
     return isSuccess;
 }
 
-- (BOOL)saveChatMessageData:(ChatMessageModel*) chatMessage totalRoomSize:(double)totalRoomSize {
+- (BOOL)saveChatMessageData:(ChatMessageData*) chatMessage totalRoomSize:(double)totalRoomSize {
     
     BOOL result = NO;
     const char *dbpath = [databasePath UTF8String];
@@ -123,7 +124,7 @@ static sqlite3_stmt *statement = nil;
     return result;
 }
 
-- (BOOL)updateChatRoomSize:(ChatMessageModel*) chatMessage totalRoomSize:(double)totalRoomSize {
+- (BOOL)updateChatRoomSize:(ChatMessageData*) chatMessage totalRoomSize:(double)totalRoomSize {
     
     BOOL result = NO;
     const char *dbpath = [databasePath UTF8String];
@@ -245,9 +246,9 @@ static sqlite3_stmt *statement = nil;
     return nil;
 }
 
-- (NSArray<ChatMessageModel*>*) getChatMessagesByRoomId:(NSString*)chatRoomId {
+- (NSArray<ChatMessageData*>*) getChatMessagesByRoomId:(NSString*)chatRoomId {
     const char *dbpath = [databasePath UTF8String];
-    NSMutableArray<ChatMessageModel*>* result = [@[] mutableCopy] ;
+    NSMutableArray<ChatMessageData*>* result = [@[] mutableCopy] ;
     
     if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
         NSString *querySQL = [NSString stringWithFormat:
@@ -274,7 +275,7 @@ static sqlite3_stmt *statement = nil;
                 int type = sqlite3_column_int(statement, 7);
                 
                 
-                ChatMessageModel *chat = [[ChatMessageModel alloc] initWithMessage:message messageId:messageId chatRoomId:chatRoomId];
+                ChatMessageData *chat = [[ChatMessageData alloc] initWithMessage:message messageId:messageId chatRoomId:chatRoomId];
 //                chat.createdAt = createdAt;
                 chat.duration = *duration;
                 chat.filePath = filePath;

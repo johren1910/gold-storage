@@ -98,6 +98,11 @@
     NSLog(@"GOOOOOD %@", chat);
 }
 
+
+- (void) updateRamCache: (UIImage*)image withKey:(NSString*)key {
+    [_viewModel updateRamCache:image withKey:key];
+}
+
 #pragma mark - Action
 
 - (IBAction)onFileLocalBtnTouched:(id)sender {

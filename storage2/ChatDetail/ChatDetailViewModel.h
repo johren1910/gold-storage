@@ -8,6 +8,7 @@
 #import "ChatDetailSectionController.h"
 #import "ChatRoomModel.h"
 #import "DatabaseManager.h"
+#import "CacheManager.h"
 
 @protocol ChatDetailViewModelDelegate <NSObject>
 
@@ -23,10 +24,12 @@
 - (NSUInteger) numberOfSections;
 - (void)addImage:(UIImage *)image;
 - (void)addFile:(NSData *)data;
+- (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
 
 @property (nonatomic, weak) id <ChatDetailViewModelDelegate>  delegate;
 @property (copy,nonatomic) NSArray<ChatMessageModel *> *filteredChats;
 @property (nonatomic, strong) DatabaseManager* databaseManager;
+@property (nonatomic, strong) CacheManager* cacheManager;
 
 -(instancetype) initWithChatRoom: (ChatRoomModel*) chatRoom;
 @end
