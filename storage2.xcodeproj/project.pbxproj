@@ -16,6 +16,8 @@
 		F64BAB862A4040F3002B923F /* HashHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAB852A4040F3002B923F /* HashHelper.m */; };
 		F64BAB8A2A4053D1002B923F /* CircleGraphComponent.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAB892A4053D1002B923F /* CircleGraphComponent.m */; };
 		F64BAB8D2A4053E3002B923F /* CircleGraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAB8C2A4053E3002B923F /* CircleGraphView.m */; };
+		F64BABB12A429940002B923F /* StorageInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F64BABB02A429940002B923F /* StorageInfoCell.xib */; };
+		F64BABB42A429A39002B923F /* StorageInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABB32A429A38002B923F /* StorageInfoCell.m */; };
 		F6C43EF42A3AEF0D001D8715 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */; };
 		F6C43EF72A3AEF0D001D8715 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF62A3AEF0D001D8715 /* SceneDelegate.m */; };
 		F6C43EFA2A3AEF0D001D8715 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF92A3AEF0D001D8715 /* HomeViewController.m */; };
@@ -62,6 +64,9 @@
 		F64BAB892A4053D1002B923F /* CircleGraphComponent.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CircleGraphComponent.m; sourceTree = "<group>"; };
 		F64BAB8B2A4053D9002B923F /* CircleGraphView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CircleGraphView.h; sourceTree = "<group>"; };
 		F64BAB8C2A4053E3002B923F /* CircleGraphView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CircleGraphView.m; sourceTree = "<group>"; };
+		F64BABB02A429940002B923F /* StorageInfoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StorageInfoCell.xib; sourceTree = "<group>"; };
+		F64BABB22A429A1D002B923F /* StorageInfoCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StorageInfoCell.h; sourceTree = "<group>"; };
+		F64BABB32A429A38002B923F /* StorageInfoCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StorageInfoCell.m; sourceTree = "<group>"; };
 		F6C43EEF2A3AEF0D001D8715 /* storage2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = storage2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6C43EF22A3AEF0D001D8715 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -282,6 +287,9 @@
 				F6C43F382A3B1159001D8715 /* ChatMessageCell.m */,
 				F6C43F3A2A3B1162001D8715 /* ChatMessageCell.h */,
 				F6C43F472A3C07A5001D8715 /* ChatMessageCell.xib */,
+				F64BABB02A429940002B923F /* StorageInfoCell.xib */,
+				F64BABB22A429A1D002B923F /* StorageInfoCell.h */,
+				F64BABB32A429A38002B923F /* StorageInfoCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -396,6 +404,7 @@
 				F6C43EFF2A3AEF0D001D8715 /* Assets.xcassets in Resources */,
 				F6C43F482A3C07A5001D8715 /* ChatMessageCell.xib in Resources */,
 				F6C43EFD2A3AEF0D001D8715 /* Main.storyboard in Resources */,
+				F64BABB12A429940002B923F /* StorageInfoCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -455,6 +464,7 @@
 				F6C43EF42A3AEF0D001D8715 /* AppDelegate.m in Sources */,
 				F6C43F332A3B0E8C001D8715 /* ChatMessageModel.m in Sources */,
 				F6C43F052A3AEF0D001D8715 /* main.m in Sources */,
+				F64BABB42A429A39002B923F /* StorageInfoCell.m in Sources */,
 				F64BAB742A3F05CA002B923F /* Coordinator.m in Sources */,
 				F6C43F392A3B1159001D8715 /* ChatMessageCell.m in Sources */,
 				F6C43F4C2A3C39EA001D8715 /* FileHelper.m in Sources */,

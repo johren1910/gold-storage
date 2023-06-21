@@ -8,54 +8,52 @@
 #import <Foundation/Foundation.h>
 #import "CircleGraphView.h"
 
+@interface CircleGraphView ()
+@property (nonatomic) NSMutableArray<UIBezierPath *>* paths;
+@property (nonatomic) int focusedIndex;
+-(void)updateCircleComponents:(NSArray*)circleComponents;
+-(void)drawCircleComponent:(CircleGraphComponent*)component context:(CGContextRef)context label:(CATextLayer*)label;
+@end
+
 @implementation CircleGraphView
 
--(id)initWithFrame:(CGRect)frame centerPoint:(CGPoint)centerPoint radius:(CGFloat)radius lineWidth:(CGFloat)lineWidth circleComponents:(NSArray*)circleComponents {
+-(id)initWithFrame:(CGRect)frame centerPoint:(CGPoint)centerPoint lineWidth:(CGFloat)lineWidth circleComponents:(NSArray*)circleComponents {
     self = [super initWithFrame:frame];
-        if (self) {
-            self.centerPoint = centerPoint;
-            self.radius = radius;
-            self.lineWidth = lineWidth;
-            self.circleComponents = circleComponents;
-        }
-        return self;
+    if (self) {
+        self.centerPoint = centerPoint;
+        self.lineWidth = lineWidth;
+        self.circleComponents = [circleComponents mutableCopy];
+        self.paths = [@[] mutableCopy];
+        self.focusedIndex = -1;
+    }
+    return self;
 }
 
 - (void)drawRect:(CGRect)rect {
-
+    
     [self drawCircle];
 }
 
-- (void)drawCircle {
+-(void)drawCircleComponent:(CircleGraphComponent*)component context:(CGContextRef)context  label:(CATextLayer*)label {
+    
+    CGContextMoveToPoint(context, _centerPoint.x, _centerPoint.y);
+    CGContextAddArc(context, _centerPoint.x , _centerPoint.y, component.radius, [self radians:component.openDegree], [self radians:component.closeDegree], 0);
 
-    CGFloat outerRadius = _radius;
-    CGFloat insideRadius = _radius/3;
-    CGContextRef context = UIGraphicsGetCurrentContext();
-    CGContextSetLineWidth(context, _lineWidth);
-    CircleGraphComponent *insideCircleComponent = [[CircleGraphComponent alloc] initWithOpenDegree:0 closeDegree:360 color:[UIColor whiteColor]];
-    for(CircleGraphComponent *circleComponent in _circleComponents)
-    {
-        // Draw circle Arc
-        CGContextMoveToPoint(context, _centerPoint.x, _centerPoint.y);
+    CGPathRef path = CGContextCopyPath(context);
+    UIBezierPath *bezierPath = [UIBezierPath bezierPathWithCGPath:path];
+    [_paths addObject:bezierPath];
 
-        CGContextAddArc(context, _centerPoint.x , _centerPoint.y, outerRadius, [self radians:circleComponent.openDegree], [self radians:circleComponent.closeDegree], 0);
-        CGContextSetFillColorWithColor(context, circleComponent.color.CGColor);
-        CGContextFillPath(context);
-        
-        //Calculate Text
-        CGFloat textDegree = circleComponent.closeDegree - (circleComponent.closeDegree - circleComponent.openDegree)/2;
+    CGContextSetFillColorWithColor(context, component.color.CGColor);
+    CGContextFillPath(context);
+    
+    if (label != nil) {
+        CGFloat textDegree = component.closeDegree - (component.closeDegree - component.openDegree)/2;
         CGFloat textAngle = [self radians:textDegree];
-        CGFloat percentage = (circleComponent.closeDegree - circleComponent.openDegree)/360 * 100;
-        NSString *text = [NSString stringWithFormat:@"%.f%%", percentage];
-        CATextLayer *label = [[CATextLayer alloc] init];
-        [label setFont:@"Helvetica-Bold"];
-        [label setFontSize:16];
-        [label setString:text];
         
         CGFloat x1 = _centerPoint.x;
         CGFloat y1 = _centerPoint.y;
-        CGFloat x2 = x1 + cos(textAngle) * outerRadius;
-        CGFloat y2 = y1 + sin(textAngle) * outerRadius;
+        CGFloat x2 = x1 + cos(textAngle) * component.radius;
+        CGFloat y2 = y1 + sin(textAngle) * component.radius;
         
         CGFloat textCenterX = (x1 + x2)/1.5;
         CGFloat textCenterY = (y1 + y2)/1.5;
@@ -65,16 +63,93 @@
         [self.layer addSublayer:label];
     }
     
+    // ANIMATION SCALE
+//    CABasicAnimation *animation = [[CABasicAnimation alloc] init];
+//    animation.keyPath = @"transform.scale";
+//    animation.repeatCount = 10;
+//    animation.duration = 1l;
+//    animation.toValue = @(1.5);
+//    CAMediaTimingFunction *timingFunction =
+//    [CAMediaTimingFunction functionWithName:kCAMediaTimingFunctionEaseInEaseOut];
+//    [animation setTimingFunction:timingFunction];
+//    animation.autoreverses = true;
+//    [self.layer addAnimation:animation forKey:nil];
+    
+}
+
+-(void)updateCircleComponents:(NSArray*)circleComponents {
+    [_paths removeAllObjects];
+    _circleComponents = [circleComponents mutableCopy];
+    self.layer.sublayers = nil;
+    [self.layer removeAllAnimations];
+    [CATransaction setDisableActions:TRUE];
+    [CATransaction flush];
+    [self setNeedsDisplay];
+}
+
+-(void)updateCircleComponentAtIndex:(int)index withComponent:(CircleGraphComponent*)component {
+    [_paths removeAllObjects];
+    _circleComponents[index] = component;
+    self.layer.sublayers = nil;
+    [self.layer removeAllAnimations];
+    [CATransaction setDisableActions:TRUE];
+    [CATransaction flush];
+    [self setNeedsDisplay];
+}
+
+- (void)drawCircle {
+    
+    self.clearsContextBeforeDrawing = TRUE;
+    CGContextRef context = UIGraphicsGetCurrentContext();
+    CGContextSetLineWidth(context, _lineWidth);
+
+    CircleGraphComponent *insideCircleComponent = [[CircleGraphComponent alloc] initWithOpenDegree:0 closeDegree:360 radius:30 color:[UIColor whiteColor]];
+    for(CircleGraphComponent *circleComponent in _circleComponents)
+    {
+        CGFloat percentage = (circleComponent.closeDegree - circleComponent.openDegree)/360 * 100;
+        NSString *text = [NSString stringWithFormat:@"%.f%%", percentage];
+        CATextLayer *label = [[CATextLayer alloc] init];
+        [label setFont:@"Helvetica-Bold"];
+        [label setFontSize:16];
+        [label setString:text];
+        
+        // Draw circle Arc
+        [self drawCircleComponent:circleComponent context:context label:label];
+    }
+    
     
     //Draw inside circle
-    CGContextMoveToPoint(context, _centerPoint.x, _centerPoint.y);
-    CGContextAddArc(context, _centerPoint.x , _centerPoint.y, insideRadius, [self radians:insideCircleComponent.openDegree], [self radians:insideCircleComponent.closeDegree], 0);
-    CGContextSetFillColorWithColor(context, insideCircleComponent.color.CGColor);
-    CGContextFillPath(context);
+    [self drawCircleComponent:insideCircleComponent context:context label:nil];
 }
 
 -(float) radians:(double) degrees {
     return degrees * M_PI / 180;
+}
+
+- (void)touchesEnded:(NSSet<UITouch *> *)touches withEvent:(UIEvent *)event {
+    
+    CGPoint location = [[touches anyObject] locationInView:self];
+    CGRect fingerRect = CGRectMake(location.x-5, location.y-5, 10, 10);
+    
+    NSUInteger index = 0;
+    for(UIBezierPath *path in _paths)
+    {
+        
+        if ([path containsPoint:fingerRect.origin]) {
+            NSLog(@"CONTAIN at index %lu", (unsigned long)index);
+            
+            //TODO: Handle animation
+//            CircleGraphComponent *selectedComponent = [_circleComponents[index] copy];
+//            selectedComponent.radius = selectedComponent.radius * 1.1;
+//
+//            [self updateCircleComponentAtIndex:index withComponent:selectedComponent];
+            
+            break;
+        }
+        
+        
+        index+=1;
+    }
 }
 
 @end

@@ -11,10 +11,9 @@
 @interface CircleGraphView : UIView
 
 @property (nonatomic) CGPoint centerPoint;
-@property (nonatomic) CGFloat radius;
 @property (nonatomic) CGFloat lineWidth;
-@property (nonatomic, strong) NSArray *circleComponents;
+@property (nonatomic, strong) NSMutableArray *circleComponents;
 
--(id)initWithFrame:(CGRect)frame centerPoint:(CGPoint)centerPoint radius:(CGFloat)radius lineWidth:(CGFloat)lineWidth circleComponents:(NSArray*)circleComponents;
+-(id)initWithFrame:(CGRect)frame centerPoint:(CGPoint)centerPoint lineWidth:(CGFloat)lineWidth circleComponents:(NSArray*)circleComponents;
 
 @end
