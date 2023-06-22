@@ -22,7 +22,7 @@
 - (void)changeSegment: (NSUInteger*) index;
 - (ChatMessageModel *)itemAtIndexPath:(NSIndexPath *)indexPath;
 - (NSUInteger) numberOfSections;
-- (void)addImage:(UIImage *)image;
+- (void)addImage:(NSData *)data;
 - (void)addFile:(NSData *)data;
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
 

@@ -45,7 +45,7 @@
     dispatch_queue_t myQueue = dispatch_queue_create("storage.image.data", DISPATCH_QUEUE_CONCURRENT);
     
     dispatch_async(myQueue, ^{
-        [weakself.viewModel changeSegment:_selectedIndex];
+        [weakself.viewModel changeSegment:weakself.selectedIndex];
     });
                 
     [_viewModel changeSegment:_selectedIndex];
@@ -152,8 +152,16 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
     NSString *mediaType = [info objectForKey: UIImagePickerControllerMediaType];
     if (CFStringCompare ((__bridge_retained CFStringRef)mediaType, kUTTypeImage, 0) == kCFCompareEqualTo)
     {
-        UIImage *image = [info objectForKey:@"UIImagePickerControllerOriginalImage"];
-        [_viewModel addImage:image];
+        NSURL *url = [info objectForKey:@"UIImagePickerControllerReferenceURL"];
+        
+        PHFetchResult<PHAsset *> *result = [PHAsset fetchAssetsWithALAssetURLs:@[url] options:nil];
+        
+        PHAsset *asset = result.firstObject;
+        __weak ChatDetailViewController *weakself = self;
+        [[PHImageManager defaultManager] requestImageDataForAsset:asset options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
+            
+            [weakself.viewModel addImage:imageData];
+        }];
         [picker dismissViewControllerAnimated:YES completion:nil];
     }
 }
@@ -164,6 +172,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         {
             UIImagePickerController *mediaUI = [[UIImagePickerController alloc] init];
             mediaUI.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+            mediaUI.allowsEditing = NO;
             mediaUI.mediaTypes =
             [UIImagePickerController availableMediaTypesForSourceType:
              UIImagePickerControllerSourceTypeSavedPhotosAlbum];

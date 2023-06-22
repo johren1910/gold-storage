@@ -14,6 +14,7 @@
 #import "FileHelper.h"
 #import "HashHelper.h"
 #import "CompressorHelper.h"
+#import <objc/runtime.h>
 
 @interface ChatDetailViewModel ()
 @property (retain,nonatomic) NSMutableArray<ChatMessageModel *> *messageModels;
@@ -117,20 +118,20 @@
     return _filteredChats;
 }
 
-- (void)addImage:(UIImage *)image {
+- (void)addImage:(NSData *)data {
     __weak ChatDetailViewModel *weakself = self;
     NSString* chatRoomId = _chatRoom.chatRoomId;
     dispatch_queue_t myQueue = dispatch_queue_create("storage.image.data", DISPATCH_QUEUE_CONCURRENT);
     dispatch_async(myQueue, ^{
         
-        NSData *pngData = UIImagePNGRepresentation(image);
+        NSString *messageId = [HashHelper hashDataMD5:data];
         
-        NSString *messageId = [HashHelper hashDataMD5:pngData];
+        UIImage *image = [UIImage imageWithData:data];
         
         [weakself compressThenCache:image withKey:messageId];
         
-        double size = ((double)pngData.length/1024.0f)/1024.0f; // MB
-        
+        double size = ((double)data.length/1024.0f)/1024.0f; // MB
+    
         NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
         
         ChatMessageData *newMessageData = [[ChatMessageData alloc] initWithMessage:messageId messageId:messageId chatRoomId:chatRoomId];
@@ -140,7 +141,7 @@
         NSString *filePath = [FileHelper documentsPathForFileName:fileName];
         
         //TODO: -Check storage space, not enough space?
-        [pngData writeToFile:filePath atomically:YES];
+        [data writeToFile:filePath atomically:YES];
         newMessageData.size = size;
         newMessageData.type = Picture;
         newMessageData.filePath = filePath;
