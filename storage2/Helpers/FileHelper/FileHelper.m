@@ -477,8 +477,6 @@
     return [NSData dataWithContentsOfFile:[self absolutePath:path] options:NSDataReadingMapped error:error];
 }
 
-
-
 +(UIImage *)readFileAtPathAsImage:(NSString *)path
 {
     return [self readFileAtPathAsImage:path error:nil];

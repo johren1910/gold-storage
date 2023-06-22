@@ -44,7 +44,9 @@
     
     CircleGraphComponent *component3 = [[CircleGraphComponent alloc] initWithOpenDegree:300 closeDegree:360 radius:100 color:[UIColor greenColor]];
     
-    NSArray *circleComponents = [[NSArray alloc] initWithObjects:component1, component2, component3, nil];
+    CircleGraphComponent *insideCircleComponent = [[CircleGraphComponent alloc] initWithOpenDegree:0 closeDegree:360 radius:30 color:[UIColor whiteColor]];
+    
+    NSArray *circleComponents = [[NSArray alloc] initWithObjects:component1, component2, component3, insideCircleComponent, nil];
     
     CGFloat rectSize = 200;
     CGRect rect = CGRectMake(_circleGraphHolder.bounds.size.width/2 - rectSize/2, 0, rectSize, rectSize);

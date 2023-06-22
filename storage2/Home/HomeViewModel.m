@@ -38,9 +38,9 @@
         NSArray<ChatRoomModel*>* result = [weakDatabaseManager getChatRoomsByPage:1];
         NSLog(@"Nice %@", result);
         if (result != nil) {
-            weakself.chats = [result mutableCopy];
-            
             dispatch_async(dispatch_get_main_queue(), ^{
+                weakself.chats = [result mutableCopy];
+                successCompletion(weakself.chats);
                 [weakself.delegate didUpdateData];
             });
         }

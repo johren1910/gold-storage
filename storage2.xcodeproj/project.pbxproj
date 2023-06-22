@@ -21,6 +21,7 @@
 		F64BABB82A42DB46002B923F /* CacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABB72A42DB46002B923F /* CacheManager.m */; };
 		F64BABBC2A42DF25002B923F /* CompressorHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABBB2A42DF25002B923F /* CompressorHelper.m */; };
 		F64BABBF2A42F08B002B923F /* ChatMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABBE2A42F08B002B923F /* ChatMessageModel.m */; };
+		F64BABC62A44057A002B923F /* ZOStatePresentable.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABC52A44057A002B923F /* ZOStatePresentable.m */; };
 		F6C43EF42A3AEF0D001D8715 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */; };
 		F6C43EF72A3AEF0D001D8715 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF62A3AEF0D001D8715 /* SceneDelegate.m */; };
 		F6C43EFA2A3AEF0D001D8715 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF92A3AEF0D001D8715 /* HomeViewController.m */; };
@@ -76,6 +77,8 @@
 		F64BABBB2A42DF25002B923F /* CompressorHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CompressorHelper.m; sourceTree = "<group>"; };
 		F64BABBD2A42F080002B923F /* ChatMessageModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatMessageModel.h; sourceTree = "<group>"; };
 		F64BABBE2A42F08B002B923F /* ChatMessageModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatMessageModel.m; sourceTree = "<group>"; };
+		F64BABC42A44056D002B923F /* ZOStatePresentable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZOStatePresentable.h; sourceTree = "<group>"; };
+		F64BABC52A44057A002B923F /* ZOStatePresentable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZOStatePresentable.m; sourceTree = "<group>"; };
 		F6C43EEF2A3AEF0D001D8715 /* storage2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = storage2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6C43EF22A3AEF0D001D8715 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -211,6 +214,45 @@
 			path = Compressor;
 			sourceTree = "<group>";
 		};
+		F64BABC02A4404C0002B923F /* ChatRoomCell */ = {
+			isa = PBXGroup;
+			children = (
+				F6C43F222A3AF139001D8715 /* ChatRoomCell.h */,
+				F6C43F232A3AF139001D8715 /* ChatRoomCell.m */,
+				F6C43F242A3AF139001D8715 /* ChatRoomCell.xib */,
+			);
+			path = ChatRoomCell;
+			sourceTree = "<group>";
+		};
+		F64BABC12A4404C6002B923F /* ChatMessageCell */ = {
+			isa = PBXGroup;
+			children = (
+				F6C43F382A3B1159001D8715 /* ChatMessageCell.m */,
+				F6C43F3A2A3B1162001D8715 /* ChatMessageCell.h */,
+				F6C43F472A3C07A5001D8715 /* ChatMessageCell.xib */,
+			);
+			path = ChatMessageCell;
+			sourceTree = "<group>";
+		};
+		F64BABC22A4404CA002B923F /* StorageInfoCell */ = {
+			isa = PBXGroup;
+			children = (
+				F64BABB02A429940002B923F /* StorageInfoCell.xib */,
+				F64BABB22A429A1D002B923F /* StorageInfoCell.h */,
+				F64BABB32A429A38002B923F /* StorageInfoCell.m */,
+			);
+			path = StorageInfoCell;
+			sourceTree = "<group>";
+		};
+		F64BABC32A4404E0002B923F /* ZOStatePresentable */ = {
+			isa = PBXGroup;
+			children = (
+				F64BABC42A44056D002B923F /* ZOStatePresentable.h */,
+				F64BABC52A44057A002B923F /* ZOStatePresentable.m */,
+			);
+			path = ZOStatePresentable;
+			sourceTree = "<group>";
+		};
 		F6C43EE62A3AEF0D001D8715 = {
 			isa = PBXGroup;
 			children = (
@@ -309,16 +351,11 @@
 		F6C43F212A3AF139001D8715 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F64BABC32A4404E0002B923F /* ZOStatePresentable */,
+				F64BABC22A4404CA002B923F /* StorageInfoCell */,
+				F64BABC12A4404C6002B923F /* ChatMessageCell */,
+				F64BABC02A4404C0002B923F /* ChatRoomCell */,
 				F64BAB872A405397002B923F /* CircleGraphView */,
-				F6C43F222A3AF139001D8715 /* ChatRoomCell.h */,
-				F6C43F232A3AF139001D8715 /* ChatRoomCell.m */,
-				F6C43F242A3AF139001D8715 /* ChatRoomCell.xib */,
-				F6C43F382A3B1159001D8715 /* ChatMessageCell.m */,
-				F6C43F3A2A3B1162001D8715 /* ChatMessageCell.h */,
-				F6C43F472A3C07A5001D8715 /* ChatMessageCell.xib */,
-				F64BABB02A429940002B923F /* StorageInfoCell.xib */,
-				F64BABB22A429A1D002B923F /* StorageInfoCell.h */,
-				F64BABB32A429A38002B923F /* StorageInfoCell.m */,
 			);
 			path = Views;
 			sourceTree = "<group>";
@@ -497,6 +534,7 @@
 				F6C43F052A3AEF0D001D8715 /* main.m in Sources */,
 				F64BABB42A429A39002B923F /* StorageInfoCell.m in Sources */,
 				F64BAB742A3F05CA002B923F /* Coordinator.m in Sources */,
+				F64BABC62A44057A002B923F /* ZOStatePresentable.m in Sources */,
 				F6C43F392A3B1159001D8715 /* ChatMessageCell.m in Sources */,
 				F64BABB82A42DB46002B923F /* CacheManager.m in Sources */,
 				F64BABBC2A42DF25002B923F /* CompressorHelper.m in Sources */,

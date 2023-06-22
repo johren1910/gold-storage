@@ -79,21 +79,33 @@
                                     <constraint firstAttribute="height" constant="1" id="L4V-pV-WtA"/>
                                 </constraints>
                             </view>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="CcJ-ff-FNY">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="mAj-Fl-TLy">
                                 <rect key="frame" x="0.0" y="168" width="393" height="650"/>
+                                <subviews>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="CcJ-ff-FNY">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="650"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <collectionViewLayout key="collectionViewLayout" id="tek-I5-Ygf" customClass="IGListCollectionViewLayout"/>
+                                        <cells>
+                                            <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="dic-CN-3cG">
+                                                <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="vcE-hi-Jk1">
+                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
+                                                    <autoresizingMask key="autoresizingMask"/>
+                                                </collectionViewCellContentView>
+                                            </collectionViewCell>
+                                        </cells>
+                                    </collectionView>
+                                </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <collectionViewLayout key="collectionViewLayout" id="tek-I5-Ygf" customClass="IGListCollectionViewLayout"/>
-                                <cells>
-                                    <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="dic-CN-3cG">
-                                        <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                        <collectionViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" id="vcE-hi-Jk1">
-                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
-                                            <autoresizingMask key="autoresizingMask"/>
-                                        </collectionViewCellContentView>
-                                    </collectionViewCell>
-                                </cells>
-                            </collectionView>
+                                <constraints>
+                                    <constraint firstAttribute="trailing" secondItem="CcJ-ff-FNY" secondAttribute="trailing" id="Mh2-kR-Viz"/>
+                                    <constraint firstItem="CcJ-ff-FNY" firstAttribute="top" secondItem="mAj-Fl-TLy" secondAttribute="top" id="Pz9-0j-ai6"/>
+                                    <constraint firstAttribute="bottom" secondItem="CcJ-ff-FNY" secondAttribute="bottom" id="eNq-Ut-0Hh"/>
+                                    <constraint firstItem="CcJ-ff-FNY" firstAttribute="leading" secondItem="mAj-Fl-TLy" secondAttribute="leading" id="rBb-Fq-nbg"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="CyJ-ex-eyi"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -101,19 +113,20 @@
                             <constraint firstItem="ljw-TQ-REb" firstAttribute="top" secondItem="CyJ-ex-eyi" secondAttribute="top" id="2NI-Sv-0HV"/>
                             <constraint firstItem="O7b-uN-7Yh" firstAttribute="top" secondItem="C5N-it-93C" secondAttribute="bottom" id="43F-Jt-LMg"/>
                             <constraint firstItem="O7b-uN-7Yh" firstAttribute="leading" secondItem="C5N-it-93C" secondAttribute="leading" id="51h-OJ-APJ"/>
+                            <constraint firstItem="CyJ-ex-eyi" firstAttribute="bottom" secondItem="mAj-Fl-TLy" secondAttribute="bottom" id="BJe-Uc-jNd"/>
                             <constraint firstItem="ljw-TQ-REb" firstAttribute="leading" secondItem="CyJ-ex-eyi" secondAttribute="leading" id="D0w-e4-d99"/>
                             <constraint firstItem="C5N-it-93C" firstAttribute="leading" secondItem="CyJ-ex-eyi" secondAttribute="leading" id="G7Y-4h-fHJ"/>
-                            <constraint firstItem="CcJ-ff-FNY" firstAttribute="leading" secondItem="CyJ-ex-eyi" secondAttribute="leading" id="Idb-zV-hsU"/>
-                            <constraint firstItem="CcJ-ff-FNY" firstAttribute="top" secondItem="O7b-uN-7Yh" secondAttribute="bottom" id="Lu0-qs-J5N"/>
+                            <constraint firstItem="mAj-Fl-TLy" firstAttribute="top" secondItem="O7b-uN-7Yh" secondAttribute="bottom" id="I9d-bs-3IS"/>
                             <constraint firstItem="CyJ-ex-eyi" firstAttribute="trailing" secondItem="C5N-it-93C" secondAttribute="trailing" id="M7f-kk-dPb"/>
-                            <constraint firstItem="CyJ-ex-eyi" firstAttribute="bottom" secondItem="CcJ-ff-FNY" secondAttribute="bottom" id="RdO-Zn-clf"/>
+                            <constraint firstItem="mAj-Fl-TLy" firstAttribute="leading" secondItem="CyJ-ex-eyi" secondAttribute="leading" id="Vew-P2-IGL"/>
                             <constraint firstItem="CyJ-ex-eyi" firstAttribute="trailing" secondItem="ljw-TQ-REb" secondAttribute="trailing" id="aRc-Hc-JqK"/>
                             <constraint firstItem="C5N-it-93C" firstAttribute="top" secondItem="ljw-TQ-REb" secondAttribute="bottom" id="hDN-2e-etE"/>
-                            <constraint firstItem="CyJ-ex-eyi" firstAttribute="trailing" secondItem="CcJ-ff-FNY" secondAttribute="trailing" id="jko-eR-sG6"/>
                             <constraint firstItem="O7b-uN-7Yh" firstAttribute="trailing" secondItem="C5N-it-93C" secondAttribute="trailing" id="sJ9-LE-JLL"/>
+                            <constraint firstItem="CyJ-ex-eyi" firstAttribute="trailing" secondItem="mAj-Fl-TLy" secondAttribute="trailing" id="tjX-qK-9ki"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="collectionViewHolder" destination="mAj-Fl-TLy" id="tgz-jP-9WA"/>
                         <outlet property="homeCollectionView" destination="CcJ-ff-FNY" id="x9F-uj-QFQ"/>
                     </connections>
                 </viewController>

@@ -8,6 +8,7 @@
 #import <UIKit/UIKit.h>
 #import "ChatRoomModel.h"
 #import "HomeViewModel.h"
+#import "ZOStatePresentable.h"
 
 @interface HomeViewController : UIViewController <ChatSectionControllerDelegate>
 

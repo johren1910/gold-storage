@@ -11,8 +11,6 @@
 @interface CircleGraphView ()
 @property (nonatomic) NSMutableArray<UIBezierPath *>* paths;
 @property (nonatomic) int focusedIndex;
--(void)updateCircleComponents:(NSArray*)circleComponents;
--(void)drawCircleComponent:(CircleGraphComponent*)component context:(CGContextRef)context label:(CATextLayer*)label;
 @end
 
 @implementation CircleGraphView
@@ -103,7 +101,6 @@
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetLineWidth(context, _lineWidth);
 
-    CircleGraphComponent *insideCircleComponent = [[CircleGraphComponent alloc] initWithOpenDegree:0 closeDegree:360 radius:30 color:[UIColor whiteColor]];
     for(CircleGraphComponent *circleComponent in _circleComponents)
     {
         CGFloat percentage = (circleComponent.closeDegree - circleComponent.openDegree)/360 * 100;
@@ -116,10 +113,6 @@
         // Draw circle Arc
         [self drawCircleComponent:circleComponent context:context label:label];
     }
-    
-    
-    //Draw inside circle
-    [self drawCircleComponent:insideCircleComponent context:context label:nil];
 }
 
 -(float) radians:(double) degrees {
@@ -138,11 +131,10 @@
         if ([path containsPoint:fingerRect.origin]) {
             NSLog(@"CONTAIN at index %lu", (unsigned long)index);
             
-            //TODO: Handle animation
-//            CircleGraphComponent *selectedComponent = [_circleComponents[index] copy];
-//            selectedComponent.radius = selectedComponent.radius * 1.1;
-//
-//            [self updateCircleComponentAtIndex:index withComponent:selectedComponent];
+            CircleGraphComponent *selectedComponent = [_circleComponents[index] copy];
+            selectedComponent.radius = 110;
+            
+            [self updateCircleComponentAtIndex:index withComponent:selectedComponent];
             
             break;
         }
