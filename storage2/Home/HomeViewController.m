@@ -56,6 +56,13 @@
     return loadingView;
 }
 
+- (UIView*) emptyStateView {
+    UIView *emptyView = [[UIView alloc] init];
+    [emptyView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [emptyView removeConstraints:emptyView.constraints];
+    return emptyView;
+}
+
 - (void)viewWillAppear:(BOOL)animated {
     
 }
@@ -65,9 +72,12 @@
     [self.statePresenter startLoading:YES completionHandler:nil];
     [self.viewModel getData:^(NSMutableArray<ChatRoomModel *> * _Nonnull chats){
         BOOL hasContent = (chats.count == 0);
-        [weakself.statePresenter endLoading:YES hasContent:hasContent completionHandler:nil];
+        
+        [weakself.statePresenter endLoading:false hasContent:hasContent completionHandler:nil];
         
         [weakself.adapter performUpdatesAnimated:true completion:nil];
+        
+       
     } error:^(NSError * _Nonnull error) {
         
     }];

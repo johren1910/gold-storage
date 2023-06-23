@@ -125,10 +125,48 @@ static CGFloat animationDuration = 0.4;
         self.emptyStateView.layer.zPosition = emptyStateViewZPosition;
         [self.stateContainerView addSubview:self.emptyStateView];
         
-        [self.emptyStateView.leadingAnchor constraintEqualToAnchor:self.stateContainerView.leadingAnchor].active = YES;
-        [self.emptyStateView.trailingAnchor constraintEqualToAnchor:self.stateContainerView.trailingAnchor].active = YES;
-        [self.emptyStateView.topAnchor constraintEqualToAnchor:self.stateContainerView.topAnchor].active = YES;
-        [self.emptyStateView.bottomAnchor constraintEqualToAnchor:self.stateContainerView.bottomAnchor].active = YES;
+        NSLayoutConstraint *trailing =[NSLayoutConstraint
+                                       constraintWithItem:self.emptyStateView
+                                       attribute:NSLayoutAttributeTrailing
+                                       relatedBy:NSLayoutRelationEqual
+                                       toItem:self.stateContainerView
+                                       attribute:NSLayoutAttributeTrailing
+                                       multiplier:1.0f
+                                       constant:0.f];
+        
+        NSLayoutConstraint *leading = [NSLayoutConstraint
+                                       constraintWithItem:self.emptyStateView
+                                       attribute:NSLayoutAttributeLeading
+                                       relatedBy:NSLayoutRelationEqual
+                                       toItem:self.stateContainerView
+                                       attribute:NSLayoutAttributeLeading
+                                       multiplier:1.0f
+                                       constant:0.f];
+        
+        NSLayoutConstraint *bottom =[NSLayoutConstraint
+                                     constraintWithItem:self.emptyStateView
+                                     attribute:NSLayoutAttributeBottom
+                                     relatedBy:NSLayoutRelationEqual
+                                     toItem:self.stateContainerView
+                                     attribute:NSLayoutAttributeBottom
+                                     multiplier:1.0f
+                                     constant:0.f];
+        
+        NSLayoutConstraint *top =[NSLayoutConstraint
+                                  constraintWithItem:self.emptyStateView
+                                  attribute:NSLayoutAttributeTop
+                                  relatedBy:NSLayoutRelationEqual
+                                  toItem:self.stateContainerView
+                                  attribute:NSLayoutAttributeTop
+                                  multiplier:1.0f
+                                  constant:0.f];
+        
+        [self.stateContainerView addConstraint:trailing];
+        [self.stateContainerView addConstraint:bottom];
+        [self.stateContainerView addConstraint:leading];
+        [self.stateContainerView addConstraint:top];
+        
+        [emptyStateView setBounds:self.stateContainerView.bounds];
     }
 }
 
@@ -139,10 +177,48 @@ static CGFloat animationDuration = 0.4;
         self.errorStateView.layer.zPosition = errorStateViewZPosition;
         [self.stateContainerView addSubview:self.errorStateView];
         
-        [self.errorStateView.leadingAnchor constraintEqualToAnchor:self.stateContainerView.leadingAnchor].active = YES;
-        [self.errorStateView.trailingAnchor constraintEqualToAnchor:self.stateContainerView.trailingAnchor].active = YES;
-        [self.errorStateView.topAnchor constraintEqualToAnchor:self.stateContainerView.topAnchor].active = YES;
-        [self.errorStateView.bottomAnchor constraintEqualToAnchor:self.stateContainerView.bottomAnchor].active = YES;
+        NSLayoutConstraint *trailing =[NSLayoutConstraint
+                                       constraintWithItem:self.errorStateView
+                                       attribute:NSLayoutAttributeTrailing
+                                       relatedBy:NSLayoutRelationEqual
+                                       toItem:self.stateContainerView
+                                       attribute:NSLayoutAttributeTrailing
+                                       multiplier:1.0f
+                                       constant:0.f];
+        
+        NSLayoutConstraint *leading = [NSLayoutConstraint
+                                       constraintWithItem:self.errorStateView
+                                       attribute:NSLayoutAttributeLeading
+                                       relatedBy:NSLayoutRelationEqual
+                                       toItem:self.stateContainerView
+                                       attribute:NSLayoutAttributeLeading
+                                       multiplier:1.0f
+                                       constant:0.f];
+        
+        NSLayoutConstraint *bottom =[NSLayoutConstraint
+                                     constraintWithItem:self.errorStateView
+                                     attribute:NSLayoutAttributeBottom
+                                     relatedBy:NSLayoutRelationEqual
+                                     toItem:self.stateContainerView
+                                     attribute:NSLayoutAttributeBottom
+                                     multiplier:1.0f
+                                     constant:0.f];
+        
+        NSLayoutConstraint *top =[NSLayoutConstraint
+                                  constraintWithItem:self.errorStateView
+                                  attribute:NSLayoutAttributeTop
+                                  relatedBy:NSLayoutRelationEqual
+                                  toItem:self.stateContainerView
+                                  attribute:NSLayoutAttributeTop
+                                  multiplier:1.0f
+                                  constant:0.f];
+        
+        [self.stateContainerView addConstraint:trailing];
+        [self.stateContainerView addConstraint:bottom];
+        [self.stateContainerView addConstraint:leading];
+        [self.stateContainerView addConstraint:top];
+        
+        [errorStateView setBounds:self.stateContainerView.bounds];
     }
 }
 
@@ -159,10 +235,12 @@ static CGFloat animationDuration = 0.4;
         [self addErrorStateViewIfNeeded];
         
         __weak ZOStatePresenter *weakself = self;
+        [weakself.errorStateView setAlpha:0];
+        [weakself.errorStateView setHidden:FALSE];
         [UIView animateWithDuration:animationDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut  animations:^{
-            [weakself.errorStateView setAlpha:0];
+            [weakself.errorStateView setAlpha:1];
         } completion:^(BOOL finished) {
-            [weakself.errorStateView setHidden:TRUE];
+            
             [weakself hideLoadingView:completionHandler];
         }];
     }
@@ -177,10 +255,11 @@ static CGFloat animationDuration = 0.4;
         [self addEmptyStateViewIfNeeded];
         
         __weak ZOStatePresenter *weakself = self;
+        [weakself.emptyStateView setHidden:FALSE];
+        [weakself.emptyStateView setAlpha:0];
         [UIView animateWithDuration:animationDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut  animations:^{
-            [weakself.emptyStateView setAlpha:0];
+            [weakself.emptyStateView setAlpha:1];
         } completion:^(BOOL finished) {
-            [weakself.emptyStateView setHidden:TRUE];
             [weakself hideLoadingView:completionHandler];
         }];
     }
