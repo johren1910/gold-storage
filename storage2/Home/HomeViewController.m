@@ -17,7 +17,7 @@
 #import "ZOStatePresentable.h"
 
 
-@interface HomeViewController () <IGListAdapterDataSource, HomeViewModelDelegate, ZOStatePresentable>
+@interface HomeViewController () <IGListAdapterDataSource, HomeViewModelDelegate>
 
 @property (nonatomic, strong) IGListAdapter *adapter;
 @property (nonatomic, strong) HomeViewModel *viewModel;
@@ -27,11 +27,6 @@
 @end
 
 @implementation HomeViewController
-
-@synthesize emptyStateView;
-@synthesize errorStateView;
-@synthesize loadingStateView;
-@synthesize stateContainerView;
 
 #pragma mark - View Lifecycle
 
@@ -54,14 +49,10 @@
     [self getData];
 }
 
-- (UIView*) loadingStateView {
-    UIView *loadingView = [[UIView alloc] init];
-    [loadingView setBackgroundColor: UIColor.lightGrayColor];
+- (SkeletonView*) loadingStateView {
+    SkeletonView *loadingView = [[SkeletonView alloc] init];
     [loadingView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [loadingView removeConstraints:loadingView.constraints];
-
-    //TODO: - Add Skeleton loading shimmer animation
-    
     return loadingView;
 }
 
@@ -75,11 +66,10 @@
     [self.viewModel getData:^(NSMutableArray<ChatRoomModel *> * _Nonnull chats){
         BOOL hasContent = (chats.count == 0);
         [weakself.statePresenter endLoading:YES hasContent:hasContent completionHandler:nil];
-
+        
         [weakself.adapter performUpdatesAnimated:true completion:nil];
-
     } error:^(NSError * _Nonnull error) {
-
+        
     }];
 }
 

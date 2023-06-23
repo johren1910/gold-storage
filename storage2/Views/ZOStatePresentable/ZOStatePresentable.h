@@ -7,6 +7,7 @@
 
 #import <UIKit/UIKit.h>
 #import <Foundation/Foundation.h>
+#import "Skeletonable.h"
 
 /// This protocol represents the all states of a view that have to load data from a server.
 /// At this time this protocol will support to show 3 states of a UIView or UIViewController which will need a show a placeholder when they are loading data
@@ -15,20 +16,6 @@
 ///
 /// To use this protocol you must have to make the `UIView` or the `UIViewController` confirm the protocol `ZOStatePresentable.
 /// and also make sure that your have provided the loading view  by confirm `loadingStateView` from `UIView` or `UIViewController`.
-///
-/// Example for UIViewController:
-///
-///     @interface HomeViewController () <ZOStatePresentable> {
-///     }
-///
-///     @implementation HomeViewController
-///     - (UIView*) loadingStateView {
-///     UIView *loadingView = [[UIView alloc] init];
-///     [loadingView setBackgroundColor: UIColor.systemPinkColor];
-///     [loadingView setTranslatesAutoresizingMaskIntoConstraints:NO];
-///     [loadingView removeConstraints:loadingView.constraints];
-///     return loadingView;
-///     }
 
 @protocol ZOStatePresentable
 
@@ -36,7 +23,7 @@
 @property (nonatomic, readwrite, retain) UIView* stateContainerView;
 
 /// [This property is] the  view will show when start fetching data
-@property (nonatomic, readwrite, retain) UIView* loadingStateView;
+@property (nonatomic, readwrite, retain) SkeletonView* loadingStateView;
 
 /// [This property is]  the view will show when fetching data run into errors
 @property (nonatomic, readwrite, retain) UIView* errorStateView;
@@ -65,5 +52,5 @@
 @end
 
 @interface ZOStatePresenter : NSObject <ZOStatePresentable>
--(instancetype) init:(UIView*)stateContainerView  loadingStateView:(UIView*)loadingStateView emptyStateView:(UIView*)emptyStateView errorStateView:(UIView*)errorStateView;
+-(instancetype) init:(UIView*)stateContainerView  loadingStateView:(SkeletonView*)loadingStateView emptyStateView:(UIView*)emptyStateView errorStateView:(UIView*)errorStateView;
 @end

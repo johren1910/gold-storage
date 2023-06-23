@@ -8,10 +8,12 @@
 #import <UIKit/UIKit.h>
 #import "ZOStatePresentable.h"
 #import <Foundation/Foundation.h>
+#import "Skeletonable.h"
 
 static CGFloat loadingStateViewZPosition = 100;
 static CGFloat emptyStateViewZPosition = 101;
 static CGFloat errorStateViewZPosition = 102;
+static CGFloat animationDuration = 0.4;
 
 @implementation ZOStatePresenter
 
@@ -20,7 +22,7 @@ static CGFloat errorStateViewZPosition = 102;
 @synthesize loadingStateView;
 @synthesize stateContainerView;
 
--(instancetype) init:(UIView*)stateContainerView  loadingStateView:(UIView*)loadingStateView emptyStateView:(UIView*)emptyStateView errorStateView:(UIView*)errorStateView {
+-(instancetype) init:(UIView*)stateContainerView  loadingStateView:(SkeletonView*)loadingStateView emptyStateView:(UIView*)emptyStateView errorStateView:(UIView*)errorStateView {
     self.stateContainerView = stateContainerView;
     self.loadingStateView = loadingStateView;
     self.emptyStateView = emptyStateView;
@@ -49,74 +51,70 @@ static CGFloat errorStateViewZPosition = 102;
 
 -(void) hideLoadingView: (void (^)(void)) completionHandler {
     __weak ZOStatePresenter *weakself = self;
-    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear  animations:^{
+    
+    [UIView animateWithDuration:animationDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut  animations:^{
+        [weakself.loadingStateView setAlpha:0];
+    } completion:^(BOOL finished) {
         [weakself.loadingStateView setHidden:TRUE];
-        } completion:^(BOOL finished) {
-            [weakself.loadingStateView removeFromSuperview];
-            if (completionHandler != nil) {
-                completionHandler();
-            }
-        }];
+        [weakself.loadingStateView removeFromSuperview];
+        if (completionHandler != nil) {
+            completionHandler();
+        }
+    }];
 }
 
 -(void) addLoadingViewIfNeeded {
     if (self.loadingStateView.superview == nil) {
-        [self.loadingStateView setHidden:NO];
+        [self.loadingStateView hideSkeleton];
+        
+        [self.loadingStateView setHidden:YES];
         self.loadingStateView.layer.zPosition = loadingStateViewZPosition;
         [self.stateContainerView addSubview:self.loadingStateView];
         [self.stateContainerView bringSubviewToFront:self.loadingStateView];
         
         NSLayoutConstraint *trailing =[NSLayoutConstraint
-                                        constraintWithItem:self.loadingStateView
-                                        attribute:NSLayoutAttributeTrailing
-                                        relatedBy:NSLayoutRelationEqual
-                                        toItem:self.stateContainerView
-                                        attribute:NSLayoutAttributeTrailing
-                                        multiplier:1.0f
-                                        constant:0.f];
-
-        NSLayoutConstraint *leading = [NSLayoutConstraint
-                                           constraintWithItem:self.loadingStateView
-                                           attribute:NSLayoutAttributeLeading
-                                           relatedBy:NSLayoutRelationEqual
-                                           toItem:self.stateContainerView
-                                           attribute:NSLayoutAttributeLeading
-                                           multiplier:1.0f
-                                           constant:0.f];
-
-        //Bottom
-        NSLayoutConstraint *bottom =[NSLayoutConstraint
-                                         constraintWithItem:self.loadingStateView
-                                         attribute:NSLayoutAttributeBottom
-                                         relatedBy:NSLayoutRelationEqual
-                                         toItem:self.stateContainerView
-                                         attribute:NSLayoutAttributeBottom
-                                         multiplier:1.0f
-                                         constant:0.f];
-        
-        //Bottom
-        NSLayoutConstraint *top =[NSLayoutConstraint
-                                         constraintWithItem:self.loadingStateView
-                                         attribute:NSLayoutAttributeTop
-                                         relatedBy:NSLayoutRelationEqual
-                                         toItem:self.stateContainerView
-                                         attribute:NSLayoutAttributeTop
-                                         multiplier:1.0f
-                                         constant:0.f];
-
-        NSLayoutConstraint *height = [NSLayoutConstraint
                                        constraintWithItem:self.loadingStateView
-                                       attribute:NSLayoutAttributeHeight
+                                       attribute:NSLayoutAttributeTrailing
                                        relatedBy:NSLayoutRelationEqual
-                                       toItem:nil
-                                       attribute:NSLayoutAttributeNotAnAttribute
-                                       multiplier:0
-                                       constant:100];
+                                       toItem:self.stateContainerView
+                                       attribute:NSLayoutAttributeTrailing
+                                       multiplier:1.0f
+                                       constant:0.f];
+        
+        NSLayoutConstraint *leading = [NSLayoutConstraint
+                                       constraintWithItem:self.loadingStateView
+                                       attribute:NSLayoutAttributeLeading
+                                       relatedBy:NSLayoutRelationEqual
+                                       toItem:self.stateContainerView
+                                       attribute:NSLayoutAttributeLeading
+                                       multiplier:1.0f
+                                       constant:0.f];
+        
+        NSLayoutConstraint *bottom =[NSLayoutConstraint
+                                     constraintWithItem:self.loadingStateView
+                                     attribute:NSLayoutAttributeBottom
+                                     relatedBy:NSLayoutRelationEqual
+                                     toItem:self.stateContainerView
+                                     attribute:NSLayoutAttributeBottom
+                                     multiplier:1.0f
+                                     constant:0.f];
+        
+        NSLayoutConstraint *top =[NSLayoutConstraint
+                                  constraintWithItem:self.loadingStateView
+                                  attribute:NSLayoutAttributeTop
+                                  relatedBy:NSLayoutRelationEqual
+                                  toItem:self.stateContainerView
+                                  attribute:NSLayoutAttributeTop
+                                  multiplier:1.0f
+                                  constant:0.f];
         
         [self.stateContainerView addConstraint:trailing];
         [self.stateContainerView addConstraint:bottom];
         [self.stateContainerView addConstraint:leading];
         [self.stateContainerView addConstraint:top];
+        
+        [loadingStateView setBounds:self.stateContainerView.bounds];
+        [loadingStateView showSkeleton];
     }
 }
 
@@ -161,11 +159,12 @@ static CGFloat errorStateViewZPosition = 102;
         [self addErrorStateViewIfNeeded];
         
         __weak ZOStatePresenter *weakself = self;
-        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear  animations:^{
+        [UIView animateWithDuration:animationDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut  animations:^{
+            [weakself.errorStateView setAlpha:0];
+        } completion:^(BOOL finished) {
             [weakself.errorStateView setHidden:TRUE];
-            } completion:^(BOOL finished) {
-                [weakself hideLoadingView:completionHandler];
-            }];
+            [weakself hideLoadingView:completionHandler];
+        }];
     }
 }
 
@@ -178,12 +177,12 @@ static CGFloat errorStateViewZPosition = 102;
         [self addEmptyStateViewIfNeeded];
         
         __weak ZOStatePresenter *weakself = self;
-        [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear  animations:^{
+        [UIView animateWithDuration:animationDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut  animations:^{
+            [weakself.emptyStateView setAlpha:0];
+        } completion:^(BOOL finished) {
             [weakself.emptyStateView setHidden:TRUE];
-            } completion:^(BOOL finished) {
-                
-                [weakself hideLoadingView:completionHandler];
-            }];
+            [weakself hideLoadingView:completionHandler];
+        }];
     }
 }
 
@@ -193,13 +192,13 @@ static CGFloat errorStateViewZPosition = 102;
     [self removeErrorStateViewIfNeeded];
     
     __weak ZOStatePresenter *weakself = self;
-    [UIView animateWithDuration:0.5 delay:0 options:UIViewAnimationOptionCurveLinear  animations:^{
+    [UIView animateWithDuration:animationDuration delay:0 options:UIViewAnimationOptionCurveEaseInOut  animations:^{
         [weakself.loadingStateView setHidden:FALSE];
-        } completion:^(BOOL finished) {
-            if (completionHandler != nil) {
-                completionHandler();
-            }
-        }];
+    } completion:^(BOOL finished) {
+        if (completionHandler != nil) {
+            completionHandler();
+        }
+    }];
 }
 
 - (void)endLoading:(BOOL)hasError hasContent:(BOOL)hasContent completionHandler:(void (^)(void))completionHandler {
