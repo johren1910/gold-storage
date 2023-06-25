@@ -10,6 +10,7 @@
 #import "ChatMessageCell.h"
 #import "CacheManager.h"
 #import "CompressorHelper.h"
+#import "FileHelper.h"
 
 @interface ChatMessageCell ()
 @property (strong, nonatomic) IBOutlet UIImageView *thumbnailImageView;
@@ -62,22 +63,7 @@
     dispatch_queue_t myQueue = dispatch_queue_create("storage.image.load", DISPATCH_QUEUE_CONCURRENT);
     dispatch_async(myQueue, ^{
         
-        //TODO: Read disk-cache
-        
-        //Read origin filePath
-        NSError* error = nil;
-        NSData *pngData = [NSData dataWithContentsOfFile:filePath options: 0 error: &error];
-
-        if (pngData == nil)
-        {
-           NSLog(@"Failed to read file, error %@", error);
-        }
-        else
-        {
-            // parse the value
-        }
-        
-        UIImage *image = [UIImage imageWithData:pngData];
+        UIImage *image = [FileHelper readFileAtPathAsImage:filePath];
         
         [weakself compressThenCache:image  withKey:weakself.chat.messageData.messageId];
         

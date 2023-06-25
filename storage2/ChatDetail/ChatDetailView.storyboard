@@ -18,12 +18,52 @@
                         <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="nx0-cp-T62">
+                                <rect key="frame" x="0.0" y="75" width="393" height="64"/>
+                                <subviews>
+                                    <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="49b-8G-5pp">
+                                        <rect key="frame" x="16" y="0.0" width="361" height="49"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="48" id="BFm-J5-mc4"/>
+                                        </constraints>
+                                        <segments>
+                                            <segment title="All"/>
+                                            <segment title="Video &amp; Pictures"/>
+                                            <segment title="Files"/>
+                                            <segment title="Other"/>
+                                        </segments>
+                                    </segmentedControl>
+                                    <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pku-XK-6eT" userLabel="Seperator">
+                                        <rect key="frame" x="0.0" y="63" width="393" height="1"/>
+                                        <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
+                                        <constraints>
+                                            <constraint firstAttribute="height" constant="1" id="eDW-Fc-5QZ"/>
+                                        </constraints>
+                                    </view>
+                                </subviews>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <constraints>
+                                    <constraint firstItem="Pku-XK-6eT" firstAttribute="leading" secondItem="nx0-cp-T62" secondAttribute="leading" id="2WG-79-EeQ"/>
+                                    <constraint firstAttribute="bottom" secondItem="49b-8G-5pp" secondAttribute="bottom" constant="16" id="EDv-iD-7nu"/>
+                                    <constraint firstAttribute="trailing" secondItem="Pku-XK-6eT" secondAttribute="trailing" id="QlK-zw-syx"/>
+                                    <constraint firstItem="49b-8G-5pp" firstAttribute="top" secondItem="nx0-cp-T62" secondAttribute="top" id="cVZ-Rs-fK7"/>
+                                    <constraint firstItem="49b-8G-5pp" firstAttribute="leading" secondItem="nx0-cp-T62" secondAttribute="leading" constant="16" id="gNd-2f-t4W"/>
+                                    <constraint firstAttribute="bottom" secondItem="Pku-XK-6eT" secondAttribute="bottom" id="gOW-Ph-rpE"/>
+                                    <constraint firstAttribute="trailing" secondItem="49b-8G-5pp" secondAttribute="trailing" constant="16" id="nz7-QO-ymB"/>
+                                </constraints>
+                            </view>
+                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="la0-Rz-Zut">
+                                <rect key="frame" x="0.0" y="139" width="393" height="583"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                <collectionViewLayout key="collectionViewLayout" id="4V5-7I-MKM" customClass="IGListCollectionViewLayout"/>
+                                <cells/>
+                            </collectionView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9WB-iT-fcy">
                                 <rect key="frame" x="0.0" y="722" width="393" height="96"/>
                                 <subviews>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="gVd-DW-pit" userLabel="Seperator">
                                         <rect key="frame" x="0.0" y="1" width="393" height="1"/>
-                                        <color key="backgroundColor" systemColor="systemGray2Color"/>
+                                        <color key="backgroundColor" systemColor="opaqueSeparatorColor"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="1" id="ClM-33-5uM"/>
                                         </constraints>
@@ -71,38 +111,20 @@
                                     <constraint firstAttribute="trailing" secondItem="HhN-VY-Ow1" secondAttribute="trailing" constant="16" id="vUH-rg-aop"/>
                                 </constraints>
                             </view>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="la0-Rz-Zut">
-                                <rect key="frame" x="0.0" y="123" width="393" height="599"/>
-                                <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <collectionViewLayout key="collectionViewLayout" id="4V5-7I-MKM" customClass="IGListCollectionViewLayout"/>
-                                <cells/>
-                            </collectionView>
-                            <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="49b-8G-5pp">
-                                <rect key="frame" x="0.0" y="59" width="393" height="65"/>
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="64" id="BFm-J5-mc4"/>
-                                </constraints>
-                                <segments>
-                                    <segment title="All"/>
-                                    <segment title="Video &amp; Pictures"/>
-                                    <segment title="Files"/>
-                                    <segment title="Other"/>
-                                </segments>
-                            </segmentedControl>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="la0-Rz-Zut" secondAttribute="trailing" id="2zO-cZ-gCd"/>
                             <constraint firstItem="la0-Rz-Zut" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="5sE-QW-DFT"/>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="49b-8G-5pp" secondAttribute="trailing" id="AmA-QU-4pI"/>
-                            <constraint firstItem="la0-Rz-Zut" firstAttribute="top" secondItem="49b-8G-5pp" secondAttribute="bottom" id="E9e-zs-v9T"/>
-                            <constraint firstItem="49b-8G-5pp" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="EWN-8f-zS1"/>
+                            <constraint firstItem="nx0-cp-T62" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="16" id="B7H-xE-FIH"/>
                             <constraint firstItem="9WB-iT-fcy" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="TnS-M3-AZn"/>
                             <constraint firstItem="9WB-iT-fcy" firstAttribute="top" secondItem="la0-Rz-Zut" secondAttribute="bottom" id="YIf-sd-Mqu"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="nx0-cp-T62" secondAttribute="trailing" id="dVq-mb-Vah"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="9WB-iT-fcy" secondAttribute="bottom" id="i4I-o0-u2l"/>
+                            <constraint firstItem="la0-Rz-Zut" firstAttribute="top" secondItem="nx0-cp-T62" secondAttribute="bottom" id="jmv-nV-UVV"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="9WB-iT-fcy" secondAttribute="trailing" id="kr4-YI-v6K"/>
-                            <constraint firstItem="49b-8G-5pp" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="q1B-jh-AZE"/>
+                            <constraint firstItem="nx0-cp-T62" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="zoa-hg-rXP"/>
                         </constraints>
                     </view>
                     <connections>
@@ -118,11 +140,11 @@
     <resources>
         <image name="arrow.up.doc" catalog="system" width="115" height="128"/>
         <image name="doc.text" catalog="system" width="115" height="128"/>
+        <systemColor name="opaqueSeparatorColor">
+            <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+        </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-        </systemColor>
-        <systemColor name="systemGray2Color">
-            <color red="0.68235294117647061" green="0.68235294117647061" blue="0.69803921568627447" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>

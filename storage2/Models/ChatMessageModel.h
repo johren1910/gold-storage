@@ -20,5 +20,3 @@
 - (instancetype)initWithMessageData:(ChatMessageData *)messageData thumbnail:(UIImage *)thumbnail NS_DESIGNATED_INITIALIZER;
 @end
 
-
-

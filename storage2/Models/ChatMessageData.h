@@ -29,5 +29,3 @@
 - (instancetype)initWithMessage:(NSString *)message messageId:(NSString *)messageId chatRoomId:(NSString *)chatRoomId NS_DESIGNATED_INITIALIZER;
 
 @end
-
-
