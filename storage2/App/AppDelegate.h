@@ -9,6 +9,7 @@
 
 @interface AppDelegate : UIResponder <UIApplicationDelegate>
 @property (nonatomic, retain) IBOutlet UIWindow* window;
+@property void(^backgroundSessionCompleteHandler)(void);
 
 @end
 

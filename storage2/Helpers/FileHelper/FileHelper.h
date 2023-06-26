@@ -14,6 +14,7 @@
 +(NSString *)documentsPathForFileName:(NSString *)name;
 
 +(id)attributeOfItemAtPath:(NSString *)path forKey:(NSString *)key;
+
 +(NSDictionary *)attributesOfItemAtPath:(NSString *)path;
 
 +(BOOL)createDirectoriesForFileAtPath:(NSString *)path;
@@ -47,5 +48,19 @@
 +(NSURL *)urlForItemAtPath:(NSString *)path;
 
 +(NSDictionary *)metadataOfImageAtPath:(NSString *)path;
+
++(BOOL *)copyItemAtPath:(NSURL *)path toPath:(NSURL*)dstPath error:(NSError **)error;
+
++(NSString *)pathForTemporaryDirectoryWithPath:(NSString *)path;
+
++(BOOL)existsItemAtPath:(NSString *)path;
+
++(NSString *)pathForCachesDirectoryWithPath:(NSString *)path;
+
++(BOOL)createDirectoriesForPath:(NSString *)path;
+
++(NSString *)pathForDocumentsDirectoryWithPath:(NSString *)path;
+
++(BOOL *)moveItemAtPath:(NSString *)path toPath:(NSString*)dstPath error:(NSError **)error;
 @end
 

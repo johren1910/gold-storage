@@ -581,6 +581,15 @@
     return (NSNumber *)[self attributeOfItemAtPath:path forKey:NSFileSize error:error];
 }
 
++(BOOL *)moveItemAtPath:(NSString *)path toPath:(NSString*)dstPath error:(NSError **)error {
+
+    return [[NSFileManager defaultManager] moveItemAtPath:path toPath:dstPath error:error];
+}
+
++(BOOL *)copyItemAtPath:(NSURL *)path toPath:(NSURL*)dstPath error:(NSError **)error {
+
+    return [[NSFileManager defaultManager] copyItemAtURL:path toURL:dstPath error:error];
+}
 
 +(NSNumber *)sizeOfFileAtPath:(NSString *)path error:(NSError **)error
 {

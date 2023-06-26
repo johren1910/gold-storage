@@ -23,6 +23,9 @@
 		F64BABBF2A42F08B002B923F /* ChatMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABBE2A42F08B002B923F /* ChatMessageModel.m */; };
 		F64BABC62A44057A002B923F /* ZOStatePresentable.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABC52A44057A002B923F /* ZOStatePresentable.m */; };
 		F64BABCA2A4536EB002B923F /* Skeletonable.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABC92A4536EB002B923F /* Skeletonable.m */; };
+		F64BABCE2A4839FA002B923F /* ZODownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABCD2A4839FA002B923F /* ZODownloadManager.m */; };
+		F64BABD22A483A3F002B923F /* ZODownloadUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABD12A483A3F002B923F /* ZODownloadUnit.m */; };
+		F64BABDA2A493BC8002B923F /* ReachabilityHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABD92A493BC8002B923F /* ReachabilityHelper.m */; };
 		F6C43EF42A3AEF0D001D8715 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */; };
 		F6C43EF72A3AEF0D001D8715 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF62A3AEF0D001D8715 /* SceneDelegate.m */; };
 		F6C43EFA2A3AEF0D001D8715 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF92A3AEF0D001D8715 /* HomeViewController.m */; };
@@ -82,6 +85,12 @@
 		F64BABC52A44057A002B923F /* ZOStatePresentable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZOStatePresentable.m; sourceTree = "<group>"; };
 		F64BABC82A4536D8002B923F /* Skeletonable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Skeletonable.h; sourceTree = "<group>"; };
 		F64BABC92A4536EB002B923F /* Skeletonable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Skeletonable.m; sourceTree = "<group>"; };
+		F64BABCC2A4839EF002B923F /* ZODownloadManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZODownloadManager.h; sourceTree = "<group>"; };
+		F64BABCD2A4839FA002B923F /* ZODownloadManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZODownloadManager.m; sourceTree = "<group>"; };
+		F64BABD02A483A36002B923F /* ZODownloadUnit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZODownloadUnit.h; sourceTree = "<group>"; };
+		F64BABD12A483A3F002B923F /* ZODownloadUnit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZODownloadUnit.m; sourceTree = "<group>"; };
+		F64BABD82A493BBF002B923F /* ReachabilityHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReachabilityHelper.h; sourceTree = "<group>"; };
+		F64BABD92A493BC8002B923F /* ReachabilityHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReachabilityHelper.m; sourceTree = "<group>"; };
 		F6C43EEF2A3AEF0D001D8715 /* storage2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = storage2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6C43EF22A3AEF0D001D8715 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -265,6 +274,34 @@
 			path = Skeleton;
 			sourceTree = "<group>";
 		};
+		F64BABCB2A4839DC002B923F /* DownloadManager */ = {
+			isa = PBXGroup;
+			children = (
+				F64BABCF2A483A07002B923F /* DownloadUnit */,
+				F64BABCC2A4839EF002B923F /* ZODownloadManager.h */,
+				F64BABCD2A4839FA002B923F /* ZODownloadManager.m */,
+			);
+			path = DownloadManager;
+			sourceTree = "<group>";
+		};
+		F64BABCF2A483A07002B923F /* DownloadUnit */ = {
+			isa = PBXGroup;
+			children = (
+				F64BABD02A483A36002B923F /* ZODownloadUnit.h */,
+				F64BABD12A483A3F002B923F /* ZODownloadUnit.m */,
+			);
+			path = DownloadUnit;
+			sourceTree = "<group>";
+		};
+		F64BABD72A493BB5002B923F /* ReachabilityHelper */ = {
+			isa = PBXGroup;
+			children = (
+				F64BABD82A493BBF002B923F /* ReachabilityHelper.h */,
+				F64BABD92A493BC8002B923F /* ReachabilityHelper.m */,
+			);
+			path = ReachabilityHelper;
+			sourceTree = "<group>";
+		};
 		F6C43EE62A3AEF0D001D8715 = {
 			isa = PBXGroup;
 			children = (
@@ -399,6 +436,8 @@
 		F6C43F492A3C39C9001D8715 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				F64BABD72A493BB5002B923F /* ReachabilityHelper */,
+				F64BABCB2A4839DC002B923F /* DownloadManager */,
 				F64BABC72A4536BE002B923F /* Skeleton */,
 				F64BABB92A42DF0D002B923F /* Compressor */,
 				F64BABB52A42DB30002B923F /* CacheManager */,
@@ -550,6 +589,7 @@
 				F64BAB742A3F05CA002B923F /* Coordinator.m in Sources */,
 				F64BABC62A44057A002B923F /* ZOStatePresentable.m in Sources */,
 				F6C43F392A3B1159001D8715 /* ChatMessageCell.m in Sources */,
+				F64BABD22A483A3F002B923F /* ZODownloadUnit.m in Sources */,
 				F64BABB82A42DB46002B923F /* CacheManager.m in Sources */,
 				F64BABBC2A42DF25002B923F /* CompressorHelper.m in Sources */,
 				F6C43F4C2A3C39EA001D8715 /* FileHelper.m in Sources */,
@@ -566,7 +606,9 @@
 				F6C43F272A3AF139001D8715 /* ChatRoomCell.m in Sources */,
 				F64BAB822A3F0F06002B923F /* HomeCoordinator.m in Sources */,
 				F6C43EF72A3AEF0D001D8715 /* SceneDelegate.m in Sources */,
+				F64BABDA2A493BC8002B923F /* ReachabilityHelper.m in Sources */,
 				F6C43F262A3AF139001D8715 /* ChatSectionController.m in Sources */,
+				F64BABCE2A4839FA002B923F /* ZODownloadManager.m in Sources */,
 				F64BABBF2A42F08B002B923F /* ChatMessageModel.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
