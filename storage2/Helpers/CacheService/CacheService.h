@@ -8,9 +8,14 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 
-@interface CacheService: NSObject
+@protocol CacheServiceType <NSObject>
+
 -(void)cacheImageByKey:(UIImage*)image withKey:(NSString*)key;
 -(UIImage*)getImageByKey:(NSString*)key;
 -(void)deleteImageByKey:(NSString*)key;
+
+@end
+
+@interface CacheService : NSObject  <CacheServiceType>
 - (instancetype) init;
 @end

@@ -47,14 +47,16 @@
 
 - (BOOL)isEqual:(ChatMessageModel *)object
 {
-  if (self == object) {
+  if (self == object && self.selected == object.selected && self.thumbnail == object.thumbnail) {
     return YES;
   } else if (self == nil || object == nil || ![object isKindOfClass:[self class]]) {
     return NO;
   }
   return
     (_messageData.message == object->_messageData.message ? YES : [_messageData.message isEqual:object->_messageData.message]) &&
-    (_messageData.messageId == object->_messageData.messageId ? YES : [_messageData.messageId isEqual:object->_messageData.messageId]);
+    (_messageData.messageId == object->_messageData.messageId ? YES : [_messageData.messageId isEqual:object->_messageData.messageId])
+    && (_selected == object->_selected)
+    && (_thumbnail == object->_thumbnail);
 }
 
 - (BOOL)isEqualToDiffableObject:(nullable id<IGListDiffable>)object

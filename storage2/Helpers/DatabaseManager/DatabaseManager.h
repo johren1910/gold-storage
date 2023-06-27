@@ -10,17 +10,22 @@
 #import "ChatRoomModel.h"
 #import "FileData.h"
 
-@interface DatabaseManager : NSObject {
-   NSString *databasePath;
-}
-
-+(DatabaseManager*)getSharedInstance;
--(BOOL)createChatDatabase;
+@protocol DatabaseManagerType
+-(BOOL) createChatDatabase;
 - (BOOL) saveChatRoomData:(ChatRoomModel*)chatRoome;
 -(ChatRoomModel*) findChatsById:(NSString*)chatRoomId;
 -(NSArray<ChatRoomModel*>*) getChatRoomsByPage:(int)page;
 - (BOOL)saveChatMessageData:(ChatMessageData*) chatMessage totalRoomSize:(double)totalRoomSize;
+- (BOOL)deleteChatMessage:(ChatMessageData*) message;
 - (NSArray<ChatMessageData*>*) getChatMessagesByRoomId:(NSString*)chatRoomId;
 - (BOOL)updateChatMessage:(ChatMessageData*) chatMessage;
+
+@end
+
+@interface DatabaseManager : NSObject <DatabaseManagerType> {
+   NSString *databasePath;
+}
+
++(DatabaseManager*)getSharedInstance;
 
 @end

@@ -32,7 +32,7 @@
     _chats = [[NSMutableArray alloc] init];
     dispatch_queue_t databaseQueue = dispatch_queue_create("storage.database", DISPATCH_QUEUE_CONCURRENT);
     
-    __weak DatabaseManager *weakDatabaseManager = _databaseManager;
+    __weak id<DatabaseManagerType> weakDatabaseManager = _databaseManager;
     __weak HomeViewModel *weakself = self;
     dispatch_async(databaseQueue, ^{
         NSArray<ChatRoomModel*>* result = [weakDatabaseManager getChatRoomsByPage:1];
@@ -77,7 +77,7 @@
     
     dispatch_queue_t databaseQueue = dispatch_queue_create("storage.database", DISPATCH_QUEUE_CONCURRENT);
     
-    __weak DatabaseManager *weakDatabaseManager = [self databaseManager];
+    __weak id<DatabaseManagerType> weakDatabaseManager = [self databaseManager];
     dispatch_async(databaseQueue, ^{
         
         [weakDatabaseManager saveChatRoomData:newChat];

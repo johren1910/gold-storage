@@ -35,6 +35,6 @@
 
 @property (nonatomic, weak) id <HomeViewModelDelegate>  delegate;
 @property (nonatomic, strong) id <HomeViewModelCoordinatorDelegate>  coordinatorDelegate;
-@property (nonatomic, strong) DatabaseManager* databaseManager;
+@property (nonatomic, strong) id<DatabaseManagerType> databaseManager;
 
 @end

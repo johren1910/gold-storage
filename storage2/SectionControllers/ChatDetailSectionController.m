@@ -13,7 +13,6 @@
 #import "ChatMessageModel.h"
 
 @interface ChatDetailSectionController () <ChatMessageCellDelegate>
-
 @end
 
 @implementation ChatDetailSectionController {
@@ -54,8 +53,11 @@
 // MARK: - ListSingleSectionControllerDelegate
 
 - (void)didSelectItemAtIndex:(NSInteger)index {
-//    NSLog(@"Ngon 1 %@", _chat);
-    [_delegate didSelect:_chat];
+    if (_chat.selected) {
+        [_delegate didDeselect:_chat];
+    } else {
+        [_delegate didSelect:_chat];
+    }
 }
 
 #pragma mark - ChatMessageCellDelegate

@@ -19,6 +19,7 @@
 
 @interface ChatDetailViewModel ()
 @property (retain,nonatomic) NSMutableArray<ChatMessageModel *> *messageModels;
+@property (retain,nonatomic) NSMutableArray<ChatMessageModel *> *selectedModels;
 @property (nonatomic, copy) ChatRoomModel *chatRoom;
 @end
 
@@ -28,6 +29,7 @@
     self = [super init];
     if (self) {
         self.messageModels = [[NSMutableArray alloc] init];
+        self.selectedModels = [[NSMutableArray alloc] init];
     }
     _chatRoom = chatRoom;
     
@@ -175,7 +177,6 @@
     } errorBlock:^(NSError *error) {
 
     }];
-    
 }
 
 - (void)addDownloadedMedia:(NSString *)filePath withMessageId:(NSString*)messageId {
@@ -235,9 +236,63 @@
         weakself.filteredChats = weakself.messageModels;
 
         dispatch_async( dispatch_get_main_queue(), ^{
-            [weakself.delegate didReloadData];
+            [weakself.delegate didUpdateData];
         });
     });
+}
+
+- (void) selectChatMessage:(ChatMessageModel *) chat {
+    [_selectedModels addObject:chat];
+    for (ChatMessageModel *model in _messageModels) {
+        if (chat.messageData.messageId == model.messageData.messageId) {
+            
+            model.selected = TRUE;
+            break;
+        }
+    }
+    
+    _filteredChats = self.messageModels;
+    dispatch_async( dispatch_get_main_queue(), ^{
+        [self.delegate didReloadData];
+    });
+}
+- (void) deselectChatMessage:(ChatMessageModel *) chat {
+    [_selectedModels removeObject:chat];
+    for (ChatMessageModel *model in _messageModels) {
+        if (chat.messageData.messageId == model.messageData.messageId) {
+            
+            model.selected = FALSE;
+            break;
+        }
+    }
+    
+    _filteredChats = self.messageModels;
+    dispatch_async( dispatch_get_main_queue(), ^{
+        [self.delegate didReloadData];
+    });
+}
+
+- (void)deleteSelected {
+    dispatch_queue_t myQueue = dispatch_queue_create("storage.image.data", DISPATCH_QUEUE_CONCURRENT);
+    __weak ChatDetailViewModel* weakself = self;
+    dispatch_async(myQueue, ^{
+        for (ChatMessageModel* model in weakself.selectedModels) {
+            [weakself.databaseManager deleteChatMessage:model.messageData];
+            [weakself.cacheService deleteImageByKey:model.messageData.messageId];
+            
+            //TODO: Thêm reference count cho File. Nếu còn reference thì không xoá file.
+            [FileHelper removeItemAtPath:model.messageData.filePath];
+            
+            [weakself.messageModels removeObject:model];
+        }
+        
+        weakself.filteredChats = weakself.messageModels;
+        
+        dispatch_async( dispatch_get_main_queue(), ^{
+            [self.delegate didUpdateData];
+        });
+    });
+    
 }
 
 - (void)addImage:(NSData *)data {

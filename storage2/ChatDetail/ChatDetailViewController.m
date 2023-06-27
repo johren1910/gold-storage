@@ -98,8 +98,12 @@
 
 #pragma mark - ChatDetailSectionControllerDelegate
 
-- (void) didSelect: (ChatRoomModel*) chat {
-    NSLog(@"GOOOOOD %@", chat);
+- (void) didSelect: (ChatMessageModel*) chat {
+    [_viewModel selectChatMessage:chat];
+}
+
+- (void) didDeselect: (ChatMessageModel*) chat {
+    [_viewModel deselectChatMessage:chat];
 }
 
 
@@ -111,6 +115,10 @@
 
 - (IBAction)onDownloadButtonTouched:(id)sender {
     [self createInputAlert];
+}
+
+- (IBAction)onDeleteButtonTouched:(id)sender {
+    [_viewModel deleteSelected];
 }
 
 - (IBAction)onVideoImagesLocalBtnTouched:(id)sender {

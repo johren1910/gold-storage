@@ -12,6 +12,10 @@ static sqlite3_stmt *statement = nil;
 
 //TODO: Handle Retry when sql failed, db locked,..., retry 10 times,...
 
+@interface DatabaseManager ()
+@property (nonatomic, strong) dispatch_queue_t databaseQueue;
+@end
+
 @implementation DatabaseManager
 
 +(DatabaseManager*)getSharedInstance {
@@ -22,6 +26,13 @@ static sqlite3_stmt *statement = nil;
         [sharedInstance createFileDatabase];
     }
     return sharedInstance;
+}
+
+- (instancetype)init {
+    if (self == [super init]) {
+        self.databaseQueue = dispatch_queue_create("com.databasemanager.queue", DISPATCH_QUEUE_SERIAL);
+    }
+    return self;
 }
 
 -(BOOL)createChatDatabase {
@@ -224,6 +235,29 @@ static sqlite3_stmt *statement = nil;
     sqlite3_finalize(statement);
     sqlite3_close(database);
     return nil;
+}
+
+- (BOOL)deleteChatMessage:(ChatMessageData*) message {
+    BOOL result = NO;
+    const char *dbpath = [databasePath UTF8String];
+    
+    if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
+        
+        NSString *deleteSQL = [NSString stringWithFormat:@"delete from chatMessage where messageId =\"%@\"",
+                               message.messageId];
+        const char *stmt = [deleteSQL UTF8String];
+        sqlite3_prepare_v2(database, stmt,-1, &statement, NULL);
+        int code = sqlite3_step(statement);
+        if (code == SQLITE_DONE) {
+            result = YES;
+        } else {
+            result = NO;
+        }
+        sqlite3_finalize(statement);
+    }
+    
+    sqlite3_close(database);
+    return result;
 }
 
 - (BOOL)updateFileData:(FileData*) fileData {

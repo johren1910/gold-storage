@@ -6,7 +6,6 @@
 //
 
 @protocol ChatMessageCellDelegate <NSObject>
-//- (void) didSelectDelete: (ChatMessageModel*) chat;
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
 @end
 

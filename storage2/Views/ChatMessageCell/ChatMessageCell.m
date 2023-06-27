@@ -14,7 +14,7 @@
 @interface ChatMessageCell ()
 @property (strong, nonatomic) IBOutlet UIImageView *thumbnailImageView;
 
-@property (strong, nonatomic) IBOutlet UIButton *selectBtn;
+@property (strong, nonatomic) IBOutlet UIImageView *selectedImage;
 @property (strong, nonatomic) IBOutlet UILabel *sizeLabel;
 @property (strong, nonatomic) IBOutlet UIImageView *typeIconView;
 @property (strong, nonatomic) IBOutlet UILabel *timeLabel;
@@ -94,10 +94,6 @@
 }
 
 - (void)setChat:(ChatMessageModel *)chat {
-    if (chat.messageData.messageId == _cachedMessageModel.messageData.messageId) {
-        return;
-    }
-    
     _chat = [chat copy];
     _cachedMessageModel = chat;
     
@@ -107,10 +103,15 @@
         [self.thumbnailImageView setBackgroundColor:[UIColor clearColor]];
         [self.loadingIndicator stopAnimating];
         self.sizeLabel.text = [NSString stringWithFormat:@"%.1f Mb", _chat.messageData.size];
-        [self.selectBtn.titleLabel setText:nil];
         [self.typeIconView setHidden:true];
         [self.timeLabel setHidden:true];
         [self.thumbnailImageView setImage:nil];
+        
+        if (_chat.selected) {
+            self.selectedImage.image = [UIImage imageNamed:@"circle-filled"];
+        } else {
+            self.selectedImage.image = [UIImage imageNamed:@"circle-empty"];
+        }
         
         switch (_chat.messageData.type) {
             case Video:

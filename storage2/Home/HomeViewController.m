@@ -22,7 +22,7 @@
 @property (nonatomic, strong) IGListAdapter *adapter;
 @property (nonatomic, strong) HomeViewModel *viewModel;
 @property (strong, nonatomic) IBOutlet UIView *collectionViewHolder;
-@property (nonatomic, strong) ZOStatePresenter* statePresenter;
+@property (nonatomic, strong) id<ZOStatePresentable> statePresenter;
 
 @end
 

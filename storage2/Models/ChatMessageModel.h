@@ -16,6 +16,7 @@
 
 @property (nonatomic,readwrite,copy) ChatMessageData* messageData;
 @property (nonatomic,readwrite) UIImage* thumbnail;
+@property (nonatomic) BOOL selected;
 
 - (instancetype)initWithMessageData:(ChatMessageData *)messageData thumbnail:(UIImage *)thumbnail NS_DESIGNATED_INITIALIZER;
 @end
