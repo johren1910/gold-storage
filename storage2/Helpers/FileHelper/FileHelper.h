@@ -9,6 +9,12 @@
 #import <ImageIO/ImageIO.h>
 #import <UIKit/UIKit.h>
 
+@interface ZOMediaInfo : NSObject
+@property (nonatomic) UIImage* thumbnail;
+@property (nonatomic) int duration;
+
+@end
+
 @interface FileHelper : NSObject
 
 +(NSString *)documentsPathForFileName:(NSString *)name;
@@ -40,6 +46,8 @@
 +(UIImage *)readFileAtPathAsImage:(NSString *)path;
 
 +(BOOL)removeItemAtPath:(NSString *)path;
+
++(ZOMediaInfo *)getMediaInfoOfFilePath:(NSString *)filePath;
 
 +(NSString *)sizeFormattedOfFileAtPath:(NSString *)path;
 

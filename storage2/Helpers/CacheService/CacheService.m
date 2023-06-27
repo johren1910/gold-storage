@@ -1,20 +1,20 @@
 //
-//  CacheManager.m
+//  CacheService.m
 //  storage2
 //
 //  Created by LAP14885 on 21/06/2023.
 //
 
-#import "CacheManager.h"
+#import "CacheService.h"
 #import "FileHelper.h"
 
-@interface CacheManager ()
+@interface CacheService ()
 @property (strong, nonatomic) NSMutableDictionary* ramImageCaches;
 @property (strong, nonatomic) NSMutableDictionary* diskImageCaches;
 
 @end
 
-@implementation CacheManager
+@implementation CacheService
 
 - (instancetype)init {
     
@@ -34,7 +34,7 @@
 -(void) loadDiskCache {
     dispatch_queue_t myQueue = dispatch_queue_create("storage.cachemanager.load.diskcache", DISPATCH_QUEUE_CONCURRENT);
     
-    __weak CacheManager *weakself = self;
+    __weak CacheService *weakself = self;
     dispatch_async(myQueue, ^{
         NSString* cacheDirectory = [FileHelper pathForCachesDirectory];
         
@@ -60,7 +60,7 @@
     
     dispatch_queue_t myQueue = dispatch_queue_create("storage.cachemanager.freeram", DISPATCH_QUEUE_CONCURRENT);
     
-    __weak CacheManager *weakself = self;
+    __weak CacheService *weakself = self;
     dispatch_async(myQueue, ^{
         NSArray* allKeys = [weakself.ramImageCaches allKeys];
         
@@ -74,7 +74,7 @@
     
     dispatch_queue_t myQueue = dispatch_queue_create("storage.cachemanager.freeram", DISPATCH_QUEUE_CONCURRENT);
     
-    __weak CacheManager *weakself = self;
+    __weak CacheService *weakself = self;
     dispatch_async(myQueue, ^{
         NSArray* allKeys = [weakself.ramImageCaches allKeys];
         
@@ -92,7 +92,7 @@
     // Disk Cache
     dispatch_queue_t myQueue = dispatch_queue_create("storage.cachemanager.write.diskcache", DISPATCH_QUEUE_CONCURRENT);
     
-    __weak CacheManager *weakself = self;
+    __weak CacheService *weakself = self;
     dispatch_async(myQueue, ^{
         NSString* cacheDirectory = [FileHelper pathForCachesDirectory];
         NSData *imageData = UIImageJPEGRepresentation(image, 0.85);
@@ -125,7 +125,7 @@
     [_ramImageCaches removeObjectForKey: key];
     
     dispatch_queue_t myQueue = dispatch_queue_create("storage.cachemanager.deletekey", DISPATCH_QUEUE_CONCURRENT);
-    __weak CacheManager *weakself = self;
+    __weak CacheService *weakself = self;
     dispatch_async(myQueue, ^{
         NSFileManager *fileManager = [NSFileManager defaultManager];
         NSString* cacheDirectory = [FileHelper pathForCachesDirectory];

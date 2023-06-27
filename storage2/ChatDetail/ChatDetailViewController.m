@@ -11,7 +11,7 @@
 
 @property (nonatomic, strong) IGListAdapter *adapter;
 @property (nonatomic, strong) ChatDetailViewModel *viewModel;
-@property (nonatomic, readonly) NSUInteger *selectedIndex;
+@property (nonatomic, readonly) NSInteger selectedIndex;
 
 @end
 
@@ -22,6 +22,10 @@
 
 - (void)didUpdateData {
     [_adapter performUpdatesAnimated:true completion:nil];
+}
+
+- (void)didReloadData {
+    [_adapter reloadDataWithCompletion:nil];
 }
 
 - (void)viewDidLoad {
@@ -105,22 +109,42 @@
 
 #pragma mark - Action
 
-- (IBAction)onFileLocalBtnTouched:(id)sender {
-    // Import
-        UIDocumentPickerViewController* documentPicker =
-          [[UIDocumentPickerViewController alloc] initWithDocumentTypes:@[@"public.data"]
-                                                                 inMode:UIDocumentPickerModeImport];
-    
-        documentPicker.delegate = self;
-    
-        documentPicker.modalPresentationStyle = UIModalPresentationFormSheet;
-    
-        [self presentViewController:documentPicker animated:true completion:nil];
+- (IBAction)onDownloadButtonTouched:(id)sender {
+    [self createInputAlert];
 }
 
 - (IBAction)onVideoImagesLocalBtnTouched:(id)sender {
     
     [self requestAuthorizationWithRedirectionToSettings];
+}
+
+- (void) createInputAlert {
+    
+    UIAlertController * alertController = [UIAlertController alertControllerWithTitle: @"Input link to download"
+                                                                              message: @"Media link"
+                                                                       preferredStyle:UIAlertControllerStyleAlert];
+    [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
+        textField.placeholder = @"Link";
+        textField.textColor = [UIColor blueColor];
+        textField.clearButtonMode = UITextFieldViewModeWhileEditing;
+        textField.borderStyle = UITextBorderStyleRoundedRect;
+    }];
+
+    __weak ChatDetailViewController *weakSelf = self;
+    [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
+        NSArray * textfields = alertController.textFields;
+        UITextField * namefield = textfields[0];
+        NSString *name = namefield.text;
+        NSURL* checkUrl = [[NSURL alloc] initWithString:name];
+        
+        // Check valid url
+        if (checkUrl && [checkUrl scheme] && [checkUrl host]) {
+            [weakSelf.viewModel downloadFileWithUrl:name];
+        }
+    }]];
+
+    [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler: nil]];
+    [self presentViewController:alertController animated:YES completion:nil];
 }
 
 
@@ -149,8 +173,8 @@
 -(void)imagePickerController:(UIImagePickerController *)picker
 didFinishPickingMediaWithInfo:(NSDictionary *)info
 {
-    NSString *mediaType = [info objectForKey: UIImagePickerControllerMediaType];
-    if (CFStringCompare ((__bridge_retained CFStringRef)mediaType, kUTTypeImage, 0) == kCFCompareEqualTo)
+    NSString *fileType = [info objectForKey: UIImagePickerControllerMediaType];
+    if (CFStringCompare ((__bridge_retained CFStringRef)fileType, kUTTypeImage, 0) == kCFCompareEqualTo)
     {
         NSURL *url = [info objectForKey:@"UIImagePickerControllerReferenceURL"];
         

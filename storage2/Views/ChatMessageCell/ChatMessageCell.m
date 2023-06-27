@@ -8,7 +8,6 @@
 #import <UIKit/UIKit.h>
 #import "ChatMessageModel.h"
 #import "ChatMessageCell.h"
-#import "CacheManager.h"
 #import "CompressorHelper.h"
 #import "FileHelper.h"
 
@@ -86,40 +85,76 @@
     });
 }
 
+- (void) createDownloadHolderView {
+    [self.loadingIndicator startAnimating];
+    [self.timeLabel setHidden:true];
+    [self.typeIconView setHidden:true];
+    [self.sizeLabel setHidden:true];
+    [self.thumbnailImageView setBackgroundColor:[UIColor systemGrayColor]];
+}
+
 - (void)setChat:(ChatMessageModel *)chat {
     if (chat.messageData.messageId == _cachedMessageModel.messageData.messageId) {
-        
         return;
     }
+    
     _chat = [chat copy];
     _cachedMessageModel = chat;
     
-    self.sizeLabel.text = [NSString stringWithFormat:@"%.1f Mb", _chat.messageData.size];
-    [self.selectBtn.titleLabel setText:nil];
-    [self.typeIconView setHidden:true];
-    [self.timeLabel setHidden:true];
-    [self.thumbnailImageView setImage:nil];
-    
-    switch (_chat.messageData.type) {
-        case Video:
-            self.typeIconView.image = [UIImage imageNamed:@"camera"];
-            [self.typeIconView setHidden:false];
-            [self.timeLabel setHidden:false];
-            self.timeLabel.text = [NSString stringWithFormat:@"%lu", (unsigned long)_chat.messageData.duration];
-            break;
-        case Picture:
-            // Read ram-cache
-            if (_chat.thumbnail != nil) {
-                [_thumbnailImageView setImage:_chat.thumbnail];
-            } else {
-                [self handleLoadingImageWithUrl:chat.messageData.filePath];
-            }
-            break;
-        default:
-            [self.timeLabel setHidden:true];
-            [self.typeIconView setHidden:true];
-            break;
+    if (_chat.messageData.type == Download) {
+        [self createDownloadHolderView];
+    } else {
+        [self.thumbnailImageView setBackgroundColor:[UIColor clearColor]];
+        [self.loadingIndicator stopAnimating];
+        self.sizeLabel.text = [NSString stringWithFormat:@"%.1f Mb", _chat.messageData.size];
+        [self.selectBtn.titleLabel setText:nil];
+        [self.typeIconView setHidden:true];
+        [self.timeLabel setHidden:true];
+        [self.thumbnailImageView setImage:nil];
+        
+        switch (_chat.messageData.type) {
+            case Video:
+                self.typeIconView.image = [UIImage imageNamed:@"video"];
+                [self.typeIconView setHidden:false];
+                [self.timeLabel setHidden:false];
+                self.timeLabel.text = [self timeFormat:_chat.messageData.duration];
+                if (_chat.thumbnail != nil) {
+                    [_thumbnailImageView setImage:_chat.thumbnail];
+                } else {
+                    // TODO: Default video icon
+                }
+                break;
+            case Picture:
+                // Read ram-cache
+                if (_chat.thumbnail != nil) {
+                    [_thumbnailImageView setImage:_chat.thumbnail];
+                } else {
+                    [self handleLoadingImageWithUrl:chat.messageData.filePath];
+                }
+                break;
+            default:
+                [self.timeLabel setHidden:true];
+                [self.typeIconView setHidden:true];
+                [self.sizeLabel setHidden:true];
+                break;
+        }
     }
 }
 
+- (NSString *)timeFormat:(int)duration
+{
+    if (duration > 3600) {
+        int seconds = duration % 60;
+        int minutes = (duration / 60) % 60;
+        int hours = duration / 3600;
+
+        return [NSString stringWithFormat:@"%02d:%02d:%02d",hours, minutes, seconds];
+    } else {
+        int seconds = duration % 60;
+        int minutes = (duration / 60) % 60;
+
+        return [NSString stringWithFormat:@"%02d:%02d", minutes, seconds];
+    }
+    
+}
 @end

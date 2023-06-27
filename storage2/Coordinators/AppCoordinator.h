@@ -7,7 +7,8 @@
 #import "BaseCoordinator.h"
 #import <UIKit/UIKit.h>
 #import "DatabaseManager.h"
-#import "CacheManager.h"
+#import "CacheService.h"
+#import "ZODownloadManager.h"
 
 @interface AppCoordinator : BaseCoordinator
 

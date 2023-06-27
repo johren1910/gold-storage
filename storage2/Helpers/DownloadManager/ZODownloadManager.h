@@ -60,9 +60,10 @@
 ///    - errorBlock:Call back with a returned error
 ///    - isBackgroundDownload:Define if the url session is background supported. Allow to download & resume even when the app crash.
 ///
-- (void)startDownloadWithUrl:(NSString *)downloadUrl progressBlock:(ZODownloadProgressBlock)progressBlock
+- (void)startDownloadWithUrl:(NSString *)downloadUrl destinationDirectory:(NSString *)dstDirectory
+        isBackgroundDownload:(BOOL)isBackgroundDownload progressBlock:(ZODownloadProgressBlock)progressBlock
                   completionBlock:(ZODownloadCompletionBlock)completionBlock
-                     errorBlock:(ZODownloadErrorBlock)errorBlock isBackgroundDownload:(BOOL)isBackgroundDownload;
+                     errorBlock:(ZODownloadErrorBlock)errorBlock;
 
 /// The action to suspend download of the according URL
 ///

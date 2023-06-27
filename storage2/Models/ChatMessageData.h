@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 
 @import IGListDiffKit;
-#import "MediaType.h"
+#import "FileType.h"
 
 @interface ChatMessageData: NSObject <IGListDiffable, NSCopying>
 
@@ -20,11 +20,11 @@
 @property (nonatomic,readwrite) double duration;
 @property (nonatomic,readwrite) NSString* filePath;
 @property (nonatomic,readwrite) double size;
-@property (nonatomic,readwrite) MediaType type;
+@property (nonatomic,readwrite) FileType type;
 
 + (instancetype)new NS_UNAVAILABLE;
 
-- (instancetype)initWithMessage:(NSString *)message messageId:(NSString *)messageId chatRoomId:(NSString *)chatRoomId type:(MediaType)type NS_DESIGNATED_INITIALIZER;
+- (instancetype)initWithMessage:(NSString *)message messageId:(NSString *)messageId chatRoomId:(NSString *)chatRoomId type:(FileType)type NS_DESIGNATED_INITIALIZER;
 
 - (instancetype)initWithMessage:(NSString *)message messageId:(NSString *)messageId chatRoomId:(NSString *)chatRoomId NS_DESIGNATED_INITIALIZER;
 

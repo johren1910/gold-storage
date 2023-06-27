@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 
 @import IGListDiffKit;
-#import "MediaType.h"
+#import "FileType.h"
 #import "ChatMessageData.h"
 #import <UIKit/UIKit.h>
 

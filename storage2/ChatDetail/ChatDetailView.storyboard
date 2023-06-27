@@ -28,9 +28,8 @@
                                         </constraints>
                                         <segments>
                                             <segment title="All"/>
-                                            <segment title="Video &amp; Pictures"/>
-                                            <segment title="Files"/>
-                                            <segment title="Other"/>
+                                            <segment title="Pictures"/>
+                                            <segment title="Videos"/>
                                         </segments>
                                     </segmentedControl>
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Pku-XK-6eT" userLabel="Seperator">
@@ -68,30 +67,27 @@
                                             <constraint firstAttribute="height" constant="1" id="ClM-33-5uM"/>
                                         </constraints>
                                     </view>
-                                    <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Bfc-25-md9">
-                                        <rect key="frame" x="16" y="30" width="167.33333333333334" height="36"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HhN-VY-Ow1" userLabel="Upload">
+                                        <rect key="frame" x="292" y="16" width="85" height="64"/>
                                         <constraints>
-                                            <constraint firstAttribute="height" constant="36" id="VNd-ah-19k"/>
+                                            <constraint firstAttribute="width" constant="85" id="sIW-0J-COh"/>
                                         </constraints>
-                                        <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                        <textInputTraits key="textInputTraits"/>
-                                    </textField>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HhN-VY-Ow1" userLabel="Images &amp; Video">
-                                        <rect key="frame" x="298.33333333333331" y="16" width="78.666666666666686" height="64"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" subtitle="Media">
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="Button">
                                             <imageReference key="image" image="arrow.up.doc" catalog="system" symbolScale="large"/>
-                                        </buttonConfiguration>
+                                        </state>
                                         <connections>
                                             <action selector="onVideoImagesLocalBtnTouched:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="EqF-9I-6P6"/>
                                         </connections>
                                     </button>
-                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="HEh-zQ-9Mz" userLabel="Files">
-                                        <rect key="frame" x="199.33333333333334" y="30.666666666666629" width="83.000000000000028" height="35"/>
-                                        <state key="normal" title="Button"/>
-                                        <buttonConfiguration key="configuration" style="plain" image="doc.text" catalog="system" title="Files"/>
+                                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="yVb-IG-aUY" userLabel="Download">
+                                        <rect key="frame" x="31.999999999999993" y="34.666666666666629" width="92.333333333333314" height="27"/>
+                                        <inset key="imageEdgeInsets" minX="0.0" minY="0.0" maxX="2.2250738585072014e-308" maxY="0.0"/>
+                                        <state key="normal" title="Download">
+                                            <imageReference key="image" image="arrow.up.doc" catalog="system" symbolScale="large"/>
+                                        </state>
                                         <connections>
-                                            <action selector="onFileLocalBtnTouched:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="o6M-PF-pKl"/>
+                                            <action selector="onDownloadButtonTouched:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="EZz-tP-B63"/>
                                         </connections>
                                     </button>
                                 </subviews>
@@ -99,15 +95,12 @@
                                 <constraints>
                                     <constraint firstAttribute="bottom" secondItem="HhN-VY-Ow1" secondAttribute="bottom" constant="16" id="5eT-H6-IbZ"/>
                                     <constraint firstAttribute="height" constant="96" id="EEI-XM-qET"/>
-                                    <constraint firstItem="HEh-zQ-9Mz" firstAttribute="leading" secondItem="Bfc-25-md9" secondAttribute="trailing" constant="16" id="HWw-Zo-XWI"/>
-                                    <constraint firstItem="HEh-zQ-9Mz" firstAttribute="centerY" secondItem="9WB-iT-fcy" secondAttribute="centerY" id="LQR-Fi-L8l"/>
+                                    <constraint firstItem="yVb-IG-aUY" firstAttribute="centerY" secondItem="9WB-iT-fcy" secondAttribute="centerY" id="FKj-uH-Ml8"/>
                                     <constraint firstAttribute="trailing" secondItem="gVd-DW-pit" secondAttribute="trailing" id="PPV-Xg-Xxr"/>
                                     <constraint firstItem="gVd-DW-pit" firstAttribute="top" secondItem="9WB-iT-fcy" secondAttribute="top" constant="1" id="Yv7-nP-cgt"/>
-                                    <constraint firstItem="HhN-VY-Ow1" firstAttribute="leading" secondItem="HEh-zQ-9Mz" secondAttribute="trailing" constant="16" id="bSv-j7-tca"/>
                                     <constraint firstItem="HhN-VY-Ow1" firstAttribute="top" secondItem="9WB-iT-fcy" secondAttribute="top" constant="16" id="lkR-O5-2Ym"/>
                                     <constraint firstItem="gVd-DW-pit" firstAttribute="leading" secondItem="9WB-iT-fcy" secondAttribute="leading" id="maQ-OG-264"/>
-                                    <constraint firstItem="Bfc-25-md9" firstAttribute="leading" secondItem="9WB-iT-fcy" secondAttribute="leading" constant="16" id="quC-Qb-pq8"/>
-                                    <constraint firstItem="Bfc-25-md9" firstAttribute="centerY" secondItem="9WB-iT-fcy" secondAttribute="centerY" id="spp-gL-pyB"/>
+                                    <constraint firstItem="yVb-IG-aUY" firstAttribute="leading" secondItem="9WB-iT-fcy" secondAttribute="leading" constant="32" id="snO-Dh-5pt"/>
                                     <constraint firstAttribute="trailing" secondItem="HhN-VY-Ow1" secondAttribute="trailing" constant="16" id="vUH-rg-aop"/>
                                 </constraints>
                             </view>
@@ -139,7 +132,6 @@
     </scenes>
     <resources>
         <image name="arrow.up.doc" catalog="system" width="115" height="128"/>
-        <image name="doc.text" catalog="system" width="115" height="128"/>
         <systemColor name="opaqueSeparatorColor">
             <color red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>

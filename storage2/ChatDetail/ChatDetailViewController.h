@@ -12,7 +12,7 @@
 @import IGListKit;
 #import "ChatRoomModel.h"
 #import "ChatDetailViewModel.h"
-#import "MediaType.h"
+#import "FileType.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "FileHelper.h"
 #import <Photos/Photos.h>

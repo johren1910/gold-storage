@@ -59,7 +59,8 @@
     
     ChatDetailViewModel* viewModel = [[ChatDetailViewModel alloc] initWithChatRoom:chatRoom];
     viewModel.databaseManager = _databaseManager;
-    viewModel.cacheManager = _cacheManager;
+    viewModel.cacheService = _cacheService;
+    viewModel.downloadManager = _downloadManager;
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"ChatDetailView" bundle:nil];
     ChatDetailViewController *ivc = [storyboard instantiateViewControllerWithIdentifier:@"ChatDetailViewController"];

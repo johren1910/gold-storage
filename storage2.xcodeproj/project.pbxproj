@@ -18,7 +18,7 @@
 		F64BAB8D2A4053E3002B923F /* CircleGraphView.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAB8C2A4053E3002B923F /* CircleGraphView.m */; };
 		F64BABB12A429940002B923F /* StorageInfoCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F64BABB02A429940002B923F /* StorageInfoCell.xib */; };
 		F64BABB42A429A39002B923F /* StorageInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABB32A429A38002B923F /* StorageInfoCell.m */; };
-		F64BABB82A42DB46002B923F /* CacheManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABB72A42DB46002B923F /* CacheManager.m */; };
+		F64BABB82A42DB46002B923F /* CacheService.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABB72A42DB46002B923F /* CacheService.m */; };
 		F64BABBC2A42DF25002B923F /* CompressorHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABBB2A42DF25002B923F /* CompressorHelper.m */; };
 		F64BABBF2A42F08B002B923F /* ChatMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABBE2A42F08B002B923F /* ChatMessageModel.m */; };
 		F64BABC62A44057A002B923F /* ZOStatePresentable.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABC52A44057A002B923F /* ZOStatePresentable.m */; };
@@ -26,6 +26,7 @@
 		F64BABCE2A4839FA002B923F /* ZODownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABCD2A4839FA002B923F /* ZODownloadManager.m */; };
 		F64BABD22A483A3F002B923F /* ZODownloadUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABD12A483A3F002B923F /* ZODownloadUnit.m */; };
 		F64BABDA2A493BC8002B923F /* ReachabilityHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABD92A493BC8002B923F /* ReachabilityHelper.m */; };
+		F64BABDD2A4A81B9002B923F /* FileData.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABDC2A4A81B9002B923F /* FileData.m */; };
 		F6C43EF42A3AEF0D001D8715 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */; };
 		F6C43EF72A3AEF0D001D8715 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF62A3AEF0D001D8715 /* SceneDelegate.m */; };
 		F6C43EFA2A3AEF0D001D8715 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF92A3AEF0D001D8715 /* HomeViewController.m */; };
@@ -75,8 +76,8 @@
 		F64BABB02A429940002B923F /* StorageInfoCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StorageInfoCell.xib; sourceTree = "<group>"; };
 		F64BABB22A429A1D002B923F /* StorageInfoCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StorageInfoCell.h; sourceTree = "<group>"; };
 		F64BABB32A429A38002B923F /* StorageInfoCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StorageInfoCell.m; sourceTree = "<group>"; };
-		F64BABB62A42DB3C002B923F /* CacheManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CacheManager.h; sourceTree = "<group>"; };
-		F64BABB72A42DB46002B923F /* CacheManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CacheManager.m; sourceTree = "<group>"; };
+		F64BABB62A42DB3C002B923F /* CacheService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CacheService.h; sourceTree = "<group>"; };
+		F64BABB72A42DB46002B923F /* CacheService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CacheService.m; sourceTree = "<group>"; };
 		F64BABBA2A42DF1B002B923F /* CompressorHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CompressorHelper.h; sourceTree = "<group>"; };
 		F64BABBB2A42DF25002B923F /* CompressorHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CompressorHelper.m; sourceTree = "<group>"; };
 		F64BABBD2A42F080002B923F /* ChatMessageModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatMessageModel.h; sourceTree = "<group>"; };
@@ -91,6 +92,8 @@
 		F64BABD12A483A3F002B923F /* ZODownloadUnit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZODownloadUnit.m; sourceTree = "<group>"; };
 		F64BABD82A493BBF002B923F /* ReachabilityHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReachabilityHelper.h; sourceTree = "<group>"; };
 		F64BABD92A493BC8002B923F /* ReachabilityHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReachabilityHelper.m; sourceTree = "<group>"; };
+		F64BABDB2A4A81B0002B923F /* FileData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileData.h; sourceTree = "<group>"; };
+		F64BABDC2A4A81B9002B923F /* FileData.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileData.m; sourceTree = "<group>"; };
 		F6C43EEF2A3AEF0D001D8715 /* storage2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = storage2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6C43EF22A3AEF0D001D8715 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -132,7 +135,7 @@
 		F6C43F472A3C07A5001D8715 /* ChatMessageCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = ChatMessageCell.xib; sourceTree = "<group>"; };
 		F6C43F4A2A3C39DC001D8715 /* FileHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileHelper.h; sourceTree = "<group>"; };
 		F6C43F4B2A3C39EA001D8715 /* FileHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileHelper.m; sourceTree = "<group>"; };
-		F6C43F4E2A3C425C001D8715 /* MediaType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MediaType.h; sourceTree = "<group>"; };
+		F6C43F4E2A3C425C001D8715 /* FileType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileType.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -208,13 +211,13 @@
 			path = CircleGraphView;
 			sourceTree = "<group>";
 		};
-		F64BABB52A42DB30002B923F /* CacheManager */ = {
+		F64BABB52A42DB30002B923F /* CacheService */ = {
 			isa = PBXGroup;
 			children = (
-				F64BABB62A42DB3C002B923F /* CacheManager.h */,
-				F64BABB72A42DB46002B923F /* CacheManager.m */,
+				F64BABB62A42DB3C002B923F /* CacheService.h */,
+				F64BABB72A42DB46002B923F /* CacheService.m */,
 			);
-			path = CacheManager;
+			path = CacheService;
 			sourceTree = "<group>";
 		};
 		F64BABB92A42DF0D002B923F /* Compressor */ = {
@@ -375,13 +378,15 @@
 		F6C43F1B2A3AF139001D8715 /* Models */ = {
 			isa = PBXGroup;
 			children = (
-				F6C43F4E2A3C425C001D8715 /* MediaType.h */,
+				F6C43F4E2A3C425C001D8715 /* FileType.h */,
 				F6C43F1C2A3AF139001D8715 /* ChatRoomModel.h */,
 				F6C43F1D2A3AF139001D8715 /* ChatRoomModel.m */,
 				F6C43F342A3B0E95001D8715 /* ChatMessageData.h */,
 				F6C43F322A3B0E8C001D8715 /* ChatMessageData.m */,
 				F64BABBD2A42F080002B923F /* ChatMessageModel.h */,
 				F64BABBE2A42F08B002B923F /* ChatMessageModel.m */,
+				F64BABDB2A4A81B0002B923F /* FileData.h */,
+				F64BABDC2A4A81B9002B923F /* FileData.m */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -440,7 +445,7 @@
 				F64BABCB2A4839DC002B923F /* DownloadManager */,
 				F64BABC72A4536BE002B923F /* Skeleton */,
 				F64BABB92A42DF0D002B923F /* Compressor */,
-				F64BABB52A42DB30002B923F /* CacheManager */,
+				F64BABB52A42DB30002B923F /* CacheService */,
 				F64BAB832A4040DB002B923F /* HashHelper */,
 				F64BAB662A3DA439002B923F /* DatabaseManager */,
 				F6C43F4D2A3C39ED001D8715 /* FileHelper */,
@@ -586,11 +591,12 @@
 				F64BABCA2A4536EB002B923F /* Skeletonable.m in Sources */,
 				F6C43F052A3AEF0D001D8715 /* main.m in Sources */,
 				F64BABB42A429A39002B923F /* StorageInfoCell.m in Sources */,
+				F64BABDD2A4A81B9002B923F /* FileData.m in Sources */,
 				F64BAB742A3F05CA002B923F /* Coordinator.m in Sources */,
 				F64BABC62A44057A002B923F /* ZOStatePresentable.m in Sources */,
 				F6C43F392A3B1159001D8715 /* ChatMessageCell.m in Sources */,
 				F64BABD22A483A3F002B923F /* ZODownloadUnit.m in Sources */,
-				F64BABB82A42DB46002B923F /* CacheManager.m in Sources */,
+				F64BABB82A42DB46002B923F /* CacheService.m in Sources */,
 				F64BABBC2A42DF25002B923F /* CompressorHelper.m in Sources */,
 				F6C43F4C2A3C39EA001D8715 /* FileHelper.m in Sources */,
 				F64BAB7A2A3F08CA002B923F /* AppCoordinator.m in Sources */,

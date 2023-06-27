@@ -12,7 +12,8 @@
 
 @interface AppCoordinator () <HomeCoordinatorDelegate>
 @property (strong, nonatomic) DatabaseManager * databaseManager;
-@property (strong, nonatomic) CacheManager * cacheManager;
+@property (strong, nonatomic) CacheService * cacheService;
+@property (strong, nonatomic) ZODownloadManager * downloadManager;
 @end
 
 @implementation AppCoordinator
@@ -29,7 +30,8 @@
     _rootViewController = [[UINavigationController alloc] init];
     
     _databaseManager = [DatabaseManager getSharedInstance];
-    _cacheManager = [[CacheManager alloc] init];
+    _cacheService = [[CacheService alloc] init];
+    _downloadManager = [ZODownloadManager getSharedInstance];
     
     _window.rootViewController = _rootViewController;
     [_window makeKeyAndVisible];
@@ -40,7 +42,8 @@
     HomeCoordinator* homeCoordinator = [[HomeCoordinator alloc] init:_rootViewController];
     
     homeCoordinator.databaseManager = _databaseManager;
-    homeCoordinator.cacheManager = _cacheManager;
+    homeCoordinator.cacheService = _cacheService;
+    homeCoordinator.downloadManager = _downloadManager;
     homeCoordinator.delegate = self;
     [self store:homeCoordinator];
     [homeCoordinator start];

@@ -6,6 +6,7 @@
 //
 
 #import "FileHelper.h"
+#import <AVFoundation/AVFoundation.h>
 
 @implementation FileHelper
 
@@ -110,6 +111,27 @@
 +(BOOL)createDirectoriesForFileAtPath:(NSString *)path
 {
     return [self createDirectoriesForFileAtPath:path error:nil];
+}
+
++(ZOMediaInfo *)getMediaInfoOfFilePath:(NSString *)filePath
+{
+    NSURL*url = [NSURL fileURLWithPath:filePath];
+    AVURLAsset *asset = [[AVURLAsset alloc] initWithURL:url options:nil];
+    AVAssetImageGenerator *generateImg = [[AVAssetImageGenerator alloc] initWithAsset:asset];
+    NSError *error = NULL;
+    CMTime time = CMTimeMake(1, 65);
+    CGImageRef refImg = [generateImg copyCGImageAtTime:time actualTime:NULL error:&error];
+    NSLog(@"error==%@, Refimage==%@", error, refImg);
+
+    UIImage *frameImage= [[UIImage alloc] initWithCGImage:refImg];
+    
+    CMTime duration = [asset duration];
+    int seconds = ceil(duration.value/duration.timescale);
+    
+    ZOMediaInfo *info = [[ZOMediaInfo alloc] init];
+    info.thumbnail = frameImage;
+    info.duration = seconds;
+    return info;
 }
 
 
@@ -700,5 +722,9 @@
 
     return nil;
 }
+
+@end
+
+@implementation ZOMediaInfo
 
 @end

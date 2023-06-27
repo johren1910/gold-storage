@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import <sqlite3.h>
 #import "ChatRoomModel.h"
+#import "FileData.h"
 
 @interface DatabaseManager : NSObject {
    NSString *databasePath;
@@ -20,5 +21,6 @@
 -(NSArray<ChatRoomModel*>*) getChatRoomsByPage:(int)page;
 - (BOOL)saveChatMessageData:(ChatMessageData*) chatMessage totalRoomSize:(double)totalRoomSize;
 - (NSArray<ChatMessageData*>*) getChatMessagesByRoomId:(NSString*)chatRoomId;
+- (BOOL)updateChatMessage:(ChatMessageData*) chatMessage;
 
 @end

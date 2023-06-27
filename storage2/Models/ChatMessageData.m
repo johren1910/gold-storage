@@ -6,10 +6,10 @@
 //
 
 #import "ChatMessageData.h"
-#import "MediaType.h"
+#import "FileType.h"
 @implementation ChatMessageData
 
-- (instancetype)initWithMessage:(NSString *)message messageId:(NSString *)messageId chatRoomId:(NSString *)chatRoomId type:(MediaType)type
+- (instancetype)initWithMessage:(NSString *)message messageId:(NSString *)messageId chatRoomId:(NSString *)chatRoomId type:(FileType)type
 {
   if ((self = [super init])) {
     _message = [message copy];
@@ -26,7 +26,7 @@
  if ((self = [super init])) {
    _message = [message copy];
    _messageId = [messageId copy];
-     _type = Other;
+     _type = Uknown;
      _chatRoomId = [chatRoomId copy];
  }
 

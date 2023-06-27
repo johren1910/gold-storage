@@ -63,4 +63,3 @@
     [_delegate updateRamCache:image withKey:key];
 }
 @end
-
