@@ -20,6 +20,12 @@
 
 #pragma mark - View Lifecycle
 
+- (void) didUpdateObject:(ChatMessageModel*)model {
+    
+    //TODO: Fix DIFF bug on perform update.
+    [_adapter reloadObjects:@[model]];
+}
+
 - (void)didUpdateData {
     [_adapter performUpdatesAnimated:true completion:nil];
 }

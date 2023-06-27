@@ -107,7 +107,6 @@
     
     NSArray *filteredArray = [_messageModels filteredArrayUsingPredicate:predicate];
     _filteredChats = filteredArray;
-    
    
     dispatch_async( dispatch_get_main_queue(), ^{
         [weakself.delegate didUpdateData];
@@ -250,10 +249,11 @@
             break;
         }
     }
-    
-    _filteredChats = self.messageModels;
+    self.filteredChats = self.messageModels;
+    __weak ChatDetailViewModel *weakself = self;
     dispatch_async( dispatch_get_main_queue(), ^{
-        [self.delegate didReloadData];
+        
+        [weakself.delegate didUpdateObject:chat];
     });
 }
 - (void) deselectChatMessage:(ChatMessageModel *) chat {
@@ -265,10 +265,11 @@
             break;
         }
     }
-    
-    _filteredChats = self.messageModels;
+    __weak ChatDetailViewModel *weakself = self;
+    self.filteredChats = self.messageModels;
     dispatch_async( dispatch_get_main_queue(), ^{
-        [self.delegate didReloadData];
+        
+        [weakself.delegate didUpdateObject:chat];
     });
 }
 

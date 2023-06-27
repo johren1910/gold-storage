@@ -14,6 +14,7 @@
 @protocol ChatDetailViewModelDelegate <NSObject>
 
 - (void) didUpdateData;
+- (void) didUpdateObject:(ChatMessageModel*)model;
 - (void) didReloadData;
 
 @end
