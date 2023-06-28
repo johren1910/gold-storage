@@ -141,7 +141,7 @@ static sqlite3_stmt *statement = nil;
     return isSuccess;
 }
 
-- (BOOL)saveChatMessageData:(ChatMessageData*) chatMessage totalRoomSize:(double)totalRoomSize {
+- (BOOL)saveChatMessageData:(ChatMessageData*) chatMessage {
     
     BOOL result = NO;
     const char *dbpath = [databasePath UTF8String];
@@ -163,7 +163,7 @@ static sqlite3_stmt *statement = nil;
         sqlite3_finalize(statement);
     }
     
-    [self updateChatRoomSize:chatMessage totalRoomSize:totalRoomSize];
+    [self updateSizeOfRoomId:chatMessage.chatRoomId];
     
     sqlite3_close(database);
     return result;
@@ -339,16 +339,15 @@ static sqlite3_stmt *statement = nil;
     return result;
 }
 
-- (BOOL)updateChatRoomSize:(ChatMessageData*) chatMessage totalRoomSize:(double)totalRoomSize {
+- (BOOL)updateSizeOfRoomId:(NSString*) roomId {
     
     BOOL result = NO;
     const char *dbpath = [databasePath UTF8String];
-    
-    double newSize = totalRoomSize + chatMessage.size;
+    double newSize = [self getSizeOfRoomId:roomId];
     
     if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
         
-        NSString *updateSQL = [NSString stringWithFormat:@"update chatRoom set size =%lf where chatRoomId =\"%@\"", newSize, chatMessage.chatRoomId];
+        NSString *updateSQL = [NSString stringWithFormat:@"update chatRoom set size =%lf where chatRoomId =\"%@\"", newSize, roomId];
         const char *update_stmt = [updateSQL UTF8String];
         sqlite3_prepare_v2(database, update_stmt,-1, &statement, NULL);
         
@@ -361,6 +360,29 @@ static sqlite3_stmt *statement = nil;
     sqlite3_finalize(statement);
     sqlite3_close(database);
     return result;
+}
+
+- (double)getSizeOfRoomId:(NSString*) roomId {
+    
+    double size = 0;
+    const char *dbpath = [databasePath UTF8String];
+
+    if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
+        
+        NSString *querySum = [NSString stringWithFormat:@"select SUM(size) from chatMessage where chatRoomId =\"%@\"", roomId];
+        const char *stml = [querySum UTF8String];
+        sqlite3_prepare_v2(database, stml,-1, &statement, NULL);
+        
+        if (sqlite3_step(statement) == SQLITE_ROW) {
+            size = sqlite3_column_double(statement, 0);
+        } else {
+            size = 0;
+        }
+        
+    }
+    sqlite3_finalize(statement);
+    sqlite3_close(database);
+    return size;
 }
 
 - (BOOL) saveChatRoomData:(ChatRoomModel*)chatRoom {
@@ -382,42 +404,6 @@ static sqlite3_stmt *statement = nil;
     sqlite3_finalize(statement);
     sqlite3_close(database);
     return result;
-}
-
--(ChatRoomModel*) findChatsById:(NSString*)chatRoomId; {
-    const char *dbpath = [databasePath UTF8String];
-    
-    ChatRoomModel* result = nil;
-    if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
-        NSString *querySQL = [NSString stringWithFormat:
-                              @"select chatRoomId, name from chatRoom where chatRoomId=\"%@\"",chatRoomId];
-        const char *query_stmt = [querySQL UTF8String];
-        
-        if (sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK) {
-            if (sqlite3_step(statement) == SQLITE_ROW) {
-                NSString *chatRoomId = [[NSString alloc] initWithUTF8String:
-                                    (const char *) sqlite3_column_text(statement, 0)];
-
-                
-                NSString *name = [[NSString alloc] initWithUTF8String:
-                                  (const char *) sqlite3_column_text(statement, 1)];
-                
-                
-                result = [[ChatRoomModel alloc] initWithName:name chatRoomId:chatRoomId];
-                
-            } else {
-                NSLog(@"Not found");
-            }
-            
-            sqlite3_finalize(statement);
-            sqlite3_close(database);
-            
-            return result;
-        }
-    }
-    sqlite3_finalize(statement);
-    sqlite3_close(database);
-    return nil;
 }
 
 - (NSArray<ChatRoomModel*>*) getChatRoomsByPage:(int)page; {

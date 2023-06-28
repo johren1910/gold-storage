@@ -50,7 +50,7 @@
     __weak ChatDetailViewModel *weakself = self;
     dispatch_queue_t myQueue = dispatch_queue_create("storage.chat.data", DISPATCH_QUEUE_CONCURRENT);
     dispatch_async(myQueue, ^{
-        NSArray<ChatMessageData*>* result = [weakself.databaseManager getChatMessagesByRoomId:weakself.chatRoom.chatRoomId];
+        NSArray<ChatMessageData*>* result = [weakself.storageManager getChatMessagesByRoomId:weakself.chatRoom.chatRoomId];
         
         if (result != nil) {
             
@@ -58,7 +58,7 @@
             
             for (ChatMessageData* messageData in result) {
                 
-                UIImage* cachedImage = [weakself.cacheService getImageByKey:messageData.messageId];
+                UIImage* cachedImage = [weakself.storageManager getImageByKey:messageData.messageId];
                 
                 ChatMessageModel* model = [[ChatMessageModel alloc] initWithMessageData:messageData thumbnail:cachedImage];
                 
@@ -143,7 +143,7 @@
         newMessageData.filePath = url;
         newMessageData.createdAt = timeStamp;
         
-        [weakself.databaseManager saveChatMessageData:newMessageData totalRoomSize:0];
+        [weakself.storageManager saveChatMessageData:newMessageData];
         
         [weakself requestDownloadWithUrl:url forMessageId:placeHolderId];
     });
@@ -217,7 +217,7 @@
         newMessageData.createdAt = timeStamp;
         newMessageData.duration = mediaInfo.duration;
         
-        [[weakself databaseManager] updateChatMessage:newMessageData];
+        [[weakself storageManager] updateChatMessage:newMessageData];
      
         ChatMessageModel *newModel = [[ChatMessageModel alloc] initWithMessageData:newMessageData thumbnail:thumbnail];
         
@@ -278,11 +278,8 @@
     __weak ChatDetailViewModel* weakself = self;
     dispatch_async(myQueue, ^{
         for (ChatMessageModel* model in weakself.selectedModels) {
-            [weakself.databaseManager deleteChatMessage:model.messageData];
-            [weakself.cacheService deleteImageByKey:model.messageData.messageId];
-            
+            [weakself.storageManager deleteChatMessage:model.messageData];
             //TODO: Thêm reference count cho File. Nếu còn reference thì không xoá file.
-            [FileHelper removeItemAtPath:model.messageData.filePath];
             
             [weakself.messageModels removeObject:model];
         }
@@ -299,7 +296,7 @@
 - (void)addImage:(NSData *)data {
     __weak ChatDetailViewModel *weakself = self;
     NSString* chatRoomId = _chatRoom.chatRoomId;
-    dispatch_queue_t myQueue = dispatch_queue_create("storage.image.data", DISPATCH_QUEUE_CONCURRENT);
+    dispatch_queue_t myQueue = dispatch_queue_create("storage.image.data", DISPATCH_QUEUE_SERIAL);
     dispatch_async(myQueue, ^{
         
         NSString *messageId = [HashHelper hashDataMD5:data];
@@ -329,7 +326,7 @@
         newMessageData.filePath = filePath;
         newMessageData.createdAt = timeStamp;
         
-        [weakself.databaseManager saveChatMessageData:newMessageData totalRoomSize:weakself.chatRoom.size];
+        [weakself.storageManager saveChatMessageData:newMessageData];
         ChatMessageModel *newModel = [[ChatMessageModel alloc] initWithMessageData:newMessageData thumbnail:image];
         
         [weakself.messageModels insertObject:newModel atIndex:0];
@@ -348,7 +345,7 @@
     dispatch_async(myQueue, ^{
         [CompressorHelper compressImage:image quality:Thumbnail completionBlock:^(UIImage* compressedImage){
             
-            [weakself.cacheService cacheImageByKey:image withKey:key];
+            [weakself.storageManager cacheImageByKey:image withKey:key];
         }];
     });
 }
@@ -383,6 +380,6 @@
 }
 
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key {
-    [_cacheService cacheImageByKey:image withKey:key];
+    [_storageManager cacheImageByKey:image withKey:key];
 }
 @end

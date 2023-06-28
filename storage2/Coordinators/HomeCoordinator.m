@@ -13,6 +13,7 @@
 #import "ChatDetailViewModel.h"
 #import "StorageViewModel.h"
 #import "StorageViewController.h"
+#import "StorageManager.h"
 
 @interface HomeCoordinator () <HomeViewModelCoordinatorDelegate>
 
@@ -32,7 +33,7 @@
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"HomeView" bundle:nil];
     HomeViewController *ivc = [storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"];
     HomeViewModel* viewModel = [[HomeViewModel alloc] init];
-    viewModel.databaseManager = _databaseManager;
+    viewModel.storageManager = _storageManager;
     viewModel.coordinatorDelegate = self;
     [ivc setViewModel:viewModel];
     [_navigationController setViewControllers:@[ivc] animated:TRUE];
@@ -58,8 +59,7 @@
     NSLog(@"Navigate to chatRoom");
     
     ChatDetailViewModel* viewModel = [[ChatDetailViewModel alloc] initWithChatRoom:chatRoom];
-    viewModel.databaseManager = _databaseManager;
-    viewModel.cacheService = _cacheService;
+    viewModel.storageManager = _storageManager;
     viewModel.downloadManager = _downloadManager;
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"ChatDetailView" bundle:nil];

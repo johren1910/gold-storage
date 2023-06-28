@@ -9,6 +9,7 @@
 #import "DatabaseManager.h"
 #import "CacheService.h"
 #import "ZODownloadManager.h"
+#import "StorageManager.h"
 
 @interface AppCoordinator : BaseCoordinator
 

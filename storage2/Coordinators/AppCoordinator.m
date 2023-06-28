@@ -14,6 +14,7 @@
 @property (strong, nonatomic) id<DatabaseManagerType> databaseManager;
 @property (strong, nonatomic) id<CacheServiceType> cacheService;
 @property (strong, nonatomic) id<ZODownloadManagerType> downloadManager;
+@property (strong, nonatomic) id<StorageManagerType> storageManager;
 @end
 
 @implementation AppCoordinator
@@ -32,6 +33,7 @@
     _databaseManager = [DatabaseManager getSharedInstance];
     _cacheService = [[CacheService alloc] init];
     _downloadManager = [ZODownloadManager getSharedInstance];
+    _storageManager = [[StorageManager alloc] initWithCacheService:_cacheService andDatabaseManager:_databaseManager];
     
     _window.rootViewController = _rootViewController;
     [_window makeKeyAndVisible];
@@ -41,8 +43,7 @@
 - (void) homeFLow {
     HomeCoordinator* homeCoordinator = [[HomeCoordinator alloc] init:_rootViewController];
     
-    homeCoordinator.databaseManager = _databaseManager;
-    homeCoordinator.cacheService = _cacheService;
+    homeCoordinator.storageManager = _storageManager;
     homeCoordinator.downloadManager = _downloadManager;
     homeCoordinator.delegate = self;
     [self store:homeCoordinator];

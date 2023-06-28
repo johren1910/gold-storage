@@ -9,7 +9,6 @@
 
 #import "HomeViewModel.h"
 #import "ChatRoomModel.h"
-#import "DatabaseManager.h"
 #import "HashHelper.h"
 
 @interface HomeViewModel ()
@@ -32,10 +31,10 @@
     _chats = [[NSMutableArray alloc] init];
     dispatch_queue_t databaseQueue = dispatch_queue_create("storage.database", DISPATCH_QUEUE_CONCURRENT);
     
-    __weak id<DatabaseManagerType> weakDatabaseManager = _databaseManager;
+    __weak id<StorageManagerType> weakStorageManager = _storageManager;
     __weak HomeViewModel *weakself = self;
     dispatch_async(databaseQueue, ^{
-        NSArray<ChatRoomModel*>* result = [weakDatabaseManager getChatRoomsByPage:1];
+        NSArray<ChatRoomModel*>* result = [weakStorageManager getChatRoomsByPage:1];
         NSLog(@"Nice %@", result);
         if (result != nil) {
             dispatch_async(dispatch_get_main_queue(), ^{
@@ -99,7 +98,7 @@
     __weak HomeViewModel* weakself = self;
     dispatch_async(myQueue, ^{
         for (ChatRoomModel* model in weakself.selectedModels) {
-            [weakself.databaseManager deleteChatRoom:model];
+            [weakself.storageManager deleteChatRoom:model];
         }
             
             //TODO: Storage manager, to delete files of chatRoom, message, and temp, cache
@@ -125,10 +124,10 @@
     
     dispatch_queue_t databaseQueue = dispatch_queue_create("storage.database", DISPATCH_QUEUE_CONCURRENT);
     
-    __weak id<DatabaseManagerType> weakDatabaseManager = [self databaseManager];
+    __weak id<StorageManagerType> weakStorageManager = self.storageManager;
     dispatch_async(databaseQueue, ^{
         
-        [weakDatabaseManager saveChatRoomData:newChat];
+        [weakStorageManager saveChatRoomData:newChat];
     });
 }
 @end

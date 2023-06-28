@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "ChatRoomModel.h"
 #import "ChatRoomSectionController.h"
-#import "DatabaseManager.h"
+#import "StorageManagerType.h"
 
 @protocol HomeViewModelDelegate
 
@@ -38,6 +38,6 @@
 
 @property (nonatomic, weak) id <HomeViewModelDelegate>  delegate;
 @property (nonatomic, strong) id <HomeViewModelCoordinatorDelegate>  coordinatorDelegate;
-@property (nonatomic, strong) id<DatabaseManagerType> databaseManager;
+@property (nonatomic, strong) id<StorageManagerType> storageManager;
 
 @end

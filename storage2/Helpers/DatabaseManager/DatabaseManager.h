@@ -12,10 +12,9 @@
 
 @protocol DatabaseManagerType
 -(BOOL) createChatDatabase;
-- (BOOL) saveChatRoomData:(ChatRoomModel*)chatRoome;
--(ChatRoomModel*) findChatsById:(NSString*)chatRoomId;
+- (BOOL) saveChatRoomData:(ChatRoomModel*)chatRoom;
 -(NSArray<ChatRoomModel*>*) getChatRoomsByPage:(int)page;
-- (BOOL)saveChatMessageData:(ChatMessageData*) chatMessage totalRoomSize:(double)totalRoomSize;
+- (BOOL)saveChatMessageData:(ChatMessageData*) chatMessage;
 - (BOOL)deleteChatMessage:(ChatMessageData*) message;
 - (NSArray<ChatMessageData*>*) getChatMessagesByRoomId:(NSString*)chatRoomId;
 - (BOOL)updateChatMessage:(ChatMessageData*) chatMessage;

@@ -7,8 +7,7 @@
 #import <Foundation/Foundation.h>
 #import "ChatDetailSectionController.h"
 #import "ChatRoomModel.h"
-#import "DatabaseManager.h"
-#import "CacheService.h"
+#import "StorageManagerType.h"
 #import "ZODownloadManager.h"
 
 @protocol ChatDetailViewModelDelegate <NSObject>
@@ -36,8 +35,7 @@
 
 @property (nonatomic, weak) id <ChatDetailViewModelDelegate>  delegate;
 @property (copy,nonatomic) NSArray<ChatMessageModel *> *filteredChats;
-@property (nonatomic, strong) id<DatabaseManagerType> databaseManager;
-@property (nonatomic, strong) id<CacheServiceType> cacheService;
+@property (nonatomic, strong) id<StorageManagerType> storageManager;
 @property (nonatomic, strong) id<ZODownloadManagerType> downloadManager;
 
 -(instancetype) initWithChatRoom: (ChatRoomModel*) chatRoom;

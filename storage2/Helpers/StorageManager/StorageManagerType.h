@@ -8,23 +8,26 @@
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
 #import "CacheService.h"
+#import "HashHelper.h"
+#import "DatabaseManager.h"
+#import "FileHelper.h"
+#import "ChatRoomModel.h"
+#import "FileData.h"
 
 @protocol StorageManagerType
 
 # pragma mark - DB Operation
-- (void) saveEntity;
-- (void) deleteEntity;
-- (void) updateEntity;
-- (void) findEntity;
-- (void) findEntities;
+- (BOOL) saveChatRoomData:(ChatRoomModel*)chatRoom;
+-(NSArray<ChatRoomModel*>*) getChatRoomsByPage:(int)page;
+- (BOOL)saveChatMessageData:(ChatMessageData*) chatMessage;
+- (BOOL)deleteChatMessage:(ChatMessageData*) message;
+- (NSArray<ChatMessageData*>*) getChatMessagesByRoomId:(NSString*)chatRoomId;
+- (BOOL)updateChatMessage:(ChatMessageData*) chatMessage;
+- (BOOL)deleteChatRoom:(ChatRoomModel*) chatRoom;
 
 # pragma mark - Cache Operation
-- (void) cacheObjectByKey;
-- (void) getObjectByKey;
-- (void) deleteObjectByKey;
-
-# pragma mark - File Operation
-- (void) createFile;
-- (void) deleteFile;
+-(void)cacheImageByKey:(UIImage*)image withKey:(NSString*)key;
+-(UIImage*)getImageByKey:(NSString*)key;
+-(void)deleteImageByKey:(NSString*)key;
 
 @end
