@@ -9,8 +9,9 @@
 #import <sqlite3.h>
 #import "ChatRoomModel.h"
 #import "FileData.h"
+#import "ServiceFactory.h"
 
-@protocol DatabaseManagerType
+@protocol DatabaseManagerType <FactoryResolvable>
 
 #pragma mark - ChatMessage
 - (BOOL)saveChatMessageData:(ChatMessageData*) chatMessage;

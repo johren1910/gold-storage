@@ -14,7 +14,7 @@
 #import "ChatRoomModel.h"
 #import "FileData.h"
 
-@protocol StorageManagerType
+@protocol StorageManagerType <FactoryResolvable>
 
 # pragma mark - DB Operation
 - (BOOL) saveChatRoomData:(ChatRoomModel*)chatRoom;
