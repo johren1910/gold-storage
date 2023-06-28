@@ -97,12 +97,12 @@
     _chat = [chat copy];
     _cachedMessageModel = chat;
     
-    if (_chat.messageData.type == Download) {
+    if (_chat.messageData.file.type == Download) {
         [self createDownloadHolderView];
     } else {
         [self.thumbnailImageView setBackgroundColor:[UIColor clearColor]];
         [self.loadingIndicator stopAnimating];
-        self.sizeLabel.text = [NSString stringWithFormat:@"%.1f MB", _chat.messageData.size];
+        self.sizeLabel.text = [NSString stringWithFormat:@"%.1f MB", _chat.messageData.file.size];
         [self.typeIconView setHidden:true];
         [self.timeLabel setHidden:true];
         [self.thumbnailImageView setImage:nil];
@@ -113,12 +113,12 @@
             self.selectedImage.image = [UIImage imageNamed:@"circle-empty"];
         }
         
-        switch (_chat.messageData.type) {
+        switch (_chat.messageData.file.type) {
             case Video:
                 self.typeIconView.image = [UIImage imageNamed:@"video"];
                 [self.typeIconView setHidden:false];
                 [self.timeLabel setHidden:false];
-                self.timeLabel.text = [self timeFormat:_chat.messageData.duration];
+                self.timeLabel.text = [self timeFormat:_chat.messageData.file.duration];
                 if (_chat.thumbnail != nil) {
                     [_thumbnailImageView setImage:_chat.thumbnail];
                 } else {
@@ -130,7 +130,7 @@
                 if (_chat.thumbnail != nil) {
                     [_thumbnailImageView setImage:_chat.thumbnail];
                 } else {
-                    [self handleLoadingImageWithUrl:chat.messageData.filePath];
+                    [self handleLoadingImageWithUrl:chat.messageData.file.filePath];
                 }
                 break;
             default:

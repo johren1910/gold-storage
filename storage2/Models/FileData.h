@@ -22,4 +22,6 @@
 @property (nonatomic,readwrite) double lastModified;
 @property (nonatomic,readwrite) double lastAccessed;
 @property (nonatomic,readwrite) FileType type;
+
+@property (nonatomic,readwrite) NSData* tempData;
 @end

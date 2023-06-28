@@ -433,6 +433,7 @@ didFinishDownloadingToURL:(NSURL *)location {
         NSError *error;
         NSString* destinationPath = [unit.destinationDirectoryPath stringByAppendingPathComponent:[urlString lastPathComponent]];
         NSURL *dstUrl = [FileHelper urlForItemAtPath:destinationPath];
+        [FileHelper createDirectoriesForFileAtPath:destinationPath];
         [FileHelper copyItemAtPath:location toPath:dstUrl error:&error];
         
         ZODownloadCompletionBlock completion = unit.completionBlock;

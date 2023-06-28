@@ -94,7 +94,7 @@ static sqlite3_stmt *statement = nil;
     if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
         char *errMsg;
         const char *sql_stmt =
-        "create table if not exists chatMessage (messageId text primary key, message text, chatRoomId text, createdAt real, duration integer, filePath text, size real, type integer)";
+        "create table if not exists chatMessage (messageId text primary key, message text, chatRoomId text, createdAt real)";
         
         if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg) != SQLITE_OK) {
             isSuccess = NO;
@@ -148,10 +148,7 @@ static sqlite3_stmt *statement = nil;
     
     if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
         
-        NSString *insertSQL = [NSString stringWithFormat:@"insert into chatMessage (messageId, message, chatRoomId, createdAt, duration, filePath, size, type) values (\"%@\",\"%@\",\"%@\",%lf, %lf,\"%@\",%lf,%ld)", chatMessage.messageId, chatMessage.message, chatMessage.chatRoomId, chatMessage.createdAt, chatMessage.duration,
-                               chatMessage.filePath,
-                               chatMessage.size,
-                               (long)chatMessage.type];
+        NSString *insertSQL = [NSString stringWithFormat:@"insert into chatMessage (messageId, message, chatRoomId, createdAt) values (\"%@\",\"%@\",\"%@\",%lf)", chatMessage.messageId, chatMessage.message, chatMessage.chatRoomId, chatMessage.createdAt];
         const char *insert_stmt = [insertSQL UTF8String];
         sqlite3_prepare_v2(database, insert_stmt,-1, &statement, NULL);
         int code = sqlite3_step(statement);
@@ -163,7 +160,7 @@ static sqlite3_stmt *statement = nil;
         sqlite3_finalize(statement);
     }
     
-    [self updateSizeOfRoomId:chatMessage.chatRoomId];
+//    [self updateSizeOfRoomId:chatMessage.chatRoomId];
     
     sqlite3_close(database);
     return result;
@@ -336,33 +333,6 @@ static sqlite3_stmt *statement = nil;
     return result;
 }
 
-- (BOOL)updateChatMessage:(ChatMessageData*) chatMessage {
-    
-    BOOL result = NO;
-    const char *dbpath = [databasePath UTF8String];
-    
-    if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
-        
-        NSString *updateSQL = [NSString stringWithFormat:@"update chatMessage set duration=%f, filePath=\"%@\", size=%f, type=%ld where messageId =\"%@\"", chatMessage.duration,
-                               chatMessage.filePath,
-                               chatMessage.size,
-                               (long)chatMessage.type,
-                               chatMessage.messageId];;
-        const char *stmt = [updateSQL UTF8String];
-        sqlite3_prepare_v2(database, stmt,-1, &statement, NULL);
-        int code = sqlite3_step(statement);
-        if (code == SQLITE_DONE) {
-            result = YES;
-        } else {
-            result = NO;
-        }
-        sqlite3_finalize(statement);
-    }
-    
-    sqlite3_close(database);
-    return result;
-}
-
 - (BOOL)updateSizeOfRoomId:(NSString*) roomId {
     
     BOOL result = NO;
@@ -388,12 +358,20 @@ static sqlite3_stmt *statement = nil;
 
 - (double)getSizeOfRoomId:(NSString*) roomId {
     
+    NSArray<NSString*>* messageIds = [self getChatMessageIdsByRoomId:roomId];
+    
     double size = 0;
     const char *dbpath = [databasePath UTF8String];
-
+    NSString* idsQueryString = @"(";
+    for (NSString* messageId in messageIds) {
+        idsQueryString = [idsQueryString stringByAppendingString:[NSString stringWithFormat:@"\"%@\",", messageId]];
+    }
+    NSString *truncatedQueryString = [idsQueryString substringToIndex:[idsQueryString length]-1];
+   
+    truncatedQueryString = [truncatedQueryString stringByAppendingString:@")"];
     if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
         
-        NSString *querySum = [NSString stringWithFormat:@"select SUM(size) from chatMessage where chatRoomId =\"%@\"", roomId];
+        NSString *querySum = [NSString stringWithFormat:@"select SUM(size) from (select distinct checksum, size, messageId from file) where messageId in %@", truncatedQueryString];
         const char *stml = [querySum UTF8String];
         sqlite3_prepare_v2(database, stml,-1, &statement, NULL);
         
@@ -491,23 +469,47 @@ static sqlite3_stmt *statement = nil;
                 
                 double createdAt = (double) sqlite3_column_double(statement, 3);
                 
-                double duration = (double) sqlite3_column_double(statement, 4);
-                
-                NSString *filePath = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 5)];
-                
-                double size =  sqlite3_column_double(statement, 6);
-                
-                int type = sqlite3_column_int(statement, 7);
-                
                 ChatMessageData *chat = [[ChatMessageData alloc] initWithMessage:message messageId:messageId chatRoomId:chatRoomId];
                 chat.createdAt = createdAt;
-                chat.duration = duration;
-                chat.filePath = filePath;
-                chat.size = size;
-                chat.type = type;
               
                 [result addObject:chat];
                 chat = nil;
+            }
+            
+            if (sqlite3_step(statement) == SQLITE_ROW) {
+                
+  
+            } else {
+                NSLog(@"Not found");
+            }
+            
+            sqlite3_finalize(statement);
+            sqlite3_close(database);
+            return result;
+        }
+    }
+    sqlite3_finalize(statement);
+    sqlite3_close(database);
+    return nil;
+}
+
+- (NSArray<NSString*>*) getChatMessageIdsByRoomId:(NSString*)chatRoomId {
+    const char *dbpath = [databasePath UTF8String];
+    NSMutableArray<NSString*>* result = [@[] mutableCopy] ;
+    
+    if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
+        NSString *querySQL = [NSString stringWithFormat:
+                              @"select messageId from chatMessage where chatRoomId=\"%@\" order by createdAt DESC ", chatRoomId];
+        const char *query_stmt = [querySQL UTF8String];
+        
+        if (sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK) {
+            
+            while (sqlite3_step(statement)==SQLITE_ROW)
+            {
+                NSString *messageId = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 0)];
+              
+                [result addObject:messageId];
+              
             }
             
             if (sqlite3_step(statement) == SQLITE_ROW) {

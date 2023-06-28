@@ -9,24 +9,11 @@
 #import "FileType.h"
 @implementation ChatMessageData
 
-- (instancetype)initWithMessage:(NSString *)message messageId:(NSString *)messageId chatRoomId:(NSString *)chatRoomId type:(FileType)type
-{
-  if ((self = [super init])) {
-    _message = [message copy];
-    _messageId = [messageId copy];
-    _type = type;
-      _chatRoomId = [chatRoomId copy];
-  }
-
-  return self;
-}
-
 - (instancetype)initWithMessage:(NSString *)message messageId:(NSString *)messageId chatRoomId:(NSString *)chatRoomId
 {
  if ((self = [super init])) {
    _message = [message copy];
    _messageId = [messageId copy];
-     _type = Uknown;
      _chatRoomId = [chatRoomId copy];
  }
 
@@ -40,7 +27,7 @@
 
 - (NSString *)description
 {
-  return [NSString stringWithFormat:@"%@ - \n\t name: %@; \n\t messageId: %@; \n type: @type", [super description], _message, _messageId, _type];
+  return [NSString stringWithFormat:@"%@ - \n\t name: %@; \n\t messageId: %@;", [super description], _message, _messageId];
 }
 
 - (id<NSObject>)diffIdentifier

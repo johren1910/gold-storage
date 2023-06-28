@@ -17,17 +17,18 @@
 - (BOOL)saveChatMessageData:(ChatMessageData*) chatMessage;
 - (BOOL)deleteChatMessage:(ChatMessageData*) message;
 - (NSArray<ChatMessageData*>*) getChatMessagesByRoomId:(NSString*)chatRoomId;
-- (BOOL)updateChatMessage:(ChatMessageData*) chatMessage;
 
 #pragma mark - ChatRoom
 - (BOOL) saveChatRoomData:(ChatRoomModel*)chatRoom;
 - (BOOL) deleteChatRoom:(ChatRoomModel*) chatRoom;
 -(NSArray<ChatRoomModel*>*) getChatRoomsByPage:(int)page;
+- (double)getSizeOfRoomId:(NSString*) roomId;
 
 #pragma mark - File
 - (BOOL)saveFileData:(FileData*) fileData;
 - (BOOL)deleteFileData:(FileData*) file;
 - (FileData*) getFileOfMessageId:(NSString*)messageId;
+- (BOOL)updateFileData:(FileData*) fileData;
 
 @end
 

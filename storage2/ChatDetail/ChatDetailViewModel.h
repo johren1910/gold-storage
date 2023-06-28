@@ -30,7 +30,6 @@
 - (void)addFile:(NSData *)data;
 - (void)downloadFileWithUrl:(NSString *)url;
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
-- (void)requestDownloadWithUrl:(NSString *)url forMessageId:(NSString*) messageId;
 - (void)deleteSelected;
 
 @property (nonatomic, weak) id <ChatDetailViewModelDelegate>  delegate;

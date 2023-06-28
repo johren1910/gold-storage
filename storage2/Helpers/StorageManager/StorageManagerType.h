@@ -17,17 +17,32 @@
 @protocol StorageManagerType <FactoryResolvable>
 
 # pragma mark - DB Operation
-- (BOOL) saveChatRoomData:(ChatRoomModel*)chatRoom;
--(NSArray<ChatRoomModel*>*) getChatRoomsByPage:(int)page;
+
 - (BOOL)saveChatMessageData:(ChatMessageData*) chatMessage;
 - (BOOL)deleteChatMessage:(ChatMessageData*) message;
 - (NSArray<ChatMessageData*>*) getChatMessagesByRoomId:(NSString*)chatRoomId;
-- (BOOL)updateChatMessage:(ChatMessageData*) chatMessage;
-- (BOOL)deleteChatRoom:(ChatRoomModel*) chatRoom;
+
+- (BOOL) saveChatRoomData:(ChatRoomModel*)chatRoom;
+- (BOOL) deleteChatRoom:(ChatRoomModel*) chatRoom;
+-(NSArray<ChatRoomModel*>*) getChatRoomsByPage:(int)page;
+- (double)getSizeOfRoomId:(NSString*) roomId;
+
+- (BOOL)saveFileData:(FileData*) fileData;
+- (BOOL)deleteFileData:(FileData*) file;
+- (FileData*) getFileOfMessageId:(NSString*)messageId;
+- (BOOL)updateFileData:(FileData*) fileData;
+
+
+#pragma mark - Local file operation
+-(void)writeToFilePath:(NSString*)filePath withData:(NSData*)data;
 
 # pragma mark - Cache Operation
 -(void)cacheImageByKey:(UIImage*)image withKey:(NSString*)key;
 -(UIImage*)getImageByKey:(NSString*)key;
 -(void)deleteImageByKey:(NSString*)key;
+- (void)compressThenCache: (UIImage*)image withKey:(NSString*) key;
+
+#pragma mark - Helper operation
+-(FileType)getFileTypeOfFilePath:(NSString*)filePath;
 
 @end
