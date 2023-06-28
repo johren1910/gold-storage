@@ -121,6 +121,10 @@
     [self createAlert];
 }
 
+- (IBAction)onDeleteBtnTouched:(id)sender {
+    [_viewModel deleteSelected];
+}
+
 - (void) createAlert {
     UIAlertController * alertController = [UIAlertController alertControllerWithTitle: @"Create new chat"
                                                                               message: @"Input chat name:"

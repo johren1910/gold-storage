@@ -274,7 +274,7 @@
 }
 
 - (void)deleteSelected {
-    dispatch_queue_t myQueue = dispatch_queue_create("storage.image.data", DISPATCH_QUEUE_CONCURRENT);
+    dispatch_queue_t myQueue = dispatch_queue_create("storage.chatdetail.delete", DISPATCH_QUEUE_CONCURRENT);
     __weak ChatDetailViewModel* weakself = self;
     dispatch_async(myQueue, ^{
         for (ChatMessageModel* model in weakself.selectedModels) {

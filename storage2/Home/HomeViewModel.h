@@ -28,6 +28,7 @@
 @interface HomeViewModel : NSObject
 - (void) selectChatRoom:(ChatRoomModel *) chatRoom;
 - (void) deselectChatRoom:(ChatRoomModel *) chatRoom;
+- (void) deleteSelected;
 - (void)getData:(void (^)(NSMutableArray<ChatRoomModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion;
 
 - (ChatRoomModel *)itemAtIndexPath:(NSIndexPath *)indexPath;

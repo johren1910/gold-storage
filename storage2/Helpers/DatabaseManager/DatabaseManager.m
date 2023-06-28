@@ -198,9 +198,9 @@ static sqlite3_stmt *statement = nil;
     return result;
 }
 
-- (NSArray<FileData*>*) getFilesOfMessageId:(NSString*)messageId {
+- (FileData*) getFileOfMessageId:(NSString*)messageId {
     const char *dbpath = [databasePath UTF8String];
-    NSMutableArray<FileData*>* result = [@[] mutableCopy] ;
+    FileData* result = nil;
     
     if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
         NSString *querySQL = [NSString stringWithFormat:
@@ -208,7 +208,7 @@ static sqlite3_stmt *statement = nil;
         const char *query_stmt = [querySQL UTF8String];
         if (sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK) {
             
-            while (sqlite3_step(statement)==SQLITE_ROW)
+            if (sqlite3_step(statement)==SQLITE_ROW)
             {
                 FileData *file = [[FileData alloc] init];
                 file.fileId = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 0)];
@@ -223,7 +223,7 @@ static sqlite3_stmt *statement = nil;
                 file.lastModified =  sqlite3_column_double(statement, 8);
                 file.lastAccessed =  sqlite3_column_double(statement, 9);
                 file.type = sqlite3_column_int(statement, 10);
-                [result addObject:file];
+                result = file;
                 
             }
             
@@ -235,6 +235,29 @@ static sqlite3_stmt *statement = nil;
     sqlite3_finalize(statement);
     sqlite3_close(database);
     return nil;
+}
+
+- (BOOL)deleteFileData:(FileData*) file {
+    BOOL result = NO;
+    const char *dbpath = [databasePath UTF8String];
+    
+    if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
+        
+        NSString *deleteSQL = [NSString stringWithFormat:@"delete from file where id =\"%@\"",
+                               file.fileId];
+        const char *stmt = [deleteSQL UTF8String];
+        sqlite3_prepare_v2(database, stmt,-1, &statement, NULL);
+        int code = sqlite3_step(statement);
+        if (code == SQLITE_DONE) {
+            result = YES;
+        } else {
+            result = NO;
+        }
+        sqlite3_finalize(statement);
+    }
+    
+    sqlite3_close(database);
+    return result;
 }
 
 - (BOOL)deleteChatRoom:(ChatRoomModel*) chatRoom {
@@ -255,6 +278,7 @@ static sqlite3_stmt *statement = nil;
         }
         sqlite3_finalize(statement);
     }
+    
     sqlite3_close(database);
     return result;
 }

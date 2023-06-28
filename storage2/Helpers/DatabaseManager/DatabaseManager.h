@@ -11,14 +11,23 @@
 #import "FileData.h"
 
 @protocol DatabaseManagerType
--(BOOL) createChatDatabase;
-- (BOOL) saveChatRoomData:(ChatRoomModel*)chatRoom;
--(NSArray<ChatRoomModel*>*) getChatRoomsByPage:(int)page;
+
+#pragma mark - ChatMessage
 - (BOOL)saveChatMessageData:(ChatMessageData*) chatMessage;
 - (BOOL)deleteChatMessage:(ChatMessageData*) message;
 - (NSArray<ChatMessageData*>*) getChatMessagesByRoomId:(NSString*)chatRoomId;
 - (BOOL)updateChatMessage:(ChatMessageData*) chatMessage;
-- (BOOL)deleteChatRoom:(ChatRoomModel*) chatRoom;
+
+#pragma mark - ChatRoom
+- (BOOL) saveChatRoomData:(ChatRoomModel*)chatRoom;
+- (BOOL) deleteChatRoom:(ChatRoomModel*) chatRoom;
+-(NSArray<ChatRoomModel*>*) getChatRoomsByPage:(int)page;
+
+#pragma mark - File
+- (BOOL)saveFileData:(FileData*) fileData;
+- (BOOL)deleteFileData:(FileData*) file;
+- (FileData*) getFileOfMessageId:(NSString*)messageId;
+
 @end
 
 @interface DatabaseManager : NSObject <DatabaseManagerType> {

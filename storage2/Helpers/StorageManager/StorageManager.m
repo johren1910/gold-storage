@@ -57,8 +57,21 @@
 - (BOOL)updateChatMessage:(ChatMessageData*) chatMessage {
    return [_databaseManager updateChatMessage:chatMessage];
 }
+
+/// 1 - Get all messages of room
+/// 2 - `deleteChatMessage` for each message
+/// 3 - Delete room
 - (BOOL)deleteChatRoom:(ChatRoomModel*) chatRoom {
-   return [_databaseManager deleteChatRoom:chatRoom];
+    
+    __weak StorageManager* weakself = self;
+    dispatch_async(_storageQueue, ^(){
+        [[weakself getChatMessagesByRoomId:chatRoom.chatRoomId] enumerateObjectsUsingBlock:^(ChatMessageData* obj, NSUInteger idx, BOOL *stop) {
+            [weakself deleteChatMessage:obj];
+        }];
+        [weakself.databaseManager deleteChatRoom:chatRoom];
+    });
+    
+    return TRUE;
 }
 
 # pragma mark - Cache Operation

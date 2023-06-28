@@ -21,6 +21,7 @@
     self = [super init];
     if (self) {
         self.chats = [[NSMutableArray alloc] init];
+        self.selectedModels = [[NSMutableArray alloc] init];
     }
     
     return self;
@@ -94,15 +95,14 @@
 }
 
 - (void)deleteSelected {
-    dispatch_queue_t myQueue = dispatch_queue_create("storage.image.data", DISPATCH_QUEUE_CONCURRENT);
+    dispatch_queue_t myQueue = dispatch_queue_create("storage.homeview.delete", DISPATCH_QUEUE_CONCURRENT);
     __weak HomeViewModel* weakself = self;
     dispatch_async(myQueue, ^{
         for (ChatRoomModel* model in weakself.selectedModels) {
             [weakself.storageManager deleteChatRoom:model];
+            [weakself.chats removeObject:model];
         }
-            
-            //TODO: Storage manager, to delete files of chatRoom, message, and temp, cache
-            
+       
         dispatch_async( dispatch_get_main_queue(), ^{
             [self.delegate didUpdateData];
         });

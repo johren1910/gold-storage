@@ -41,16 +41,8 @@
                                                     <action selector="onCreateBtnTouch:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="kIu-UF-kX4"/>
                                                 </connections>
                                             </button>
-                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PQ0-uA-3bM">
-                                                <rect key="frame" x="136.66666666666666" y="0.0" width="119.99999999999997" height="64"/>
-                                                <constraints>
-                                                    <constraint firstAttribute="width" constant="120" id="Yqf-1E-p2D"/>
-                                                </constraints>
-                                                <state key="normal" title="Button"/>
-                                                <buttonConfiguration key="configuration" style="plain" title="Edit"/>
-                                            </button>
                                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ZFc-qP-pQs">
-                                                <rect key="frame" x="273" y="0.0" width="120" height="64"/>
+                                                <rect key="frame" x="136.66666666666666" y="0.0" width="119.99999999999997" height="64"/>
                                                 <constraints>
                                                     <constraint firstAttribute="width" constant="120" id="iSb-I8-ySO"/>
                                                 </constraints>
@@ -58,6 +50,19 @@
                                                 <buttonConfiguration key="configuration" style="plain" title="Setting"/>
                                                 <connections>
                                                     <action selector="onSettingBtnTouched:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="RLM-9K-QNF"/>
+                                                </connections>
+                                            </button>
+                                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PQ0-uA-3bM">
+                                                <rect key="frame" x="273" y="0.0" width="120" height="64"/>
+                                                <constraints>
+                                                    <constraint firstAttribute="width" constant="120" id="Yqf-1E-p2D"/>
+                                                </constraints>
+                                                <state key="normal" title="Button"/>
+                                                <buttonConfiguration key="configuration" style="plain" title="Delete">
+                                                    <color key="baseForegroundColor" systemColor="systemRedColor"/>
+                                                </buttonConfiguration>
+                                                <connections>
+                                                    <action selector="onDeleteBtnTouched:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="txp-zG-k9P"/>
                                                 </connections>
                                             </button>
                                         </subviews>
@@ -141,6 +146,9 @@
         </systemColor>
         <systemColor name="systemBackgroundColor">
             <color white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+        </systemColor>
+        <systemColor name="systemRedColor">
+            <color red="1" green="0.23137254901960785" blue="0.18823529411764706" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
         </systemColor>
     </resources>
 </document>
