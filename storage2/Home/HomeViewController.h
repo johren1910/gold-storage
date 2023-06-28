@@ -10,7 +10,7 @@
 #import "HomeViewModel.h"
 #import "ZOStatePresentable.h"
 
-@interface HomeViewController : UIViewController <ChatSectionControllerDelegate>
+@interface HomeViewController : UIViewController <ChatRoomSectionControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UICollectionView *homeCollectionView;
 - (void)setViewModel:(HomeViewModel *)viewModel;

@@ -7,12 +7,14 @@
 
 #import <Foundation/Foundation.h>
 #import "ChatRoomModel.h"
-#import "ChatSectionController.h"
+#import "ChatRoomSectionController.h"
 #import "DatabaseManager.h"
 
 @protocol HomeViewModelDelegate
 
 - (void) didUpdateData;
+- (void) didUpdateObject:(ChatRoomModel*)model;
+- (void) didReloadData;
 
 @end
 
@@ -24,7 +26,8 @@
 @end
 
 @interface HomeViewModel : NSObject
-
+- (void) selectChatRoom:(ChatRoomModel *) chatRoom;
+- (void) deselectChatRoom:(ChatRoomModel *) chatRoom;
 - (void)getData:(void (^)(NSMutableArray<ChatRoomModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion;
 
 - (ChatRoomModel *)itemAtIndexPath:(NSIndexPath *)indexPath;

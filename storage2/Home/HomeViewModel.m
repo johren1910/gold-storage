@@ -13,7 +13,7 @@
 #import "HashHelper.h"
 
 @interface HomeViewModel ()
-
+@property (retain,nonatomic) NSMutableArray<ChatRoomModel *> *selectedModels;
 @end
 
 @implementation HomeViewModel
@@ -61,6 +61,54 @@
 
 - (NSMutableArray<ChatRoomModel*>*) items {
     return _chats;
+}
+
+- (void) selectChatRoom:(ChatRoomModel *) chatRoom {
+    [_selectedModels addObject:chatRoom];
+    for (ChatRoomModel *model in _chats) {
+        if (chatRoom.chatRoomId == model.chatRoomId) {
+            
+            model.selected = TRUE;
+            break;
+        }
+    }
+    __weak HomeViewModel *weakself = self;
+    dispatch_async( dispatch_get_main_queue(), ^{
+        
+        [weakself.delegate didUpdateObject:chatRoom];
+    });
+}
+- (void) deselectChatRoom:(ChatRoomModel *) chatRoom {
+    [_selectedModels removeObject:chatRoom];
+    for (ChatRoomModel *model in _chats) {
+        if (chatRoom.chatRoomId == model.chatRoomId) {
+            
+            model.selected = FALSE;
+            break;
+        }
+    }
+    __weak HomeViewModel *weakself = self;
+    dispatch_async( dispatch_get_main_queue(), ^{
+        
+        [weakself.delegate didUpdateObject:chatRoom];
+    });
+}
+
+- (void)deleteSelected {
+    dispatch_queue_t myQueue = dispatch_queue_create("storage.image.data", DISPATCH_QUEUE_CONCURRENT);
+    __weak HomeViewModel* weakself = self;
+    dispatch_async(myQueue, ^{
+        for (ChatRoomModel* model in weakself.selectedModels) {
+            [weakself.databaseManager deleteChatRoom:model];
+        }
+            
+            //TODO: Storage manager, to delete files of chatRoom, message, and temp, cache
+            
+        dispatch_async( dispatch_get_main_queue(), ^{
+            [self.delegate didUpdateData];
+        });
+    });
+    
 }
 
 - (void)createNewChat: (NSString *) name {

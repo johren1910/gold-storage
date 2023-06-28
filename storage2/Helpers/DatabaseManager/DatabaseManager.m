@@ -237,6 +237,27 @@ static sqlite3_stmt *statement = nil;
     return nil;
 }
 
+- (BOOL)deleteChatRoom:(ChatRoomModel*) chatRoom {
+    BOOL result = NO;
+    const char *dbpath = [databasePath UTF8String];
+    
+    if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
+        
+        NSString *deleteSQL = [NSString stringWithFormat:@"delete from chatRoom where chatRoomId =\"%@\"",
+                               chatRoom.chatRoomId];
+        const char *stmt = [deleteSQL UTF8String];
+        sqlite3_prepare_v2(database, stmt,-1, &statement, NULL);
+        int code = sqlite3_step(statement);
+        if (code == SQLITE_DONE) {
+            result = YES;
+        } else {
+            result = NO;
+        }
+        sqlite3_finalize(statement);
+    }
+    sqlite3_close(database);
+    return result;
+}
 - (BOOL)deleteChatMessage:(ChatMessageData*) message {
     BOOL result = NO;
     const char *dbpath = [databasePath UTF8String];

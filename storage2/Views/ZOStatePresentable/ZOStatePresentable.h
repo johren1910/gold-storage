@@ -52,5 +52,5 @@
 @end
 
 @interface ZOStatePresenter : NSObject <ZOStatePresentable>
--(instancetype) init:(UIView*)stateContainerView  loadingStateView:(SkeletonView*)loadingStateView emptyStateView:(UIView*)emptyStateView errorStateView:(UIView*)errorStateView;
+-(instancetype) init:(UIView*)stateContainerView  loadingStateView:(id<Skeletonable>)loadingStateView emptyStateView:(UIView*)emptyStateView errorStateView:(UIView*)errorStateView;
 @end

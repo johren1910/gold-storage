@@ -9,7 +9,7 @@
 @import IGListKit;
 #import "ChatRoomModel.h"
 #import "ChatRoomCell.h"
-#import "ChatSectionController.h"
+#import "ChatRoomSectionController.h"
 #import "HomeViewModel.h"
 #import "ChatDetailViewController.h"
 #import "StorageViewController.h"
@@ -90,7 +90,7 @@
 }
 
 - (IGListSectionController *)listAdapter:(IGListAdapter *)listAdapter sectionControllerForObject:(id)object {
-    ChatSectionController *chatSection = [ChatSectionController new];
+    ChatRoomSectionController *chatSection = [ChatRoomSectionController new];
     chatSection.delegate = self;
     return chatSection;
 }
@@ -105,6 +105,15 @@
     
     [_viewModel.coordinatorDelegate didTapChatRoom:chat];
 }
+
+- (void) didSelectForDelete: (ChatRoomModel*) chatRoom {
+    [_viewModel selectChatRoom:chatRoom];
+}
+
+- (void) didDeselect: (ChatRoomModel*) chatRoom {
+    [_viewModel deselectChatRoom:chatRoom];
+}
+
 
 #pragma mark - Action
 
@@ -146,6 +155,13 @@
 #pragma mark - HomeViewModelDelegate
 - (void) didUpdateData {
     [self.adapter performUpdatesAnimated:true completion:nil];
+}
+
+- (void) didUpdateObject:(ChatRoomModel*)model {
+    [self.adapter reloadObjects:@[model]];
+}
+- (void) didReloadData {
+    [self.adapter reloadDataWithCompletion:nil];
 }
 
 @end

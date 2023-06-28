@@ -7,12 +7,16 @@
 
 #import <Foundation/Foundation.h>
 
-#import "ChatSectionController.h"
+#import "ChatRoomSectionController.h"
 
 #import "ChatRoomCell.h"
 #import "ChatRoomModel.h"
 
-@implementation ChatSectionController {
+@interface ChatRoomSectionController () <ChatRoomCellDelegate>
+
+@end
+
+@implementation ChatRoomSectionController {
     ChatRoomModel *_chat;
 }
 
@@ -53,4 +57,16 @@
 //    NSLog(@"Ngon 1 %@", _chat);
     [_delegate didSelect:_chat];
 }
+- (void)didSelectCircle {
+    if (_chat.selected) {
+        [_delegate didDeselect:_chat];
+    } else {
+        [_delegate didSelectForDelete:_chat];
+    }
+}
+
+- (void)updateRamCache:(UIImage *)image withKey:(NSString *)key {
+    
+}
+
 @end

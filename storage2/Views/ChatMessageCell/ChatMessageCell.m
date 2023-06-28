@@ -102,7 +102,7 @@
     } else {
         [self.thumbnailImageView setBackgroundColor:[UIColor clearColor]];
         [self.loadingIndicator stopAnimating];
-        self.sizeLabel.text = [NSString stringWithFormat:@"%.1f Mb", _chat.messageData.size];
+        self.sizeLabel.text = [NSString stringWithFormat:@"%.1f MB", _chat.messageData.size];
         [self.typeIconView setHidden:true];
         [self.timeLabel setHidden:true];
         [self.thumbnailImageView setImage:nil];

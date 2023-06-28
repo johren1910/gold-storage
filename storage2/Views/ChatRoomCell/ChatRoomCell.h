@@ -9,6 +9,7 @@
 
 @protocol ChatRoomCellDelegate <NSObject>
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
+- (void) didSelectCircle;
 @end
 
 @interface ChatRoomCell : UICollectionViewCell

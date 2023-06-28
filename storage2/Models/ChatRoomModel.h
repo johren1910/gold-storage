@@ -17,6 +17,7 @@
 @property (nonatomic,readwrite, copy) NSArray<ChatMessageData *>* messages;
 @property (nonatomic,readwrite) double size;
 @property (nonatomic,readwrite) double createdAt;
+@property (nonatomic) BOOL selected;
 
 + (instancetype)new NS_UNAVAILABLE;
 - (instancetype)initWithName:(NSString *)name chatRoomId:(NSString *)chatRoomId;

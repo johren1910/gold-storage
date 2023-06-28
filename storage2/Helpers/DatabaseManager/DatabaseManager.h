@@ -19,7 +19,7 @@
 - (BOOL)deleteChatMessage:(ChatMessageData*) message;
 - (NSArray<ChatMessageData*>*) getChatMessagesByRoomId:(NSString*)chatRoomId;
 - (BOOL)updateChatMessage:(ChatMessageData*) chatMessage;
-
+- (BOOL)deleteChatRoom:(ChatRoomModel*) chatRoom;
 @end
 
 @interface DatabaseManager : NSObject <DatabaseManagerType> {

@@ -31,7 +31,7 @@
 }
 
 - (void)setupSubviews {
-    self.contentView.backgroundColor = [UIColor colorWithWhite:0.85 alpha:1.0];
+    self.contentView.backgroundColor = [UIColor systemBackgroundColor];
 
     self.nameLabel.textAlignment = NSTextAlignmentLeft;
 
@@ -52,12 +52,23 @@ static NSAttributedString *AttributedStringForChat(ChatRoomModel *chat) {
                                                                    attributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:15.0]}]];
     return string;
 }
+- (IBAction)onSelectBtnTouched:(id)sender {
+    [_delegate didSelectCircle];
+}
 
 - (void)setChat:(ChatRoomModel *)chat {
     
     _chat = [chat copy];
-
+    
     self.nameLabel.attributedText = AttributedStringForChat(chat);
+    
+    if (_chat.selected) {
+        self.circleImageView.image = [[UIImage imageNamed:@"circle-filled"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        [self.circleImageView setTintColor:[UIColor darkGrayColor]];
+    } else {
+        self.circleImageView.image = [[UIImage imageNamed:@"circle-empty"] imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+        [self.circleImageView setTintColor:[UIColor darkGrayColor]];
+    }
 }
 
 @end

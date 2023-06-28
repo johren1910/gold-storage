@@ -12,7 +12,6 @@ static NSString* gradientLayerName = @"gradientLayer";
 
 @implementation SkeletonView
 
-
 - (void)hideSkeleton {
     for (CALayer* layer in self.layer.sublayers) {
         if ([[layer name] isEqualToString:skeletonLayerName] || [[layer name] isEqualToString:gradientLayerName]) {
