@@ -9,19 +9,23 @@
 #import "FileHelper.h"
 #import "HashHelper.h"
 #import "ReachabilityHelper.h"
+#import "ZOPriorityQueue.h"
 
 @interface ZODownloadManager () <NSURLSessionDelegate, NSURLSessionDownloadDelegate>
 
-@property (nonatomic, strong) NSLock *lock;
 @property (nonatomic, strong) NSURLSession *defaultUrlSession;
 @property (nonatomic, strong) NSURLSession *backgroundUrlSession;
-@property (nonatomic, strong) NSMutableDictionary *currentDownloadUnits;
-@property (nonatomic, strong) dispatch_queue_t downloadDispatchQueue;
-@property (nonatomic, strong) dispatch_queue_t operationDispatchQueue;
-@property (nonatomic, strong) NSMutableArray<ZODownloadUnit *> *pendingDownloadUnits;
+
+
+@property (nonatomic, strong) dispatch_queue_t concurrentDispatchQueue;
+@property (nonatomic, strong) dispatch_queue_t serialDispatchQueue;
+
 @property (nonatomic) NSUInteger currentDownloadingCount;
+
 @property (nonatomic, strong) ReachabilityHelper *reachabilityHelper;
-@property (nonatomic, strong) NSMutableArray *currentPendingArray;
+
+@property (nonatomic, strong) ZOPriorityQueue* priorityQueue;
+@property (nonatomic, strong) NSMutableDictionary *currentDownloadUnits;
 @end
 
 @implementation ZODownloadManager
@@ -38,7 +42,6 @@
 }
 -(instancetype)init {
     if (self == [super init]) {
-        _lock = [[NSLock alloc] init];
         [self prepare];
         
     }
@@ -74,50 +77,61 @@
     return _defaultUrlSession;
 }
 
+- (void)removePendingUnit:(ZODownloadUnit *)unit {
+    [_priorityQueue remove:unit];
+}
+
+- (void)addPendingUnit:(ZODownloadUnit *)unit {
+    [_priorityQueue enqueue:unit];
+}
+
+- (ZODownloadUnit *)getNextDownloadUnit {
+    return [_priorityQueue dequeue];
+}
+
 -(void)prepare {
-    _maxConcurrentDownloads = MAX_DOWNLOAD_CONRRUENT;
+    _maxConcurrentDownloads = MAX_DOWNLOAD_CONCURRENT;
     _currentDownloadingCount = 0;
     _currentDownloadUnits = [NSMutableDictionary new];
-    _downloadDispatchQueue = dispatch_queue_create("com.ZODownloadManager.downloadQueue", DISPATCH_QUEUE_CONCURRENT);
-    _operationDispatchQueue = dispatch_queue_create("com.ZODownloadManager.operationQueue", DISPATCH_QUEUE_SERIAL);
+    _priorityQueue = [[ZOPriorityQueue alloc] init];
+    
+    _concurrentDispatchQueue = dispatch_queue_create("com.ZODownloadManager.downloadQueue", DISPATCH_QUEUE_CONCURRENT);
+    _serialDispatchQueue = dispatch_queue_create("com.ZODownloadManager.operationQueue", DISPATCH_QUEUE_SERIAL);
     
     _allowAutoRetry = FALSE;
     _retryTimeout = MAX_DOWNLOAD_TIMEOUT;
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkChanged:) name:kReachabilityChangedNotification object:nil];
     self.reachabilityHelper = [ReachabilityHelper reachabilityForLocalWiFi];
-    [self.reachabilityHelper startNotifier];
-}
+    [self.reachabilityHelper startNotifier];}
 
 #pragma mark - Session manager
 
--(NSMutableArray *)currentPendingArray {
-    if (!_currentPendingArray) {
-        _currentPendingArray = [NSMutableArray array];
-    }
-    return _currentPendingArray;
-}
-
 - (void)startDownloadWithUrl:(NSString *)downloadUrl destinationDirectory:(NSString *)dstDirectory
-        isBackgroundDownload:(BOOL)isBackgroundDownload progressBlock:(ZODownloadProgressBlock)progressBlock
+        isBackgroundDownload:(BOOL)isBackgroundDownload
+               priority:(ZODownloadPriority)priority  progressBlock:(ZODownloadProgressBlock)progressBlock
                   completionBlock:(ZODownloadCompletionBlock)completionBlock
                      errorBlock:(ZODownloadErrorBlock)errorBlock {
-    if (downloadUrl.length == 0) { return;}
+    if (downloadUrl.length == 0)
+        return;
     __weak ZODownloadManager* weakself = self;
-    dispatch_async(_operationDispatchQueue, ^{
-        [weakself.lock lock];
+    dispatch_async(_serialDispatchQueue, ^{
         ZODownloadUnit *unit = [weakself.currentDownloadUnits objectForKey:downloadUrl];
-        if (!unit) {
-            unit = [[ZODownloadUnit alloc] init];
+        if (unit) {
+            [unit.completionBlocks addObject:completionBlock];
+        } else {
+            ZODownloadUnit* unit = [[ZODownloadUnit alloc] init];
             unit.requestUrl = downloadUrl;
             unit.downloadState = ZODownloadStatePending;
             unit.progressBlock = progressBlock;
-            unit.completionBlock = completionBlock;
+            unit.completionBlocks = [[NSMutableArray alloc] init];
+            unit.priority = priority;
+            [unit.completionBlocks addObject:completionBlock];
             unit.errorBlock = errorBlock;
             unit.startDate = [NSDate date];
             unit.isBackgroundSession = isBackgroundDownload;
-            [self.currentPendingArray addObject:unit];
+            [self addPendingUnit:unit];
             if (!dstDirectory) {
-                unit.destinationDirectoryPath = [FileHelper pathForDocumentsDirectory];
+                unit.destinationDirectoryPath = [FileHelper pathForApplicationSupportDirectory];
             } else {
                 unit.destinationDirectoryPath = dstDirectory;
             }
@@ -126,16 +140,14 @@
             NSString* destinationPath = [unit.destinationDirectoryPath stringByAppendingPathComponent:[downloadUrl lastPathComponent]];
             if ([FileHelper existsItemAtPath:destinationPath]) {
                 // File already downloaded
-                dispatch_async(self.downloadDispatchQueue, ^{
-                    completionBlock(destinationPath);
-                });
+                for (ZODownloadCompletionBlock block in unit.completionBlocks) {
+                    block(destinationPath);
+                }
                 return;
             }
+            [weakself checkDownloadPipeline];
         }
-        [weakself checkDownloadPipeline];
-        [weakself.lock unlock];
     });
-    
     
 }
 
@@ -144,8 +156,7 @@
         return;
     }
     __weak ZODownloadManager* weakself = self;
-    dispatch_async(_operationDispatchQueue, ^{
-        [weakself.lock lock];
+    dispatch_async(_serialDispatchQueue, ^{
         ZODownloadUnit *unit = [weakself.currentDownloadUnits objectForKey:url];
         if (unit) {
             [unit.task cancelByProducingResumeData:^(NSData * _Nullable resumeData) {
@@ -157,14 +168,12 @@
         }
         weakself.currentDownloadingCount--;
         [weakself checkDownloadPipeline];
-        [weakself.lock unlock];
     });
 }
 
 - (void)suspendAllDownload{
     __weak ZODownloadManager* weakself = self;
-    dispatch_async(_operationDispatchQueue, ^{
-        [weakself.lock lock];
+    dispatch_async(_serialDispatchQueue, ^{
         [weakself.currentDownloadUnits enumerateKeysAndObjectsUsingBlock:^(id key, ZODownloadUnit* value, BOOL* stop) {
             if (value.downloadState == ZODownloadStateDownloading || value.downloadState == ZODownloadStatePending || value.downloadState == ZODownloadStateError) {
                 [value.task suspend];
@@ -172,7 +181,6 @@
             }
         }];
         weakself.currentDownloadingCount = 0;
-        [weakself.lock unlock];
     });
 }
 
@@ -181,9 +189,8 @@
         return;
     }
     __weak ZODownloadManager* weakself = self;
-    dispatch_async(_operationDispatchQueue, ^{
+    dispatch_async(_serialDispatchQueue, ^{
         
-        [weakself.lock lock];
         ZODownloadUnit *unit = [weakself.currentDownloadUnits objectForKey:url];
         if (unit) {
             unit.downloadState = ZODownloadStatePending;
@@ -192,16 +199,14 @@
         }
         
         [weakself checkDownloadPipeline];
-        [weakself.lock unlock];
     });
     
 }
 
 - (void)resumeAllDownload{
     __weak ZODownloadManager* weakself = self;
-    dispatch_async(_operationDispatchQueue, ^{
-        [weakself.lock lock];
-        
+    dispatch_async(_serialDispatchQueue, ^{
+       
         [weakself.currentDownloadUnits enumerateKeysAndObjectsUsingBlock:^(id key, ZODownloadUnit* value, BOOL* stop) {
             if (value.downloadState != ZODownloadStateError || value.downloadState != ZODownloadStateDone || value.downloadState != ZODownloadStateDownloading ) {
                 value.downloadState = ZODownloadStatePending;
@@ -209,7 +214,6 @@
         }];
         
         [weakself checkDownloadPipeline];
-        [weakself.lock unlock];
     });
     
 }
@@ -219,9 +223,8 @@
         return;
     }
     __weak ZODownloadManager* weakself = self;
-    dispatch_async(_operationDispatchQueue, ^{
+    dispatch_async(_serialDispatchQueue, ^{
         
-        [weakself.lock lock];
         ZODownloadUnit *unit = [weakself.currentDownloadUnits objectForKey:url];
         
         // TODO: - Remove TEMP downloading files.
@@ -229,14 +232,18 @@
             if (unit.downloadState == ZODownloadStateDone) {
                 return;
             } else {
+                if (unit.downloadState == ZODownloadStateDownloading) {
+                    weakself.currentDownloadingCount--;
+                }
                 [unit.task cancel];
                 unit.task = nil;
             }
             [weakself.currentDownloadUnits removeObjectForKey:url];
+            [weakself.priorityQueue remove:unit];
         }
-        weakself.currentDownloadingCount--;
+        
+       
         [weakself checkDownloadPipeline];
-        [weakself.lock unlock];
     });
    
 }
@@ -244,8 +251,7 @@
 - (void)cancelAllDownload{
     
     __weak ZODownloadManager* weakself = self;
-    dispatch_async(_operationDispatchQueue, ^{
-        [weakself.lock lock];
+    dispatch_async(_serialDispatchQueue, ^{
         
         [weakself.currentDownloadUnits enumerateKeysAndObjectsUsingBlock:^(id key, ZODownloadUnit* value, BOOL* stop) {
             [value.task cancel];
@@ -260,7 +266,6 @@
         [weakself.currentDownloadUnits removeAllObjects];
         weakself.currentDownloadingCount = 0;
         
-        [weakself.lock unlock];
     });
     
 }
@@ -268,16 +273,8 @@
 - (void)checkDownloadPipeline {
     
     if (self.isAllowNewDownload) {
-        for (ZODownloadUnit *unit in _currentPendingArray) {
-            if (unit.downloadState == ZODownloadStatePending) {
-                
-                if (self.maxConcurrentDownloads - self.currentDownloadingCount > 0) {
-                    [self startDownloadItem:unit];
-                } else {
-                    break;
-                }
-            }
-        }
+        self.currentDownloadingCount++;
+        [self startDownloadItem:[self getNextDownloadUnit]];
     }
 }
 
@@ -295,10 +292,10 @@
         return;
     }
     __weak ZODownloadManager* weakself = self;
-    dispatch_async(_operationDispatchQueue, ^{
+    dispatch_async(_serialDispatchQueue, ^{
 
         unit.downloadState = ZODownloadStateDownloading;
-        [weakself cancelTaskOfUnit:unit];
+//        [weakself cancelTaskOfUnit:unit];
         
         [[NSURLCache sharedURLCache] removeAllCachedResponses];
         // TODO: CORNER CASE: If client A request ZODownloadManager to down linkA at background thread. The session is 50% done, another client B request ZODownloadManager to download the same file at foreground thread. Should we create a new download or reuse the current session of background thread?
@@ -313,13 +310,14 @@
                             && sessionTask.error) {
                             // App terminated manully by user. All background session download cleared, create new download
                             [sessionTask cancel];
+                            weakself.currentDownloadingCount--;
                         } else {
                             unit.task = (NSURLSessionDownloadTask*)sessionTask;
                             [weakself.currentDownloadUnits setObject:unit forKey:unit.requestUrl];
                             if (sessionTask.state == NSURLSessionTaskStateSuspended) {
                                 [sessionTask resume];
                             }
-                            weakself.currentDownloadingCount++;
+                            
                         }
                     }
                 }];
@@ -330,7 +328,7 @@
                     unit.task = downloadTask;
                     [weakself.currentDownloadUnits setObject:unit forKey:unit.requestUrl];
                     [downloadTask resume];
-                    weakself.currentDownloadingCount++;
+                    
                 }
             }];
         } else {
@@ -339,7 +337,6 @@
             unit.task = downloadTask;
             [weakself.currentDownloadUnits setObject:unit forKey:unit.requestUrl];
             [downloadTask resume];
-            weakself.currentDownloadingCount++;
         }
     });
 }
@@ -398,7 +395,6 @@
  totalBytesWritten:(int64_t)totalBytesWritten
 totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     
-    [self.lock lock];
     NSString *urlString = downloadTask.originalRequest.URL.absoluteString;
     if (!urlString) {
         urlString = downloadTask.currentRequest.URL.absoluteString;
@@ -409,26 +405,24 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     CGFloat progress = (CGFloat)totalBytesWritten/ (CGFloat)totalBytesExpectedToWrite;
     NSUInteger remainingTime = [self remainingTimeForDownload:unit bytesTransferred:totalBytesWritten totalBytesExpectedToWrite:totalBytesExpectedToWrite];
     NSUInteger speed = bytesWritten/1024;
-    dispatch_async(dispatch_get_main_queue(), ^{
+    if (unit.progressBlock) {
         unit.progressBlock(progress, speed, remainingTime);
-    });
-    
-    [self.lock unlock];
-    
+    }
 }
 
 - (void)URLSession:(NSURLSession *)session
       downloadTask:(NSURLSessionDownloadTask *)downloadTask
 didFinishDownloadingToURL:(NSURL *)location {
-
+    __weak ZODownloadManager* weakself = self;
+    
     NSString *urlString = downloadTask.currentRequest.URL.absoluteString;
     if (!urlString) {
         urlString = downloadTask.originalRequest.URL.absoluteString;
     }
     
-    ZODownloadUnit *unit = [self.currentDownloadUnits objectForKey:urlString];
+    ZODownloadUnit *unit = [weakself.currentDownloadUnits objectForKey:urlString];
     unit.tempFilePath = location.path;
-    _currentDownloadingCount--;
+    weakself.currentDownloadingCount--;
     if (unit) {
         NSError *error;
         NSString* destinationPath = [unit.destinationDirectoryPath stringByAppendingPathComponent:[urlString lastPathComponent]];
@@ -436,21 +430,22 @@ didFinishDownloadingToURL:(NSURL *)location {
         [FileHelper createDirectoriesForFileAtPath:destinationPath];
         [FileHelper copyItemAtPath:location toPath:dstUrl error:&error];
         
-        ZODownloadCompletionBlock completion = unit.completionBlock;
-        if (completion) {
-            dispatch_async(self.downloadDispatchQueue, ^{
-                completion(destinationPath);
-            });
+        if (unit.completionBlocks) {
+            for (ZODownloadCompletionBlock block in unit.completionBlocks) {
+                block(destinationPath);
+            }
             [FileHelper removeItemAtPath:unit.tempFilePath];
         }
         
-        [self.currentDownloadUnits removeObjectForKey:unit.requestUrl];
+        [weakself.currentDownloadUnits removeObjectForKey:unit.requestUrl];
         
         [unit.task cancel];
         unit.task = nil;
     } else {
         [downloadTask cancel];
     }
+    
+    [weakself checkDownloadPipeline];
 }
 
 - (void)URLSession:(NSURLSession *)session
@@ -479,8 +474,14 @@ didCompleteWithError:(NSError *)error {
                 } else {
                     // Try resume data
                     NSData* resumeData = [error.userInfo objectForKey:NSURLSessionDownloadTaskResumeData];
-                    unit.task = [[self getUrlSessionBasedOnUnit:unit] downloadTaskWithResumeData:resumeData];
-                    [task resume];
+                    if (resumeData) {
+                        unit.task = [[self getUrlSessionBasedOnUnit:unit] downloadTaskWithResumeData:resumeData];
+                        [task resume];
+                    } else {
+                        [task cancel];
+                        _currentDownloadingCount--;
+                    }
+                    
                 }
             break;
         }
@@ -505,6 +506,8 @@ didCompleteWithError:(NSError *)error {
             break;
         }
     }
+    
+    [self checkDownloadPipeline];
 }
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
@@ -526,7 +529,7 @@ didCompleteWithError:(NSError *)error {
         {
             if (_allowAutoRetry) {
                 //TODO: Auto Retry
-//                [self resumeAllDownload];
+                //[self resumeAllDownload];
             }
         }
             

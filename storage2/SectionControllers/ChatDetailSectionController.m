@@ -36,6 +36,7 @@
 - (UICollectionViewCell *)cellForItemAtIndex:(NSInteger)index {
     
     ChatMessageCell *cell = (ChatMessageCell *)[self.collectionContext dequeueReusableCellWithNibName:@"ChatMessageCell" bundle:nil forSectionController:self atIndex:index];
+    
     cell.chat = _chat;
     cell.delegate = self;
     return cell;

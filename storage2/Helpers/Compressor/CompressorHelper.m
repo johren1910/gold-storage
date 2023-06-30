@@ -6,13 +6,20 @@
 //
 
 #import "CompressorHelper.h"
+static  dispatch_queue_t compressQueue;
+@interface CompressorHelper ()
+@end
 
 @implementation CompressorHelper
 
-+(void)compressImage:(UIImage *)image quality:(CompressQuality)quality completionBlock: (void (^)(UIImage* compressedImage))completionBlock; {
-    
-    dispatch_queue_t myQueue = dispatch_queue_create("storage.compressor.image", DISPATCH_QUEUE_CONCURRENT);
-    dispatch_async(myQueue, ^{
++(void)prepareCompressor {
+    compressQueue = dispatch_queue_create("com.compressor.queue", DISPATCH_QUEUE_SERIAL);
+}
+
+-(void)compressImage:(UIImage *)image quality:(CompressQuality)quality completionBlock: (void (^)(UIImage* compressedImage))completionBlock; {
+   
+    dispatch_async(compressQueue, ^{
+
         NSData *imgData = UIImageJPEGRepresentation(image, 1);
         NSLog(@"Size of Image(bytes):%ld",(unsigned long)[imgData length]);
 
@@ -27,14 +34,14 @@
             case Thumbnail:
                 maxHeight = 600.0;
                 maxWidth = 800.0;
-                compressionQuality = 0.5;
+                compressionQuality = 0.2;
                 break;
             case Usable:
                 maxHeight = 900;
                 maxWidth = 1200.0;
-                compressionQuality = 0.85;
+                compressionQuality = 0.4;
                 break;
-                
+
             default:
                 break;
         }
@@ -64,7 +71,7 @@
         UIGraphicsEndImageContext();
 
         NSLog(@"Size of Image(bytes):%ld",(unsigned long)[imageData length]);
-        
+
         completionBlock([UIImage imageWithData:imageData]);
     });
 }

@@ -19,8 +19,6 @@
 @property (strong, nonatomic) IBOutlet UIImageView *typeIconView;
 @property (strong, nonatomic) IBOutlet UILabel *timeLabel;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
-
-@property (weak, nonatomic)  UIImage *cachedImage;
 @property (weak, nonatomic)  ChatMessageModel *cachedMessageModel;
 
 @end
@@ -56,33 +54,38 @@
     [super layoutSubviews];
 }
 
+- (void)prepareForReuse {
+    [super prepareForReuse];
+    [self.thumbnailImageView setBackgroundColor:[UIColor clearColor]];
+    [self.loadingIndicator stopAnimating];
+    self.sizeLabel.text = nil;
+    [self.thumbnailImageView setImage:nil];
+    [self.timeLabel setHidden:true];
+    [self.typeIconView setHidden:true];
+    [self.sizeLabel setHidden:true];
+    [self.selectedImage setHidden: true];
+}
+
 - (void) handleLoadingImageWithUrl:(NSString*) filePath {
     [_loadingIndicator startAnimating];
     __weak ChatMessageCell *weakself = self;
-    dispatch_queue_t myQueue = dispatch_queue_create("storage.image.load", DISPATCH_QUEUE_CONCURRENT);
-    dispatch_async(myQueue, ^{
-        
-        UIImage *image = [FileHelper readFileAtPathAsImage:filePath];
-        
-        [weakself compressThenCache:image  withKey:weakself.chat.messageData.messageId];
-        
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakself.thumbnailImageView setImage:image];
-            [weakself.loadingIndicator stopAnimating];
-            weakself.cachedImage = image;
-        });
+  
+    UIImage *image = [FileHelper readFileAtPathAsImage:filePath];
+    
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakself.thumbnailImageView setImage:image];
+        [weakself.loadingIndicator stopAnimating];
+       
     });
 }
 
 - (void)compressThenCache: (UIImage*) image withKey:(NSString*)key {
     __weak ChatMessageCell *weakself = self;
-    dispatch_queue_t myQueue = dispatch_queue_create("storage.cache.image", DISPATCH_QUEUE_CONCURRENT);
-    dispatch_async(myQueue, ^{
-        [CompressorHelper compressImage:image quality:Thumbnail completionBlock:^(UIImage* compressedImage){
-            
-            [weakself.delegate updateRamCache:compressedImage withKey:key];
-        }];
-    });
+    
+    [CompressorHelper compressImage:image quality:Thumbnail completionBlock:^(UIImage* compressedImage){
+        
+        [weakself.delegate updateRamCache:compressedImage withKey:key];
+    }];
 }
 
 - (void) createDownloadHolderView {
@@ -94,18 +97,20 @@
 }
 
 - (void)setChat:(ChatMessageModel *)chat {
+    [self prepareForReuse];
     _chat = [chat copy];
     _cachedMessageModel = chat;
     
     if (_chat.messageData.file.type == Download) {
         [self createDownloadHolderView];
     } else {
-        [self.thumbnailImageView setBackgroundColor:[UIColor clearColor]];
-        [self.loadingIndicator stopAnimating];
-        self.sizeLabel.text = [NSString stringWithFormat:@"%.1f MB", _chat.messageData.file.size];
-        [self.typeIconView setHidden:true];
-        [self.timeLabel setHidden:true];
-        [self.thumbnailImageView setImage:nil];
+        [self.selectedImage setHidden: false];
+        if (_chat.messageData.file.size == 0){
+            [self.sizeLabel setHidden: TRUE];
+        } else {
+            self.sizeLabel.text = [NSString stringWithFormat:@"%.1f MB", _chat.messageData.file.size];
+            [self.sizeLabel setHidden:FALSE];
+        }
         
         if (_chat.selected) {
             self.selectedImage.image = [UIImage imageNamed:@"circle-filled"];
@@ -126,7 +131,6 @@
                 }
                 break;
             case Picture:
-                // Read ram-cache
                 if (_chat.thumbnail != nil) {
                     [_thumbnailImageView setImage:_chat.thumbnail];
                 } else {
@@ -156,6 +160,8 @@
 
         return [NSString stringWithFormat:@"%02d:%02d", minutes, seconds];
     }
+    
+    
     
 }
 @end

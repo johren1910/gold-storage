@@ -11,6 +11,7 @@
 #import "StorageManager.h"
 #import "CacheService.h"
 #import "ZODownloadManager.h"
+#import "CompressorHelper.h"
 
 @interface AppService : NSObject
 -(id) getService:(id)class;

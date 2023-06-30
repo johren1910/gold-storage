@@ -7,6 +7,12 @@
 
 #import "StorageManagerType.h"
 
+@interface ZOUploadUnit : NSObject
+@property (nonatomic, copy) NSData *data;
+@property (nonatomic, copy) NSString *roomID;
+@property (nonatomic, copy) ZOFetchCompletionBlock completionBlock;
+@end
+
 @interface StorageManager : NSObject <StorageManagerType>
 
 -(instancetype) initWithCacheService:(id<CacheServiceType>)cacheService andDatabaseManager:(id<DatabaseManagerType>)databaseManager;

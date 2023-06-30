@@ -29,6 +29,8 @@
 		F64BABDD2A4A81B9002B923F /* FileData.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABDC2A4A81B9002B923F /* FileData.m */; };
 		F64BAFD22A4AECBE002B923F /* StorageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAFD12A4AECBE002B923F /* StorageManager.m */; };
 		F64BAFE22A4C1A47002B923F /* AppService.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAFE12A4C1A47002B923F /* AppService.m */; };
+		F64BAFE82A4E7A2A002B923F /* ZOPrirorityQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAFE72A4E7A2A002B923F /* ZOPrirorityQueue.m */; };
+		F64BAFEC2A4E7FF1002B923F /* ZOHeap.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAFEB2A4E7FF1002B923F /* ZOHeap.m */; };
 		F6C43EF42A3AEF0D001D8715 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */; };
 		F6C43EF72A3AEF0D001D8715 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF62A3AEF0D001D8715 /* SceneDelegate.m */; };
 		F6C43EFA2A3AEF0D001D8715 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF92A3AEF0D001D8715 /* HomeViewController.m */; };
@@ -103,6 +105,10 @@
 		F64BAFE02A4C198E002B923F /* AppService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppService.h; sourceTree = "<group>"; };
 		F64BAFE12A4C1A47002B923F /* AppService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppService.m; sourceTree = "<group>"; };
 		F64BAFE42A4C1B8C002B923F /* ServiceFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ServiceFactory.h; sourceTree = "<group>"; };
+		F64BAFE62A4E7A1F002B923F /* ZOPriorityQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZOPriorityQueue.h; sourceTree = "<group>"; };
+		F64BAFE72A4E7A2A002B923F /* ZOPrirorityQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZOPrirorityQueue.m; sourceTree = "<group>"; };
+		F64BAFEA2A4E7FE9002B923F /* ZOHeap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZOHeap.h; sourceTree = "<group>"; };
+		F64BAFEB2A4E7FF1002B923F /* ZOHeap.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZOHeap.m; sourceTree = "<group>"; };
 		F6C43EEF2A3AEF0D001D8715 /* storage2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = storage2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6C43EF22A3AEF0D001D8715 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -289,6 +295,7 @@
 		F64BABCB2A4839DC002B923F /* DownloadManager */ = {
 			isa = PBXGroup;
 			children = (
+				F64BAFE52A4E7A12002B923F /* ZOPriorityQueue */,
 				F64BABCF2A483A07002B923F /* DownloadUnit */,
 				F64BABCC2A4839EF002B923F /* ZODownloadManager.h */,
 				F64BABCD2A4839FA002B923F /* ZODownloadManager.m */,
@@ -331,6 +338,25 @@
 				F64BAFE42A4C1B8C002B923F /* ServiceFactory.h */,
 			);
 			path = Factory;
+			sourceTree = "<group>";
+		};
+		F64BAFE52A4E7A12002B923F /* ZOPriorityQueue */ = {
+			isa = PBXGroup;
+			children = (
+				F64BAFE92A4E7FDB002B923F /* ZOHeap */,
+				F64BAFE62A4E7A1F002B923F /* ZOPriorityQueue.h */,
+				F64BAFE72A4E7A2A002B923F /* ZOPrirorityQueue.m */,
+			);
+			path = ZOPriorityQueue;
+			sourceTree = "<group>";
+		};
+		F64BAFE92A4E7FDB002B923F /* ZOHeap */ = {
+			isa = PBXGroup;
+			children = (
+				F64BAFEA2A4E7FE9002B923F /* ZOHeap.h */,
+				F64BAFEB2A4E7FF1002B923F /* ZOHeap.m */,
+			);
+			path = ZOHeap;
 			sourceTree = "<group>";
 		};
 		F6C43EE62A3AEF0D001D8715 = {
@@ -617,6 +643,7 @@
 				F6C43F2C2A3B0D15001D8715 /* ChatDetailViewController.m in Sources */,
 				F6C43F2F2A3B0D45001D8715 /* ChatDetailViewModel.m in Sources */,
 				F64BAFD22A4AECBE002B923F /* StorageManager.m in Sources */,
+				F64BAFE82A4E7A2A002B923F /* ZOPrirorityQueue.m in Sources */,
 				F6C43EFA2A3AEF0D001D8715 /* HomeViewController.m in Sources */,
 				F64BAB862A4040F3002B923F /* HashHelper.m in Sources */,
 				F6C43EF42A3AEF0D001D8715 /* AppDelegate.m in Sources */,
@@ -631,6 +658,7 @@
 				F64BABD22A483A3F002B923F /* ZODownloadUnit.m in Sources */,
 				F64BABB82A42DB46002B923F /* CacheService.m in Sources */,
 				F64BABBC2A42DF25002B923F /* CompressorHelper.m in Sources */,
+				F64BAFEC2A4E7FF1002B923F /* ZOHeap.m in Sources */,
 				F6C43F4C2A3C39EA001D8715 /* FileHelper.m in Sources */,
 				F64BAB7A2A3F08CA002B923F /* AppCoordinator.m in Sources */,
 				F64BAFE22A4C1A47002B923F /* AppService.m in Sources */,

@@ -20,6 +20,8 @@
 @property (retain,nonatomic) NSMutableArray<ChatMessageModel *> *messageModels;
 @property (retain,nonatomic) NSMutableArray<ChatMessageModel *> *selectedModels;
 @property (nonatomic, copy) ChatRoomModel *chatRoom;
+@property (nonatomic) BOOL isCheatOn;
+@property (nonatomic) dispatch_queue_t backgroundQueue;
 @end
 
 @implementation ChatDetailViewModel
@@ -29,6 +31,8 @@
     if (self) {
         self.messageModels = [[NSMutableArray alloc] init];
         self.selectedModels = [[NSMutableArray alloc] init];
+        self.backgroundQueue = dispatch_queue_create("com.chatdetai.viewmodel.backgroundqueue", DISPATCH_QUEUE_SERIAL);
+        self.isCheatOn = FALSE;
     }
     _chatRoom = chatRoom;
     
@@ -38,42 +42,46 @@
 - (instancetype)init {
     self = [super init];
     if (self) {
-        self.messageModels = [[NSMutableArray alloc] init];
+        self.messageModels = [[NSMutableArray alloc] init];;
+        if ([[UICollectionView class] instancesRespondToSelector:@selector(setPrefetchingEnabled:)]) {
+            [[UICollectionView appearance] setPrefetchingEnabled:NO];
+        }
     }
     
     return self;
 }
 
 - (void)getData:(void (^)(NSArray<ChatMessageModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion {
-    
     __weak ChatDetailViewModel *weakself = self;
-    dispatch_queue_t myQueue = dispatch_queue_create("storage.chat.data", DISPATCH_QUEUE_CONCURRENT);
-    dispatch_async(myQueue, ^{
-        NSArray<ChatMessageData*>* result = [weakself.storageManager getChatMessagesByRoomId:weakself.chatRoom.chatRoomId];
-        
-        if (result != nil) {
+    dispatch_async(_backgroundQueue, ^{
+        [weakself.storageManager getChatMessagesByRoomId:weakself.chatRoom.chatRoomId completionBlock:^(id object) {
             
-            NSMutableArray<ChatMessageModel*>* modelResult = [@[] mutableCopy];
+            NSArray* result = (NSArray*)object;
             
-            for (ChatMessageData* messageData in result) {
+            if (result != nil) {
                 
-                UIImage* cachedImage = [weakself.storageManager getImageByKey:messageData.messageId];
+                NSMutableArray<ChatMessageModel*>* modelResult = [@[] mutableCopy];
                 
-                ChatMessageModel* model = [[ChatMessageModel alloc] initWithMessageData:messageData thumbnail:cachedImage];
-                
-                [modelResult addObject:model];
-                
-                if (messageData.file.type == Download) {
-                    [weakself requestDownloadWithUrl:messageData.file.filePath forFileId:messageData.file.fileId andMessageId:messageData.messageId];
+                for (ChatMessageData* messageData in result) {
+                    
+                    UIImage* cachedImage = [weakself.storageManager getImageByKey:messageData.file.checksum];
+                    
+                    ChatMessageModel* model = [[ChatMessageModel alloc] initWithMessageData:messageData thumbnail:cachedImage];
+                    
+                    [modelResult addObject:model];
+                    
+                    if (messageData.file.type == Download) {
+                        [weakself requestDownloadWithUrl:messageData.file.filePath forFileId:messageData.file.fileId andMessageId:messageData.messageId];
+                    }
                 }
+                weakself.messageModels = [modelResult mutableCopy];
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    weakself.filteredChats = weakself.messageModels;
+                    successCompletion(weakself.messageModels);
+                });
             }
-            weakself.messageModels = [modelResult mutableCopy];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                weakself.filteredChats = weakself.messageModels;
-                successCompletion(weakself.messageModels);
-            });
-        }
+        }];
     });
 }
 
@@ -86,12 +94,9 @@
 }
 
 - (void)changeSegment: (NSInteger) index {
-    __weak ChatDetailViewModel *weakself = self;
     if (index == 0) {
         _filteredChats = _messageModels;
-        dispatch_async( dispatch_get_main_queue(), ^{
-            [weakself.delegate didUpdateData];
-        });
+        [self.delegate didUpdateData];
         return;
     }
     
@@ -107,9 +112,7 @@
     NSArray *filteredArray = [_messageModels filteredArrayUsingPredicate:predicate];
     _filteredChats = filteredArray;
    
-    dispatch_async( dispatch_get_main_queue(), ^{
-        [weakself.delegate didUpdateData];
-    });
+    [_delegate didUpdateData];
 }
 
 - (NSUInteger) numberOfSections {
@@ -121,53 +124,58 @@
 }
 
 - (void)downloadFileWithUrl:(NSString *)url {
+    if (_isCheatOn) {
+        [self fakeDownload100Images:url];
+        return;
+    }
     
-    __weak ChatDetailViewModel* weakself = self;
-    dispatch_queue_t myQueue = dispatch_queue_create("storage.image.data", DISPATCH_QUEUE_SERIAL);
-    dispatch_async(myQueue, ^{
-        NSString *messageId = [[NSUUID UUID] UUIDString];
-        NSString *fileId = [[NSUUID UUID] UUIDString];
-        
-        ChatMessageData *newMessageData = [[ChatMessageData alloc] initWithMessage:messageId messageId:messageId chatRoomId:weakself.chatRoom.chatRoomId];
-        
-        FileData *newFileData = [[FileData alloc] init];
-        newFileData.type = Download;
-        newFileData.fileId = fileId;
-        newFileData.messageId = messageId;
-        
-        newMessageData.file = newFileData;
-        
-        ChatMessageModel *newModel = [[ChatMessageModel alloc] initWithMessageData:newMessageData thumbnail:nil];
-        
-        [weakself.messageModels insertObject:newModel atIndex:0];
-        weakself.filteredChats = weakself.messageModels;
+    NSString *messageId = [[NSUUID UUID] UUIDString];
+    NSString *fileId = [[NSUUID UUID] UUIDString];
 
-        dispatch_async( dispatch_get_main_queue(), ^{
-            [weakself.delegate didUpdateData];
-        });
-        
-        NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
-       
-        newFileData.filePath = url;
-        newMessageData.createdAt = timeStamp;
-        newFileData.createdAt = timeStamp;
-        
-        [weakself.storageManager saveChatMessageData:newMessageData];
-        [weakself.storageManager saveFileData:newFileData];
-        
-        [weakself requestDownloadWithUrl:url forFileId:fileId andMessageId:messageId];
-    });
-    
+    ChatMessageData *newMessageData = [[ChatMessageData alloc] initWithMessage:messageId messageId:messageId chatRoomId:self.chatRoom.chatRoomId];
+
+    FileData *newFileData = [[FileData alloc] init];
+    newFileData.type = Download;
+    newFileData.fileId = fileId;
+    newFileData.messageId = messageId;
+
+    newMessageData.file = newFileData;
+
+    ChatMessageModel *newModel = [[ChatMessageModel alloc] initWithMessageData:newMessageData thumbnail:nil];
+
+    [self.messageModels insertObject:newModel atIndex:0];
+    self.filteredChats = self.messageModels;
+
+    [self.delegate didUpdateData];
+
+    NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
+
+    newFileData.filePath = url;
+    newMessageData.createdAt = timeStamp;
+    newFileData.createdAt = timeStamp;
+
+    __weak ChatDetailViewModel* weakself = self;
+    [self.storageManager createChatMessage:newMessageData completionBlock:^(BOOL isSuccess){
+        [weakself.storageManager createFile:newFileData completionBlock:^(BOOL isSaved){
+            [weakself requestDownloadWithUrl:url forFileId:fileId andMessageId:messageId];
+
+        }];
+    }];
 }
 
 - (void)requestDownloadWithUrl:(NSString *)url forFileId:(NSString*) fileId andMessageId:(NSString*)messageId {
     
     NSString *chatRoomName = self.chatRoom.chatRoomId;
-    NSString *folderPath = [FileHelper documentsPathForFileName:chatRoomName];
+    NSString *folderPath = [FileHelper pathForApplicationSupportDirectoryWithPath:chatRoomName];
 
     __weak ChatDetailViewModel* weakself = self;
 
-    [_downloadManager startDownloadWithUrl:url destinationDirectory:folderPath isBackgroundDownload: FALSE progressBlock:^(CGFloat progress, NSUInteger speed, NSUInteger remainingSeconds) {
+    // TO RANDOM PRIORITY
+                uint32_t rnd = arc4random_uniform(2);
+    ZODownloadPriority priority = (rnd == 1) ? ZODownloadPriorityHigh : ZODownloadPriorityNormal;
+    // DELETE AFTER TESTING ABOVE
+    
+    [_downloadManager startDownloadWithUrl:url destinationDirectory:folderPath isBackgroundDownload: FALSE priority: priority progressBlock:^(CGFloat progress, NSUInteger speed, NSUInteger remainingSeconds) {
 
         NSLog(@"progress: %f\nspeed: %ld\nremainSeconds:%ld", progress,speed,remainingSeconds);
 
@@ -176,22 +184,24 @@
         [weakself addDownloadedMedia:destinationPath withFileId:fileId andMessageId:messageId];
         NSLog(@"destinationPath download: %@", destinationPath);
     } errorBlock:^(NSError *error) {
-
+        NSLog(@"error");
     }];
 }
 
 - (void)addDownloadedMedia:(NSString *)filePath withFileId:(NSString*)fileId andMessageId:(NSString*)messageId {
     __weak ChatDetailViewModel *weakself = self;
-    dispatch_queue_t myQueue = dispatch_queue_create("storage.image.data", DISPATCH_QUEUE_SERIAL);
-    dispatch_async(myQueue, ^{
+    dispatch_async(_backgroundQueue, ^{
         
+        // Check if db still exist before processing.
         NSData *fileData = [FileHelper readFileAtPathAsData:filePath];
-
-        ZOMediaInfo *mediaInfo = [FileHelper getMediaInfoOfFilePath:filePath];
-        
-        UIImage *thumbnail = mediaInfo.thumbnail;
         NSString *checkSum = [HashHelper hashDataMD5:fileData];
-        [weakself.storageManager compressThenCache:thumbnail withKey:messageId];
+        UIImage *thumbnail = [weakself.storageManager getImageByKey:checkSum];
+        ZOMediaInfo *mediaInfo = [FileHelper getMediaInfoOfFilePath:filePath];
+        if (!thumbnail) {
+            
+            thumbnail = mediaInfo.thumbnail;
+            [weakself.storageManager compressThenCache:thumbnail withKey:checkSum];
+        }
         
         double size = ((double)fileData.length/1024.0f)/1024.0f; // MB
     
@@ -208,29 +218,29 @@
         newFileData.createdAt = timeStamp;
         newFileData.duration = mediaInfo.duration;
         
-        [[weakself storageManager] updateFileData:newFileData];
+        [[weakself storageManager] updateFileData:newFileData completionBlock:^(BOOL isSuccess){
+            __block ChatMessageData *messageData = nil;
+            __block NSUInteger index = 0;
+            [weakself.messageModels enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                ChatMessageModel *model = (ChatMessageModel *)obj;
+                if ([model.messageData.messageId isEqualToString:messageId]) {
+                    index = idx;
+                    *stop = YES;
+                    messageData = [model.messageData copy];
+                }
 
-        __block ChatMessageData *messageData = nil;
-        __block NSUInteger index = 0;
-        [weakself.messageModels enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            ChatMessageModel *model = (ChatMessageModel *)obj;
-            if ([model.messageData.messageId isEqualToString:messageId]) {
-                index = idx;
-                *stop = YES;
-                messageData = [model.messageData copy];
-            }
+            }];
             
-        }];
-        
-        messageData.file = newFileData;
-        ChatMessageModel *newModel = [[ChatMessageModel alloc] initWithMessageData:messageData thumbnail:thumbnail];
-        
-        [weakself.messageModels replaceObjectAtIndex:index withObject:newModel];
-        weakself.filteredChats = weakself.messageModels;
+            messageData.file = newFileData;
+            ChatMessageModel *newModel = [[ChatMessageModel alloc] initWithMessageData:messageData thumbnail:thumbnail];
+            
+            [weakself.messageModels replaceObjectAtIndex:index withObject:newModel];
+            weakself.filteredChats = weakself.messageModels;
 
-        dispatch_async( dispatch_get_main_queue(), ^{
-            [weakself.delegate didUpdateData];
-        });
+            dispatch_async( dispatch_get_main_queue(), ^{
+                [weakself.delegate didUpdateData];
+            });
+        }];
     });
 }
 
@@ -244,11 +254,8 @@
         }
     }
     self.filteredChats = self.messageModels;
-    __weak ChatDetailViewModel *weakself = self;
-    dispatch_async( dispatch_get_main_queue(), ^{
-        
-        [weakself.delegate didUpdateObject:chat];
-    });
+    
+    [self.delegate didUpdateObject:chat];
 }
 - (void) deselectChatMessage:(ChatMessageModel *) chat {
     [_selectedModels removeObject:chat];
@@ -259,96 +266,151 @@
             break;
         }
     }
-    __weak ChatDetailViewModel *weakself = self;
     self.filteredChats = self.messageModels;
-    dispatch_async( dispatch_get_main_queue(), ^{
-        
-        [weakself.delegate didUpdateObject:chat];
-    });
+    [self.delegate didUpdateObject:chat];
 }
 
 - (void)deleteSelected {
-    dispatch_queue_t myQueue = dispatch_queue_create("storage.chatdetail.delete", DISPATCH_QUEUE_CONCURRENT);
+    for (ChatMessageModel* model in self.selectedModels) {
+        
+        __weak ChatDetailViewModel* weakself = self;
+        [self.downloadManager cancelDownloadOfUrl:model.messageData.file.filePath];
+        [self.storageManager deleteChatMessage:model.messageData completionBlock:^(BOOL isSuccess) {
+            if(isSuccess) {
+                [weakself.messageModels removeObject:model];
+                weakself.filteredChats = weakself.messageModels;
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [weakself.delegate didUpdateData];
+                });
+                
+            }
+        }];
+    }
+    
+}
+
+- (void)fakeUpload100Images:(NSData *)data {
     __weak ChatDetailViewModel* weakself = self;
-    dispatch_async(myQueue, ^{
-        for (ChatMessageModel* model in weakself.selectedModels) {
-            [weakself.storageManager deleteChatMessage:model.messageData];
-            //TODO: Thêm reference count cho File. Nếu còn reference thì không xoá file.
-            
-            [weakself.messageModels removeObject:model];
+    
+    UIImage* fake1 = [UIImage imageNamed:@"circle-filled"];
+    UIImage* fake2 = [UIImage imageNamed:@"circle-empty"];
+    UIImage* fake3 = [UIImage imageNamed:@"video"];
+    NSArray<NSData*>* fakeDatas = @[data, UIImagePNGRepresentation(fake1), UIImagePNGRepresentation(fake2),UIImagePNGRepresentation(fake3)];
+    dispatch_async(_backgroundQueue, ^{
+        for (int i=0; i<100; i++) {
+//            uint32_t rnd = arc4random_uniform([fakeDatas count]);
+//            NSData *chosenTest = [fakeDatas objectAtIndex:rnd];
+            [weakself.storageManager uploadImage:data withRoomId:weakself.chatRoom.chatRoomId completionBlock:^(id object){
+               
+                ChatMessageData* messageData = (ChatMessageData*)object;
+                
+                UIImage *image = [weakself.storageManager getImageByKey:messageData.file.checksum];
+                if (!image) {
+                     image = [UIImage imageWithData:data];
+                [weakself.storageManager cacheImageByKey:image withKey:messageData.file.checksum];
+                }
+               
+                ChatMessageModel *newModel = [[ChatMessageModel alloc] initWithMessageData:messageData thumbnail:image];
+                
+                [weakself.messageModels insertObject:newModel atIndex:0];
+                weakself.filteredChats = weakself.messageModels;
+                
+                dispatch_async(dispatch_get_main_queue(), ^{
+                        [weakself.delegate didUpdateData];
+                });
+                
+            }];
         }
-        
-        weakself.filteredChats = weakself.messageModels;
-        
-        dispatch_async( dispatch_get_main_queue(), ^{
-            [self.delegate didUpdateData];
-        });
     });
     
+}
+
+- (void) fakeDownload100Images:(NSString*)url {
+    __weak ChatDetailViewModel* weakself = self;
+    
+    NSString* link1 = @"https://getsamplefiles.com/download/mp4/sample-5.mp4";
+    NSString* link2 = @"https://joy1.videvo.net/videvo_files/video/free/2016-05/large_watermarked/Mykonos_2_preview.mp4";
+    NSString* link3 = @"https://joy1.videvo.net/videvo_files/video/free/2016-08/large_watermarked/VID_20160517_175443_preview.mp4";
+    NSString* link4 = @"https://freetestdata.com/wp-content/uploads/2022/02/Free_Test_Data_7MB_MP4.mp4";
+    NSString* link5 = @"https://joy1.videvo.net/videvo_files/video/free/2013-11/large_watermarked/SUPER8MMSTOCKEMULTIONNicholasLever_preview.mp4";
+    NSString* link6 = @"https://joy1.videvo.net/videvo_files/video/free/2015-08/large_watermarked/Dream_lake_1_preview.mp4";
+    NSString* link7 = @"https://joy1.videvo.net/videvo_files/video/free/2015-08/large_watermarked/Surfer1_preview.mp4";
+    NSString* link8 = @"https://freetestdata.com/wp-content/uploads/2022/02/Free_Test_Data_5.05MB_MOV.mov";
+    NSString* link9 = @"https://freetestdata.com/wp-content/uploads/2022/02/Free_Test_Data_2MB_MP4.mp4";
+    NSString* link10 = @"https://freetestdata.com/wp-content/uploads/2021/10/Free_Test_Data_1MB_MOV.mov";
+
+    NSArray<NSString*>* rand = @[link1, link2,link3,link4,link5,link6,link7,link8,link9,link10];
+    dispatch_async(_backgroundQueue, ^{
+        for (int i=0; i<100; i++) {
+            uint32_t rnd = arc4random_uniform(rand.count);
+            NSString *chosenTest = [rand objectAtIndex:rnd];
+            
+            NSString *url = url;
+            url = chosenTest;
+            NSString *messageId = [[NSUUID UUID] UUIDString];
+            NSString *fileId = [[NSUUID UUID] UUIDString];
+            
+            ChatMessageData *newMessageData = [[ChatMessageData alloc] initWithMessage:messageId messageId:messageId chatRoomId:weakself.chatRoom.chatRoomId];
+            
+            FileData *newFileData = [[FileData alloc] init];
+            newFileData.type = Download;
+            newFileData.fileId = fileId;
+            newFileData.messageId = messageId;
+            
+            newMessageData.file = newFileData;
+            
+            ChatMessageModel *newModel = [[ChatMessageModel alloc] initWithMessageData:newMessageData thumbnail:nil];
+            
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakself.messageModels insertObject:newModel atIndex:0];
+                weakself.filteredChats = weakself.messageModels;
+
+                [weakself.delegate didUpdateData];
+            });
+            
+            
+            NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
+           
+            newFileData.filePath = url;
+            newMessageData.createdAt = timeStamp;
+            newFileData.createdAt = timeStamp;
+            
+            [weakself.storageManager createChatMessage:newMessageData completionBlock:^(BOOL isSuccess){
+                [weakself.storageManager createFile:newFileData completionBlock:^(BOOL isSaved){
+                    [weakself requestDownloadWithUrl:url forFileId:fileId andMessageId:messageId];
+                    
+                }];
+            }];
+        }
+    });
+}
+
+- (void)setCheat:(BOOL)isOn {
+    _isCheatOn = isOn;
 }
 
 - (void)addImage:(NSData *)data {
-    __weak ChatDetailViewModel *weakself = self;
-    NSString* chatRoomId = _chatRoom.chatRoomId;
-    dispatch_queue_t myQueue = dispatch_queue_create("storage.image.data", DISPATCH_QUEUE_SERIAL);
-    dispatch_async(myQueue, ^{
-        
-        NSString *checkSum = [HashHelper hashDataMD5:data];
-        NSString *messageId = [[NSUUID UUID] UUIDString];
-      
-        double size = ((double)data.length/1024.0f)/1024.0f; // MB
+    if (self.isCheatOn) {
+        [self fakeUpload100Images:data];
+        return;
+    }
     
-        NSTimeInterval timeStamp = [[NSDate date] timeIntervalSince1970];
-        
-        ChatMessageData *newMessageData = [[ChatMessageData alloc] initWithMessage:messageId messageId:messageId chatRoomId:chatRoomId];
-        
-        NSString *chatRoomName = weakself.chatRoom.chatRoomId;
-        
-        NSString *fileName = [NSString stringWithFormat:@"%@.png", newMessageData.messageId];
-        NSString *componentFolderPath = [chatRoomName stringByAppendingPathComponent:fileName];
-        NSString *filePath = [FileHelper documentsPathForFileName:componentFolderPath];
-        
-        newMessageData.createdAt = timeStamp;
-        
-        FileData *fileData = [[FileData alloc] init];
-        fileData.fileId = [[NSUUID UUID] UUIDString];
-        fileData.messageId = messageId;
-        fileData.filePath = filePath;
-        fileData.checksum = checkSum;
-        fileData.createdAt = timeStamp;
-        fileData.size = size;
-        fileData.lastAccessed = timeStamp;
-        fileData.lastModified = timeStamp;
-        fileData.tempData = data;
-        fileData.type = Picture;
-        
-        [weakself.storageManager saveFileData:fileData];
-        [weakself.storageManager saveChatMessageData:newMessageData];
-        
-        // Update UI Model
+    __weak ChatDetailViewModel *weakself = self;
+    [_storageManager uploadImage:data withRoomId:_chatRoom.chatRoomId completionBlock:^(id object){
+        ChatMessageData* messageData = (ChatMessageData*)object;
         UIImage *image = [UIImage imageWithData:data];
-        ChatMessageModel *newModel = [[ChatMessageModel alloc] initWithMessageData:newMessageData thumbnail:image];
-        
+        ChatMessageModel *newModel = [[ChatMessageModel alloc] initWithMessageData:messageData thumbnail:image];
+
         [weakself.messageModels insertObject:newModel atIndex:0];
         weakself.filteredChats = weakself.messageModels;
 
-        dispatch_async( dispatch_get_main_queue(), ^{
+        dispatch_async(dispatch_get_main_queue(), ^{
             [weakself.delegate didUpdateData];
         });
-    });
+    }];
 }
-
-//- (void)compressThenCache: (UIImage*)image withKey:(NSString*) key {
-//
-//    __weak ChatDetailViewModel *weakself = self;
-//    dispatch_queue_t myQueue = dispatch_queue_create("storage.cache.image", DISPATCH_QUEUE_CONCURRENT);
-//    dispatch_async(myQueue, ^{
-//        [CompressorHelper compressImage:image quality:Thumbnail completionBlock:^(UIImage* compressedImage){
-//
-//            [weakself.storageManager cacheImageByKey:image withKey:key];
-//        }];
-//    });
-//}
 
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key {
     [_storageManager cacheImageByKey:image withKey:key];

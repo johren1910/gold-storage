@@ -10,6 +10,7 @@
 @interface ChatDetailViewController () <IGListAdapterDataSource, UIDocumentPickerDelegate, UIImagePickerControllerDelegate, ChatDetailViewModelDelegate>
 
 @property (nonatomic, strong) IGListAdapter *adapter;
+@property (strong, nonatomic) IBOutlet UISwitch *cheatSwitch;
 @property (nonatomic, strong) ChatDetailViewModel *viewModel;
 @property (nonatomic, readonly) NSInteger selectedIndex;
 
@@ -52,11 +53,6 @@
     _selectedIndex = sender.selectedSegmentIndex;
     
     __weak ChatDetailViewController *weakself = self;
-    dispatch_queue_t myQueue = dispatch_queue_create("storage.image.data", DISPATCH_QUEUE_CONCURRENT);
-    
-    dispatch_async(myQueue, ^{
-        [weakself.viewModel changeSegment:weakself.selectedIndex];
-    });
                 
     [_viewModel changeSegment:_selectedIndex];
     [self.adapter performUpdatesAnimated:true completion:nil];
@@ -130,6 +126,9 @@
 - (IBAction)onVideoImagesLocalBtnTouched:(id)sender {
     
     [self requestAuthorizationWithRedirectionToSettings];
+}
+- (IBAction)onCheatSwitchValueChanged:(id)sender {
+    [_viewModel setCheat:[sender isOn]];
 }
 
 - (void) createInputAlert {

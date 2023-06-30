@@ -22,6 +22,12 @@ typedef NS_ENUM(NSUInteger,ZODownloadState) {
     ZODownloadStateError              = 6
 };
 
+typedef NS_ENUM(NSUInteger,ZODownloadPriority) {
+    
+    ZODownloadPriorityNormal            = 1,
+    ZODownloadPriorityHigh            = 2
+};
+
 typedef NS_ENUM(NSUInteger,ZODownloadErrorCode) {
     
     ZODownloadErrorNoInternet            = -1009,
@@ -31,6 +37,8 @@ typedef NS_ENUM(NSUInteger,ZODownloadErrorCode) {
 
 /// This interface provide details info for a download
 @interface ZODownloadUnit : NSObject
+/// [This property is] define unique id of each download unit
+@property (nonatomic, readonly) NSString* downloadId;
 
 /// [This property is] define url that the client request to be downloaded
 @property (nonatomic, copy) NSString *requestUrl;
@@ -66,11 +74,17 @@ typedef NS_ENUM(NSUInteger,ZODownloadErrorCode) {
 @property (nonatomic, strong) ZODownloadProgressBlock progressBlock;
 
 /// [This property is] retain completionBlock of the task to notify the manager
-@property (nonatomic, strong) ZODownloadCompletionBlock completionBlock;
+@property (nonatomic, strong) NSMutableArray<ZODownloadCompletionBlock>* completionBlocks;
 
 /// [This property is] retain errorBlock of the task to notify the manager
 @property (nonatomic, strong) ZODownloadErrorBlock errorBlock;
 
 /// [This property is] retain downloadState of the task to notify the manager
 @property (nonatomic, assign) ZODownloadState downloadState;
+
+/// [This property is]  priority of the task. Higher priority start download first
+@property (nonatomic, assign) ZODownloadPriority priority;
+
+/// [This function  is] compare priority of the task to
+- (NSComparisonResult)compare:(ZODownloadUnit *)object;
 @end

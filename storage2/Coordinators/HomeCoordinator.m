@@ -34,6 +34,7 @@
     HomeViewController *ivc = [storyboard instantiateViewControllerWithIdentifier:@"HomeViewController"];
     HomeViewModel* viewModel = [[HomeViewModel alloc] init];
     viewModel.storageManager = _storageManager;
+    viewModel.downloadManager = _downloadManager;
     viewModel.coordinatorDelegate = self;
     [ivc setViewModel:viewModel];
     [_navigationController setViewControllers:@[ivc] animated:TRUE];

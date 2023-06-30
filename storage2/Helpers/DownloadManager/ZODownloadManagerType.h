@@ -11,7 +11,7 @@
 #import "AppDelegate.h"
 #import "ServiceFactory.h"
 
-#define MAX_DOWNLOAD_CONRRUENT 10
+#define MAX_DOWNLOAD_CONCURRENT 3
 #define MAX_DOWNLOAD_TIMEOUT 10
 
 /// This protocol provide methods to handle all media/files download of a client that need to request from remote server or api.
@@ -28,7 +28,7 @@
 ///     - Cancel/Suspend/Resume 1 download or all downloads
 ///     - Resume interrupted download (App terminate)
 ///     - Remaining time & speed estimation
-///
+//
 ///     - TODO: RETRY ON FAILED DOWNLOAD
 ///     - TODO: AUTO RETRY ON GAIN INTERNET
 ///
@@ -45,10 +45,11 @@
 ///    if this parameters is `false` and `hasContent` is `false` the will show empty state
 ///    - completionBlack: Call back with a returned destinationPath where the downloaded file stored
 ///    - errorBlock:Call back with a returned error
-///    - isBackgroundDownload:Define if the url session is background supported. Allow to download & resume even when the app crash.
+///    - isBackgroundDownload:Define if the url session is background supported. Alrnlow to download & resume even when the app crash.
 ///
 - (void)startDownloadWithUrl:(NSString *)downloadUrl destinationDirectory:(NSString *)dstDirectory
-        isBackgroundDownload:(BOOL)isBackgroundDownload progressBlock:(ZODownloadProgressBlock)progressBlock
+        isBackgroundDownload:(BOOL)isBackgroundDownload
+               priority:(ZODownloadPriority)priority  progressBlock:(ZODownloadProgressBlock)progressBlock
                   completionBlock:(ZODownloadCompletionBlock)completionBlock
                      errorBlock:(ZODownloadErrorBlock)errorBlock;
 

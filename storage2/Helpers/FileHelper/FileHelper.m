@@ -384,6 +384,14 @@
     return [documentsPath stringByAppendingPathComponent:name];
 }
 
++ (NSString *)applicationSupportPathForFileName:(NSString *)name
+{
+    NSArray *paths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory,NSUserDomainMask, YES);
+    NSString *documentsPath = [paths objectAtIndex:0];
+
+    return [documentsPath stringByAppendingPathComponent:name];
+}
+
 +(NSString *)pathForDocumentsDirectory
 {
     static NSString *path = nil;
@@ -519,7 +527,12 @@
 
 +(BOOL)removeItemAtPath:(NSString *)path
 {
-    return [self removeItemAtPath:path error:nil];
+    if (path) {
+        return [self removeItemAtPath:path error:nil];
+    } else {
+        return FALSE;
+    }
+    
 }
 
 

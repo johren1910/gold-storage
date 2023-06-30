@@ -70,5 +70,7 @@
 +(NSString *)pathForDocumentsDirectoryWithPath:(NSString *)path;
 
 +(BOOL *)moveItemAtPath:(NSString *)path toPath:(NSString*)dstPath error:(NSError **)error;
+
++(NSString *)pathForApplicationSupportDirectoryWithPath:(NSString *)path;
 @end
 

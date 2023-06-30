@@ -5,6 +5,8 @@
 //  Created by LAP14885 on 15/06/2023.
 //
 
+#import <UIKit/UIKit.h>
+
 @protocol ChatMessageCellDelegate <NSObject>
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
 @end

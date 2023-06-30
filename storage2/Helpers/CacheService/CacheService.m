@@ -11,7 +11,7 @@
 @interface CacheService ()
 @property (strong, nonatomic) NSMutableDictionary* ramImageCaches;
 @property (strong, nonatomic) NSMutableDictionary* diskImageCaches;
-
+@property (nonatomic) dispatch_queue_t cacheQueue;
 @end
 
 @implementation CacheService
@@ -22,6 +22,7 @@
     if (self) {
         self.ramImageCaches = [@{} mutableCopy];
         self.diskImageCaches = [@{} mutableCopy];
+        self.cacheQueue = dispatch_queue_create("com.cacheservice.queue", DISPATCH_QUEUE_SERIAL);
     }
     
     [[NSNotificationCenter defaultCenter] addObserver:self
@@ -32,10 +33,8 @@
 }
 
 -(void) loadDiskCache {
-    dispatch_queue_t myQueue = dispatch_queue_create("storage.cachemanager.load.diskcache", DISPATCH_QUEUE_CONCURRENT);
-    
     __weak CacheService *weakself = self;
-    dispatch_async(myQueue, ^{
+    dispatch_async(_cacheQueue, ^{
         NSString* cacheDirectory = [FileHelper pathForCachesDirectory];
         
         NSArray* dirs = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:cacheDirectory
@@ -57,11 +56,8 @@
 }
 
 - (void)freeAllCache {
-    
-    dispatch_queue_t myQueue = dispatch_queue_create("storage.cachemanager.freeram", DISPATCH_QUEUE_CONCURRENT);
-    
     __weak CacheService *weakself = self;
-    dispatch_async(myQueue, ^{
+    dispatch_async(_cacheQueue, ^{
         NSArray* allKeys = [weakself.ramImageCaches allKeys];
         
         for (int i = 0; i < allKeys.count; i++) {
@@ -71,11 +67,8 @@
 }
 
 - (void)freeHalfCache {
-    
-    dispatch_queue_t myQueue = dispatch_queue_create("storage.cachemanager.freeram", DISPATCH_QUEUE_CONCURRENT);
-    
     __weak CacheService *weakself = self;
-    dispatch_async(myQueue, ^{
+    dispatch_async(_cacheQueue, ^{
         NSArray* allKeys = [weakself.ramImageCaches allKeys];
         
         for (int i = 0; i < allKeys.count/2; i++) {
@@ -86,25 +79,23 @@
 
 -(void)cacheImageByKey:(UIImage*)image withKey:(NSString*)key {
     if (image != nil && key != nil){
-        [_ramImageCaches setObject:image forKey:key];
-    }
-    
-    // Disk Cache
-    dispatch_queue_t myQueue = dispatch_queue_create("storage.cachemanager.write.diskcache", DISPATCH_QUEUE_CONCURRENT);
-    
-    __weak CacheService *weakself = self;
-    dispatch_async(myQueue, ^{
-        NSString* cacheDirectory = [FileHelper pathForCachesDirectory];
-        NSData *imageData = UIImageJPEGRepresentation(image, 0.85);
+        UIImage* cachedImage = [image copy];
+        [_ramImageCaches setObject:cachedImage forKey:key];
         
-        NSString *filePath = [cacheDirectory stringByAppendingFormat:@"/%@", key];
-        BOOL isWrited = [imageData writeToFile:filePath atomically:YES];
-        if (isWrited) {
-            [weakself.diskImageCaches setObject:filePath forKey:key];
-        } else {
-            //TODO: Handle write disk cache failed
-        }
-    });
+        __weak CacheService *weakself = self;
+        dispatch_async(_cacheQueue, ^{
+            NSString* cacheDirectory = [FileHelper pathForCachesDirectory];
+            NSData *imageData = UIImageJPEGRepresentation(cachedImage, 0.85);
+            
+            NSString *filePath = [cacheDirectory stringByAppendingPathComponent:key];
+            BOOL isWrited = [imageData writeToFile:filePath atomically:YES];
+            if (isWrited) {
+                [weakself.diskImageCaches setObject:filePath forKey:key];
+            } else {
+                //TODO: Handle write disk cache failed
+            }
+        });
+    }
 }
 
 -(UIImage*)getImageByKey:(NSString*)key {
@@ -123,15 +114,12 @@
 }
 -(void)deleteImageByKey:(NSString*)key {
     [_ramImageCaches removeObjectForKey: key];
-    
-    dispatch_queue_t myQueue = dispatch_queue_create("storage.cachemanager.deletekey", DISPATCH_QUEUE_CONCURRENT);
     __weak CacheService *weakself = self;
-    dispatch_async(myQueue, ^{
-        NSFileManager *fileManager = [NSFileManager defaultManager];
+    dispatch_async(_cacheQueue, ^{
         NSString* cacheDirectory = [FileHelper pathForCachesDirectory];
-        NSString *filePath = [cacheDirectory stringByAppendingFormat:@"/%@", key];
-        NSError *error;
-        BOOL isDeleted = [fileManager removeItemAtPath:filePath error:&error];
+        
+         NSString *filePath = [cacheDirectory stringByAppendingPathComponent:key];
+        BOOL isDeleted = [FileHelper removeItemAtPath:filePath];
         if (isDeleted) {
             [weakself.diskImageCaches removeObjectForKey: key];
         } else {

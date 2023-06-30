@@ -30,21 +30,22 @@
 - (void)getData:(void (^)(NSMutableArray<ChatRoomModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion {
     
     _chats = [[NSMutableArray alloc] init];
-    dispatch_queue_t databaseQueue = dispatch_queue_create("storage.database", DISPATCH_QUEUE_CONCURRENT);
     
     __weak id<StorageManagerType> weakStorageManager = _storageManager;
     __weak HomeViewModel *weakself = self;
-    dispatch_async(databaseQueue, ^{
-        NSArray<ChatRoomModel*>* result = [weakStorageManager getChatRoomsByPage:1];
-        NSLog(@"Nice %@", result);
+    
+    [weakStorageManager getChatRoomsByPage:1 completionBlock:^(id object){
+        NSArray* result = (NSArray*)object;
         if (result != nil) {
+            weakself.chats = [result mutableCopy];
             dispatch_async(dispatch_get_main_queue(), ^{
-                weakself.chats = [result mutableCopy];
-                successCompletion(weakself.chats);
                 [weakself.delegate didUpdateData];
+                successCompletion(weakself.chats);
             });
+            
         }
-    });
+    }];
+   
 }
 
 - (ChatRoomModel *)itemAtIndexPath:(NSIndexPath *)indexPath {
@@ -72,11 +73,7 @@
             break;
         }
     }
-    __weak HomeViewModel *weakself = self;
-    dispatch_async( dispatch_get_main_queue(), ^{
-        
-        [weakself.delegate didUpdateObject:chatRoom];
-    });
+    [self.delegate didUpdateObject:chatRoom];
 }
 - (void) deselectChatRoom:(ChatRoomModel *) chatRoom {
     [_selectedModels removeObject:chatRoom];
@@ -87,27 +84,23 @@
             break;
         }
     }
-    __weak HomeViewModel *weakself = self;
-    dispatch_async( dispatch_get_main_queue(), ^{
-        
-        [weakself.delegate didUpdateObject:chatRoom];
-    });
+    [self.delegate didUpdateObject:chatRoom];
 }
 
 - (void)deleteSelected {
-    dispatch_queue_t myQueue = dispatch_queue_create("storage.homeview.delete", DISPATCH_QUEUE_CONCURRENT);
-    __weak HomeViewModel* weakself = self;
-    dispatch_async(myQueue, ^{
-        for (ChatRoomModel* model in weakself.selectedModels) {
-            [weakself.storageManager deleteChatRoom:model];
-            [weakself.chats removeObject:model];
-        }
-       
-        dispatch_async( dispatch_get_main_queue(), ^{
-            [self.delegate didUpdateData];
-        });
-    });
     
+    __weak HomeViewModel* weakself = self;
+    for (ChatRoomModel* model in weakself.selectedModels) {
+        [self.storageManager deleteChatRoom:model completionBlock:^(BOOL isSuccess){
+            if (isSuccess) {
+                // TODO: - REFACTOR TO CANCEL ONLY DOWNLOADING LINK OF SELECTED ROOM
+                [weakself.downloadManager cancelAllDownload];
+                [weakself.chats removeObject:model];
+            }
+        }];
+    }
+    
+    [self.delegate didUpdateData];
 }
 
 - (void)createNewChat: (NSString *) name {
@@ -122,12 +115,11 @@
     newChat.size = 0;
     [_chats insertObject:newChat atIndex: 0];
     
-    dispatch_queue_t databaseQueue = dispatch_queue_create("storage.database", DISPATCH_QUEUE_CONCURRENT);
-    
-    __weak id<StorageManagerType> weakStorageManager = self.storageManager;
-    dispatch_async(databaseQueue, ^{
-        
-        [weakStorageManager saveChatRoomData:newChat];
-    });
+    __weak HomeViewModel* weakself = self;
+    [_storageManager createChatRoom:newChat completionBlock:^(BOOL isSuccess){
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakself.delegate didUpdateData];
+        });
+    }];
 }
 @end

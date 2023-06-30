@@ -31,6 +31,7 @@
 - (void)downloadFileWithUrl:(NSString *)url;
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
 - (void)deleteSelected;
+- (void)setCheat:(BOOL)isOn;
 
 @property (nonatomic, weak) id <ChatDetailViewModelDelegate>  delegate;
 @property (copy,nonatomic) NSArray<ChatMessageModel *> *filteredChats;

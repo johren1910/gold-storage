@@ -11,30 +11,32 @@
 #import "FileData.h"
 #import "ServiceFactory.h"
 
+typedef void(^ZOCompletionBlock)(BOOL isSuccess);
+typedef void(^ZOFetchCompletionBlock)(id object);
+
 @protocol DatabaseManagerType <FactoryResolvable>
 
 #pragma mark - ChatMessage
-- (BOOL)saveChatMessageData:(ChatMessageData*) chatMessage;
-- (BOOL)deleteChatMessage:(ChatMessageData*) message;
-- (NSArray<ChatMessageData*>*) getChatMessagesByRoomId:(NSString*)chatRoomId;
+- (void)saveChatMessageData:(ChatMessageData*) chatMessage  completionBlock:(ZOCompletionBlock)completionBlock;
+- (void)deleteChatMessage:(ChatMessageData*) message completionBlock:(ZOCompletionBlock)completionBlock;
+- (void) getChatMessagesByRoomId:(NSString*)chatRoomId completionBlock:(ZOFetchCompletionBlock)completionBlock;
 
 #pragma mark - ChatRoom
-- (BOOL) saveChatRoomData:(ChatRoomModel*)chatRoom;
-- (BOOL) deleteChatRoom:(ChatRoomModel*) chatRoom;
--(NSArray<ChatRoomModel*>*) getChatRoomsByPage:(int)page;
-- (double)getSizeOfRoomId:(NSString*) roomId;
+- (void) saveChatRoomData:(ChatRoomModel*)chatRoom completionBlock:(ZOCompletionBlock)completionBlock;
+- (void)deleteChatRoom:(ChatRoomModel*) chatRoom completionBlock:(ZOCompletionBlock)completionBlock;
+- (void) getChatRoomsByPage:(int)page completionBlock:(ZOFetchCompletionBlock)completionBlock;
+- (void)getSizeOfRoomId:(NSString*) roomId completionBlock:(ZOFetchCompletionBlock)completionBlock;
 
 #pragma mark - File
-- (BOOL)saveFileData:(FileData*) fileData;
-- (BOOL)deleteFileData:(FileData*) file;
-- (FileData*) getFileOfMessageId:(NSString*)messageId;
-- (BOOL)updateFileData:(FileData*) fileData;
+- (void)saveFileData:(FileData*) fileData completionBlock:(ZOCompletionBlock)completionBlock;
+- (void)deleteFileData:(FileData*) file completionBlock:(ZOCompletionBlock)completionBlock;
+- (void) getFileOfMessageId:(NSString*)messageId completionBlock:(ZOFetchCompletionBlock)completionBlock;
+- (void)updateFileData:(FileData*) fileData completionBlock:(ZOCompletionBlock)completionBlock;
 
 @end
 
-@interface DatabaseManager : NSObject <DatabaseManagerType> {
-   NSString *databasePath;
-}
+@interface DatabaseManager : NSObject <DatabaseManagerType>
+
 
 +(DatabaseManager*)getSharedInstance;
 

@@ -13,7 +13,7 @@
 @property (nonatomic, assign) int maxConcurrentDownloads;
 
 /// [This property is] define the retry time out when client trying to reconnect
-///  - Note: Default is MAX_DOWNLOAD_CONRRUENT
+///  - Note: Default is MAX_DOWNLOAD_CONCURRENT
 @property (nonatomic, assign) CGFloat retryTimeout;
 
 /// [This property is] define if the manager is allowed to auto retry when client lost connection then regain it back.

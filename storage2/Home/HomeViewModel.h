@@ -9,6 +9,7 @@
 #import "ChatRoomModel.h"
 #import "ChatRoomSectionController.h"
 #import "StorageManagerType.h"
+#import "ZODownloadManagerType.h"
 
 @protocol HomeViewModelDelegate
 
@@ -40,5 +41,6 @@
 @property (nonatomic, weak) id <HomeViewModelDelegate>  delegate;
 @property (nonatomic, strong) id <HomeViewModelCoordinatorDelegate>  coordinatorDelegate;
 @property (nonatomic, strong) id<StorageManagerType> storageManager;
+@property (nonatomic, strong) id<ZODownloadManagerType> downloadManager;
 
 @end
