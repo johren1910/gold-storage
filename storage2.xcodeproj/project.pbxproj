@@ -20,7 +20,6 @@
 		F64BABB42A429A39002B923F /* StorageInfoCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABB32A429A38002B923F /* StorageInfoCell.m */; };
 		F64BABB82A42DB46002B923F /* CacheService.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABB72A42DB46002B923F /* CacheService.m */; };
 		F64BABBC2A42DF25002B923F /* CompressorHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABBB2A42DF25002B923F /* CompressorHelper.m */; };
-		F64BABBF2A42F08B002B923F /* ChatMessageModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABBE2A42F08B002B923F /* ChatMessageModel.m */; };
 		F64BABC62A44057A002B923F /* ZOStatePresentable.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABC52A44057A002B923F /* ZOStatePresentable.m */; };
 		F64BABCA2A4536EB002B923F /* Skeletonable.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABC92A4536EB002B923F /* Skeletonable.m */; };
 		F64BABCE2A4839FA002B923F /* ZODownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABCD2A4839FA002B923F /* ZODownloadManager.m */; };
@@ -31,6 +30,11 @@
 		F64BAFE22A4C1A47002B923F /* AppService.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAFE12A4C1A47002B923F /* AppService.m */; };
 		F64BAFE82A4E7A2A002B923F /* ZOPrirorityQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAFE72A4E7A2A002B923F /* ZOPrirorityQueue.m */; };
 		F64BAFEC2A4E7FF1002B923F /* ZOHeap.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAFEB2A4E7FF1002B923F /* ZOHeap.m */; };
+		F64BAFFE2A518842002B923F /* ChatDetailUseCase.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAFFD2A518842002B923F /* ChatDetailUseCase.m */; };
+		F64BB0002A518FC6002B923F /* ChatDetailLocalDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAFFF2A518FC6002B923F /* ChatDetailLocalDataSource.m */; };
+		F64BB0022A518FD5002B923F /* ChatDetailRemoteDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BB0012A518FD5002B923F /* ChatDetailRemoteDataSource.m */; };
+		F64BB0042A51AC7A002B923F /* ChatDetailEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BB0032A51AC7A002B923F /* ChatDetailEntity.m */; };
+		F64BB0062A51AEC9002B923F /* ChatDetailDataRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BB0052A51AEC9002B923F /* ChatDetailDataRepository.m */; };
 		F6C43EF42A3AEF0D001D8715 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */; };
 		F6C43EF72A3AEF0D001D8715 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF62A3AEF0D001D8715 /* SceneDelegate.m */; };
 		F6C43EFA2A3AEF0D001D8715 /* HomeViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF92A3AEF0D001D8715 /* HomeViewController.m */; };
@@ -84,8 +88,6 @@
 		F64BABB72A42DB46002B923F /* CacheService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CacheService.m; sourceTree = "<group>"; };
 		F64BABBA2A42DF1B002B923F /* CompressorHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CompressorHelper.h; sourceTree = "<group>"; };
 		F64BABBB2A42DF25002B923F /* CompressorHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CompressorHelper.m; sourceTree = "<group>"; };
-		F64BABBD2A42F080002B923F /* ChatMessageModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatMessageModel.h; sourceTree = "<group>"; };
-		F64BABBE2A42F08B002B923F /* ChatMessageModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatMessageModel.m; sourceTree = "<group>"; };
 		F64BABC42A44056D002B923F /* ZOStatePresentable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZOStatePresentable.h; sourceTree = "<group>"; };
 		F64BABC52A44057A002B923F /* ZOStatePresentable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZOStatePresentable.m; sourceTree = "<group>"; };
 		F64BABC82A4536D8002B923F /* Skeletonable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Skeletonable.h; sourceTree = "<group>"; };
@@ -109,6 +111,17 @@
 		F64BAFE72A4E7A2A002B923F /* ZOPrirorityQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZOPrirorityQueue.m; sourceTree = "<group>"; };
 		F64BAFEA2A4E7FE9002B923F /* ZOHeap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZOHeap.h; sourceTree = "<group>"; };
 		F64BAFEB2A4E7FF1002B923F /* ZOHeap.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZOHeap.m; sourceTree = "<group>"; };
+		F64BAFF52A51825C002B923F /* ChatDetailUseCase.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDetailUseCase.h; sourceTree = "<group>"; };
+		F64BAFF62A518271002B923F /* ChatDetailEntity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDetailEntity.h; sourceTree = "<group>"; };
+		F64BAFF72A518281002B923F /* ChatDetailReporitoryInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDetailReporitoryInterface.h; sourceTree = "<group>"; };
+		F64BAFF92A5182A0002B923F /* ChatDetailDataRepository.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDetailDataRepository.h; sourceTree = "<group>"; };
+		F64BAFFB2A5182F2002B923F /* ChatDetailLocalDataSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDetailLocalDataSource.h; sourceTree = "<group>"; };
+		F64BAFFC2A518307002B923F /* ChatDetailRemoteDataSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDetailRemoteDataSource.h; sourceTree = "<group>"; };
+		F64BAFFD2A518842002B923F /* ChatDetailUseCase.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailUseCase.m; sourceTree = "<group>"; };
+		F64BAFFF2A518FC6002B923F /* ChatDetailLocalDataSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailLocalDataSource.m; sourceTree = "<group>"; };
+		F64BB0012A518FD5002B923F /* ChatDetailRemoteDataSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailRemoteDataSource.m; sourceTree = "<group>"; };
+		F64BB0032A51AC7A002B923F /* ChatDetailEntity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailEntity.m; sourceTree = "<group>"; };
+		F64BB0052A51AEC9002B923F /* ChatDetailDataRepository.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailDataRepository.m; sourceTree = "<group>"; };
 		F6C43EEF2A3AEF0D001D8715 /* storage2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = storage2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6C43EF22A3AEF0D001D8715 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -359,6 +372,61 @@
 			path = ZOHeap;
 			sourceTree = "<group>";
 		};
+		F64BAFED2A5180A1002B923F /* Features */ = {
+			isa = PBXGroup;
+			children = (
+				F64BAB702A3F04C4002B923F /* Coordinators */,
+				F6C43F3B2A3B2A12001D8715 /* StorageOverview */,
+				F6C43F292A3B0CF2001D8715 /* ChatDetail */,
+				F6C43F0B2A3AEF90001D8715 /* Home */,
+			);
+			path = Features;
+			sourceTree = "<group>";
+		};
+		F64BAFF22A51822D002B923F /* ChatDetailPresentation */ = {
+			isa = PBXGroup;
+			children = (
+				F6C43F2A2A3B0D0A001D8715 /* ChatDetailViewController.h */,
+				F6C43F2B2A3B0D15001D8715 /* ChatDetailViewController.m */,
+				F6C43F2D2A3B0D3A001D8715 /* ChatDetailViewModel.h */,
+				F6C43F2E2A3B0D45001D8715 /* ChatDetailViewModel.m */,
+				F6C43F302A3B0D53001D8715 /* ChatDetailView.storyboard */,
+			);
+			path = ChatDetailPresentation;
+			sourceTree = "<group>";
+		};
+		F64BAFF32A518238002B923F /* ChatDetailDomain */ = {
+			isa = PBXGroup;
+			children = (
+				F64BAFF52A51825C002B923F /* ChatDetailUseCase.h */,
+				F64BAFFD2A518842002B923F /* ChatDetailUseCase.m */,
+				F64BAFF72A518281002B923F /* ChatDetailReporitoryInterface.h */,
+				F64BAFF62A518271002B923F /* ChatDetailEntity.h */,
+				F64BB0032A51AC7A002B923F /* ChatDetailEntity.m */,
+			);
+			path = ChatDetailDomain;
+			sourceTree = "<group>";
+		};
+		F64BAFF42A51823E002B923F /* ChatDetailData */ = {
+			isa = PBXGroup;
+			children = (
+				F64BAFF92A5182A0002B923F /* ChatDetailDataRepository.h */,
+				F64BB0052A51AEC9002B923F /* ChatDetailDataRepository.m */,
+			);
+			path = ChatDetailData;
+			sourceTree = "<group>";
+		};
+		F64BAFFA2A5182D9002B923F /* ChatDetailDataSources */ = {
+			isa = PBXGroup;
+			children = (
+				F64BAFFB2A5182F2002B923F /* ChatDetailLocalDataSource.h */,
+				F64BAFFF2A518FC6002B923F /* ChatDetailLocalDataSource.m */,
+				F64BAFFC2A518307002B923F /* ChatDetailRemoteDataSource.h */,
+				F64BB0012A518FD5002B923F /* ChatDetailRemoteDataSource.m */,
+			);
+			path = ChatDetailDataSources;
+			sourceTree = "<group>";
+		};
 		F6C43EE62A3AEF0D001D8715 = {
 			isa = PBXGroup;
 			children = (
@@ -380,16 +448,11 @@
 		F6C43EF12A3AEF0D001D8715 /* storage2 */ = {
 			isa = PBXGroup;
 			children = (
-				F64BAB702A3F04C4002B923F /* Coordinators */,
+				F64BAFED2A5180A1002B923F /* Features */,
 				F6C43F492A3C39C9001D8715 /* Helpers */,
-				F6C43F3B2A3B2A12001D8715 /* StorageOverview */,
-				F6C43F292A3B0CF2001D8715 /* ChatDetail */,
-				F6C43F1B2A3AF139001D8715 /* Models */,
-				F6C43F1E2A3AF139001D8715 /* SectionControllers */,
 				F6C43F1A2A3AF139001D8715 /* Services */,
 				F6C43F212A3AF139001D8715 /* Views */,
 				F6C43F0C2A3AEF9C001D8715 /* App */,
-				F6C43F0B2A3AEF90001D8715 /* Home */,
 			);
 			path = storage2;
 			sourceTree = "<group>";
@@ -427,6 +490,8 @@
 		F6C43F1A2A3AF139001D8715 /* Services */ = {
 			isa = PBXGroup;
 			children = (
+				F64BAFFA2A5182D9002B923F /* ChatDetailDataSources */,
+				F6C43F1B2A3AF139001D8715 /* Models */,
 				F64BAFE32A4C1B7F002B923F /* Factory */,
 			);
 			path = Services;
@@ -440,8 +505,6 @@
 				F6C43F1D2A3AF139001D8715 /* ChatRoomModel.m */,
 				F6C43F342A3B0E95001D8715 /* ChatMessageData.h */,
 				F6C43F322A3B0E8C001D8715 /* ChatMessageData.m */,
-				F64BABBD2A42F080002B923F /* ChatMessageModel.h */,
-				F64BABBE2A42F08B002B923F /* ChatMessageModel.m */,
 				F64BABDB2A4A81B0002B923F /* FileData.h */,
 				F64BABDC2A4A81B9002B923F /* FileData.m */,
 			);
@@ -462,6 +525,7 @@
 		F6C43F212A3AF139001D8715 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F6C43F1E2A3AF139001D8715 /* SectionControllers */,
 				F64BABC32A4404E0002B923F /* ZOStatePresentable */,
 				F64BABC22A4404CA002B923F /* StorageInfoCell */,
 				F64BABC12A4404C6002B923F /* ChatMessageCell */,
@@ -474,11 +538,9 @@
 		F6C43F292A3B0CF2001D8715 /* ChatDetail */ = {
 			isa = PBXGroup;
 			children = (
-				F6C43F2A2A3B0D0A001D8715 /* ChatDetailViewController.h */,
-				F6C43F2B2A3B0D15001D8715 /* ChatDetailViewController.m */,
-				F6C43F2D2A3B0D3A001D8715 /* ChatDetailViewModel.h */,
-				F6C43F2E2A3B0D45001D8715 /* ChatDetailViewModel.m */,
-				F6C43F302A3B0D53001D8715 /* ChatDetailView.storyboard */,
+				F64BAFF42A51823E002B923F /* ChatDetailData */,
+				F64BAFF32A518238002B923F /* ChatDetailDomain */,
+				F64BAFF22A51822D002B923F /* ChatDetailPresentation */,
 			);
 			path = ChatDetail;
 			sourceTree = "<group>";
@@ -645,6 +707,7 @@
 				F64BAFD22A4AECBE002B923F /* StorageManager.m in Sources */,
 				F64BAFE82A4E7A2A002B923F /* ZOPrirorityQueue.m in Sources */,
 				F6C43EFA2A3AEF0D001D8715 /* HomeViewController.m in Sources */,
+				F64BB0062A51AEC9002B923F /* ChatDetailDataRepository.m in Sources */,
 				F64BAB862A4040F3002B923F /* HashHelper.m in Sources */,
 				F6C43EF42A3AEF0D001D8715 /* AppDelegate.m in Sources */,
 				F6C43F332A3B0E8C001D8715 /* ChatMessageData.m in Sources */,
@@ -657,11 +720,13 @@
 				F6C43F392A3B1159001D8715 /* ChatMessageCell.m in Sources */,
 				F64BABD22A483A3F002B923F /* ZODownloadUnit.m in Sources */,
 				F64BABB82A42DB46002B923F /* CacheService.m in Sources */,
+				F64BAFFE2A518842002B923F /* ChatDetailUseCase.m in Sources */,
 				F64BABBC2A42DF25002B923F /* CompressorHelper.m in Sources */,
 				F64BAFEC2A4E7FF1002B923F /* ZOHeap.m in Sources */,
 				F6C43F4C2A3C39EA001D8715 /* FileHelper.m in Sources */,
 				F64BAB7A2A3F08CA002B923F /* AppCoordinator.m in Sources */,
 				F64BAFE22A4C1A47002B923F /* AppService.m in Sources */,
+				F64BB0002A518FC6002B923F /* ChatDetailLocalDataSource.m in Sources */,
 				F6C43F412A3B2A53001D8715 /* StorageViewModel.m in Sources */,
 				F64BAB692A3DA456002B923F /* DatabaseManager.m in Sources */,
 				F6C43F3E2A3B2A39001D8715 /* StorageViewController.m in Sources */,
@@ -669,6 +734,7 @@
 				F6C43F192A3AF0D3001D8715 /* HomeViewModel.m in Sources */,
 				F64BAB7C2A3F0C2F002B923F /* BaseCoordinator.m in Sources */,
 				F6C43F372A3B10E3001D8715 /* ChatDetailSectionController.m in Sources */,
+				F64BB0042A51AC7A002B923F /* ChatDetailEntity.m in Sources */,
 				F64BAB8A2A4053D1002B923F /* CircleGraphComponent.m in Sources */,
 				F64BAB8D2A4053E3002B923F /* CircleGraphView.m in Sources */,
 				F6C43F272A3AF139001D8715 /* ChatRoomCell.m in Sources */,
@@ -677,7 +743,7 @@
 				F64BABDA2A493BC8002B923F /* ReachabilityHelper.m in Sources */,
 				F6C43F262A3AF139001D8715 /* ChatRoomSectionController.m in Sources */,
 				F64BABCE2A4839FA002B923F /* ZODownloadManager.m in Sources */,
-				F64BABBF2A42F08B002B923F /* ChatMessageModel.m in Sources */,
+				F64BB0022A518FD5002B923F /* ChatDetailRemoteDataSource.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

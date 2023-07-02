@@ -10,13 +10,13 @@
 #import "ChatDetailSectionController.h"
 
 #import "ChatMessageCell.h"
-#import "ChatMessageModel.h"
+#import "ChatDetailEntity.h"
 
 @interface ChatDetailSectionController () <ChatMessageCellDelegate>
 @end
 
 @implementation ChatDetailSectionController {
-    ChatMessageModel *_chat;
+    ChatDetailEntity *_chat;
 }
 
 #pragma mark - IGListSectionController Overrides
@@ -47,7 +47,7 @@
 }
 
 - (void)didUpdateToObject:(id)object {
-    _chat = (ChatMessageModel *)object;
+    _chat = (ChatDetailEntity *)object;
 }
 
 // MARK: - ListSingleSectionControllerDelegate
@@ -65,7 +65,7 @@
     [_delegate updateRamCache:image withKey:key];
 }
 
-- (void) retryWithModel: (ChatMessageModel*)model {
+- (void) retryWithModel: (ChatDetailEntity*)model {
     [_delegate retryWithModel:model];
 }
 @end

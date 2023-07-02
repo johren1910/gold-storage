@@ -9,22 +9,25 @@
 #import "ChatRoomModel.h"
 #import "StorageManagerType.h"
 #import "ZODownloadManager.h"
+#import "ChatDetailUseCase.h"
 
 @protocol ChatDetailViewModelDelegate <NSObject>
 
 - (void) didUpdateData;
-- (void) didUpdateObject:(ChatMessageModel*)model;
+- (void) didUpdateObject:(ChatDetailEntity*)model;
 - (void) didReloadData;
 
 @end
 
 @interface ChatDetailViewModel : NSObject
 
-- (void) selectChatMessage:(ChatMessageModel *) chat;
-- (void) deselectChatMessage:(ChatMessageModel *) chat;
-- (void)getData:(void (^)(NSArray<ChatMessageModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion;
+@property (nonatomic) id<ChatDetailUseCaseInterface> chatDetailUsecase;
+
+- (void) selectChatMessage:(ChatDetailEntity *) chat;
+- (void) deselectChatMessage:(ChatDetailEntity *) chat;
+- (void) onViewDidLoad;
 - (void)changeSegment: (NSInteger) index;
-- (ChatMessageModel *)itemAtIndexPath:(NSIndexPath *)indexPath;
+- (ChatDetailEntity *)itemAtIndexPath:(NSIndexPath *)indexPath;
 - (NSUInteger) numberOfSections;
 - (void)addImage:(NSData *)data;
 - (void)addFile:(NSData *)data;
@@ -33,12 +36,12 @@
 - (void)deleteSelected;
 - (void)setCheat:(BOOL)isOn;
 
-- (void)retryWithModel:(ChatMessageModel *)model;
+- (void)retryWithModel:(ChatDetailEntity *)model;
 
-@property (nonatomic, weak) id <ChatDetailViewModelDelegate>  delegate;
-@property (copy,nonatomic) NSArray<ChatMessageModel *> *filteredChats;
+@property (nonatomic, weak) id <ChatDetailViewModelDelegate> delegate;
+@property (copy,nonatomic) NSArray<ChatDetailEntity *> *filteredChats;
 @property (nonatomic, strong) id<StorageManagerType> storageManager;
 @property (nonatomic, strong) id<ZODownloadManagerType> downloadManager;
 
--(instancetype) initWithChatRoom: (ChatRoomModel*) chatRoom;
+-(instancetype) initWithChatRoom:(ChatRoomModel*)chatRoom andUsecase:(id<ChatDetailUseCaseInterface>)chatDetailUsecase;
 @end

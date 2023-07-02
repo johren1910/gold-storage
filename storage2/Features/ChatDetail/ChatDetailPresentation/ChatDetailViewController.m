@@ -21,7 +21,7 @@
 
 #pragma mark - View Lifecycle
 
-- (void) didUpdateObject:(ChatMessageModel*)model {
+- (void) didUpdateObject:(ChatDetailEntity*)model {
     
     //TODO: Fix DIFF bug on perform update.
     [_adapter reloadObjects:@[model]];
@@ -42,7 +42,7 @@
     self.adapter.collectionView = self.collectionView;
     self.adapter.dataSource = self;
     [_segmentBar addTarget:self action:@selector(segmentChanged:) forControlEvents:UIControlEventValueChanged];
-    [self getData];
+    [self.viewModel onViewDidLoad];
     
     UINib *cellNib = [UINib nibWithNibName:@"ChatMessageCell" bundle:nil];
     [self.collectionView registerNib:cellNib forCellWithReuseIdentifier:@"ChatMessageCell"];
@@ -70,18 +70,6 @@
     
 }
 
-- (void)getData {
-    __weak ChatDetailViewController *weakself = self;
-    
-    [self.viewModel getData:^(NSArray<ChatMessageModel *> * _Nonnull chats){
-        
-        [weakself.adapter performUpdatesAnimated:true completion:nil];
-        
-    } error:^(NSError * _Nonnull error) {
-        
-    }];
-}
-
 #pragma mark - IGListAdapterDataSource
 
 - (NSArray<id<IGListDiffable>> *)objectsForListAdapter:(IGListAdapter *)listAdapter {
@@ -100,11 +88,11 @@
 
 #pragma mark - ChatDetailSectionControllerDelegate
 
-- (void) didSelect: (ChatMessageModel*) chat {
+- (void) didSelect: (ChatDetailEntity*) chat {
     [_viewModel selectChatMessage:chat];
 }
 
-- (void) didDeselect: (ChatMessageModel*) chat {
+- (void) didDeselect: (ChatDetailEntity*) chat {
     [_viewModel deselectChatMessage:chat];
 }
 
@@ -113,7 +101,7 @@
     [_viewModel updateRamCache:image withKey:key];
 }
 
-- (void) retryWithModel:(ChatMessageModel *)model {
+- (void) retryWithModel:(ChatDetailEntity *)model {
     [_viewModel retryWithModel:model];
 }
 

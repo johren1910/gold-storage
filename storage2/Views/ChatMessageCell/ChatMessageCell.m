@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ChatMessageModel.h"
+#import "ChatDetailEntity.h"
 #import "ChatMessageCell.h"
 #import "CompressorHelper.h"
 #import "FileHelper.h"
@@ -19,7 +19,7 @@
 @property (strong, nonatomic) IBOutlet UIImageView *typeIconView;
 @property (strong, nonatomic) IBOutlet UILabel *timeLabel;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
-@property (weak, nonatomic)  ChatMessageModel *cachedMessageModel;
+@property (weak, nonatomic)  ChatDetailEntity *cachedMessageModel;
 @property (strong, nonatomic) IBOutlet UIButton *retryBtn;
 
 @end
@@ -107,24 +107,24 @@
     [self.thumbnailImageView setBackgroundColor:[UIColor systemRedColor]];
 }
 
-- (void)setChat:(ChatMessageModel *)chat {
+- (void)setChat:(ChatDetailEntity *)chat {
     [self prepareForReuse];
     _chat = [chat copy];
     _cachedMessageModel = chat;
     
-    if (chat.isError) {
-        [self createErrorView];
-        return;
-    }
+//    if (chat.isError) {
+//        [self createErrorView];
+//        return;
+//    }
     [self.retryBtn setHidden:true];
-    if (_chat.messageData.file.type == Download) {
+    if (_chat.file.type == Download) {
         [self createDownloadHolderView];
     } else {
         [self.selectedImage setHidden: false];
-        if (_chat.messageData.file.size == 0){
+        if (_chat.file.size == 0){
             [self.sizeLabel setHidden: TRUE];
         } else {
-            self.sizeLabel.text = [NSString stringWithFormat:@"%.1f MB", _chat.messageData.file.size];
+            self.sizeLabel.text = [NSString stringWithFormat:@"%.1f MB", _chat.file.size];
             [self.sizeLabel setHidden:FALSE];
         }
         
@@ -134,12 +134,12 @@
             self.selectedImage.image = [UIImage imageNamed:@"circle-empty"];
         }
         
-        switch (_chat.messageData.file.type) {
+        switch (_chat.file.type) {
             case Video:
                 self.typeIconView.image = [UIImage imageNamed:@"video"];
                 [self.typeIconView setHidden:false];
                 [self.timeLabel setHidden:false];
-                self.timeLabel.text = [self timeFormat:_chat.messageData.file.duration];
+                self.timeLabel.text = [self timeFormat:_chat.file.duration];
                 if (_chat.thumbnail != nil) {
                     [_thumbnailImageView setImage:_chat.thumbnail];
                 } else {
@@ -150,7 +150,7 @@
                 if (_chat.thumbnail != nil) {
                     [_thumbnailImageView setImage:_chat.thumbnail];
                 } else {
-                    [self handleLoadingImageWithUrl:chat.messageData.file.filePath];
+                    [self handleLoadingImageWithUrl:chat.file.filePath];
                 }
                 break;
             default:

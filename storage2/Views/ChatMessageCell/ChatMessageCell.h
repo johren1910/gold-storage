@@ -9,10 +9,10 @@
 
 @protocol ChatMessageCellDelegate <NSObject>
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
-- (void) retryWithModel: (ChatMessageModel*)model;
+- (void) retryWithModel: (ChatDetailEntity*)model;
 @end
 
 @interface ChatMessageCell : UICollectionViewCell
-@property (nonatomic, copy) ChatMessageModel *chat;
+@property (nonatomic, copy) ChatDetailEntity *chat;
 @property (nonatomic, weak) id <ChatMessageCellDelegate> delegate;
 @end

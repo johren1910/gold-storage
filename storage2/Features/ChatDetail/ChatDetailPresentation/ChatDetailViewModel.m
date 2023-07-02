@@ -9,7 +9,7 @@
 
 #import "ChatDetailViewModel.h"
 #import "ChatMessageData.h"
-#import "ChatMessageModel.h"
+#import "ChatDetailEntity.h"
 #import "FileType.h"
 #import "FileHelper.h"
 #import "HashHelper.h"
@@ -17,8 +17,8 @@
 #import <objc/runtime.h>
 
 @interface ChatDetailViewModel ()
-@property (retain,nonatomic) NSMutableArray<ChatMessageModel *> *messageModels;
-@property (retain,nonatomic) NSMutableArray<ChatMessageModel *> *selectedModels;
+@property (retain,nonatomic) NSMutableArray<ChatDetailEntity *> *messageModels;
+@property (retain,nonatomic) NSMutableArray<ChatDetailEntity *> *selectedModels;
 @property (nonatomic, copy) ChatRoomModel *chatRoom;
 @property (nonatomic) BOOL isCheatOn;
 @property (nonatomic) dispatch_queue_t backgroundQueue;
@@ -26,13 +26,14 @@
 
 @implementation ChatDetailViewModel
 
--(instancetype) initWithChatRoom: (ChatRoomModel*) chatRoom {
+-(instancetype) initWithChatRoom:(ChatRoomModel*)chatRoom andUsecase:(id<ChatDetailUseCaseInterface>)chatDetailUsecase {
     self = [super init];
     if (self) {
         self.messageModels = [[NSMutableArray alloc] init];
         self.selectedModels = [[NSMutableArray alloc] init];
         self.backgroundQueue = dispatch_queue_create("com.chatdetai.viewmodel.backgroundqueue", DISPATCH_QUEUE_SERIAL);
         self.isCheatOn = FALSE;
+        self.chatDetailUsecase = chatDetailUsecase;
     }
     _chatRoom = chatRoom;
     
@@ -51,41 +52,33 @@
     return self;
 }
 
-- (void)getData:(void (^)(NSArray<ChatMessageModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion {
-    __weak ChatDetailViewModel *weakself = self;
-    dispatch_async(_backgroundQueue, ^{
-        [weakself.storageManager getChatMessagesByRoomId:weakself.chatRoom.chatRoomId completionBlock:^(id object) {
-            
-            NSArray* result = (NSArray*)object;
-            
-            if (result != nil) {
-                
-                NSMutableArray<ChatMessageModel*>* modelResult = [@[] mutableCopy];
-                
-                for (ChatMessageData* messageData in result) {
-                    
-                    UIImage* cachedImage = [weakself.storageManager getImageByKey:messageData.file.checksum];
-                    
-                    ChatMessageModel* model = [[ChatMessageModel alloc] initWithMessageData:messageData thumbnail:cachedImage];
-                    
-                    [modelResult addObject:model];
-                    
-                    if (messageData.file.type == Download) {
-                        [weakself requestDownloadWithUrl:messageData.file.filePath forFileId:messageData.file.fileId andMessageId:messageData.messageId];
-                    }
-                }
-                weakself.messageModels = [modelResult mutableCopy];
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    weakself.filteredChats = weakself.messageModels;
-                    successCompletion(weakself.messageModels);
-                });
-            }
-        }];
-    });
+- (void) onViewDidLoad {
+    [self _loadData];
 }
 
-- (ChatMessageModel *)itemAtIndexPath:(NSIndexPath *)indexPath {
+- (void)_loadData {
+    __weak ChatDetailViewModel *weakself = self;
+    [_chatDetailUsecase getChatDetailsOfRoomId:_chatRoom.chatRoomId successCompletion:^(NSArray<ChatDetailEntity*>* entities) {
+        
+        for (ChatDetailEntity* entity in entities) {
+            if (entity.file.type == Download) {
+                [weakself requestDownloadWithUrl:entity.file.filePath forFileId:entity.file.fileId andMessageId:entity.messageId];
+            }
+        }
+        
+        weakself.messageModels = [entities mutableCopy];
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            weakself.filteredChats = weakself.messageModels;
+            [weakself.delegate didUpdateData];
+            
+        });
+    } error:^(NSError* error) {
+        
+    }];
+}
+
+- (ChatDetailEntity *)itemAtIndexPath:(NSIndexPath *)indexPath {
     if (indexPath.row >= self.filteredChats.count) {
         return nil;
     }
@@ -119,34 +112,8 @@
     return 1;
 }
 
-- (NSArray<ChatMessageModel*>*) items {
+- (NSArray<ChatDetailEntity*>*) items {
     return _filteredChats;
-}
-
-- (void)retryWithModel:(ChatMessageModel *)model {
-    [self.downloadManager resumeDownloadOfUrl:model.messageData.file.filePath];
-    
-    ChatMessageModel *updateModel = [model copy];
-    updateModel.isError = FALSE;
-    __block int index = -1;
-    __weak ChatDetailViewModel* weakself = self;
-    [self.messageModels enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        ChatMessageModel *currentModel = (ChatMessageModel *)obj;
-        if ([model.messageData.messageId isEqualToString:updateModel.messageData.messageId]) {
-            index = idx;
-            *stop = YES;
-        }
-    }];
-    if (index == -1){
-        return;
-    }
-    
-    [self.messageModels replaceObjectAtIndex:index withObject:updateModel];
-    self.filteredChats = weakself.messageModels;
-
-    dispatch_async( dispatch_get_main_queue(), ^{
-        [self.delegate didUpdateObject:weakself.messageModels[index]];
-    });
 }
 
 - (void)downloadFileWithUrl:(NSString *)url {
@@ -167,7 +134,9 @@
 
     newMessageData.file = newFileData;
 
-    ChatMessageModel *newModel = [[ChatMessageModel alloc] initWithMessageData:newMessageData thumbnail:nil];
+    ChatDetailEntity *newModel = [[ChatDetailEntity alloc] init];
+    newModel.messageId = newMessageData.messageId;
+    newModel.file = newMessageData.file;
 
     [self.messageModels insertObject:newModel atIndex:0];
     self.filteredChats = self.messageModels;
@@ -210,23 +179,23 @@
         [weakself addDownloadedMedia:destinationPath withFileId:fileId andMessageId:messageId];
         NSLog(@"destinationPath download: %@", destinationPath);
     } errorBlock:^(NSError *error) {
-        __block int index = -1;
-        [weakself.messageModels enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-            ChatMessageModel *currentModel = (ChatMessageModel *)obj;
-            if ([currentModel.messageData.messageId isEqualToString:messageId]) {
-                index = idx;
-                *stop = YES;
-            }
-        }];
-        if (index == -1){
-            return;
-        }
-        weakself.messageModels[index].isError = TRUE;
-        weakself.filteredChats = weakself.messageModels;
-
-        dispatch_async( dispatch_get_main_queue(), ^{
-            [self.delegate didUpdateObject:weakself.messageModels[index]];
-        });
+//        __block int index = -1;
+//        [weakself.messageModels enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+//            ChatDetailEntity *currentModel = (ChatDetailEntity *)obj;
+//            if ([currentModel.messageData.messageId isEqualToString:messageId]) {
+//                index = idx;
+//                *stop = YES;
+//            }
+//        }];
+//        if (index == -1){
+//            return;
+//        }
+//        weakself.messageModels[index].isError = TRUE;
+//        weakself.filteredChats = weakself.messageModels;
+//
+//        dispatch_async( dispatch_get_main_queue(), ^{
+//            [self.delegate didUpdateObject:weakself.messageModels[index]];
+//        });
         NSLog(@"error");
     }];
 }
@@ -262,22 +231,22 @@
         newFileData.duration = mediaInfo.duration;
         
         [[weakself storageManager] updateFileData:newFileData completionBlock:^(BOOL isSuccess){
-            __block ChatMessageData *messageData = nil;
+            __block ChatDetailEntity *entity = nil;
             __block NSUInteger index = 0;
             [weakself.messageModels enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                ChatMessageModel *model = (ChatMessageModel *)obj;
-                if ([model.messageData.messageId isEqualToString:messageId]) {
+                ChatDetailEntity *model = (ChatDetailEntity *)obj;
+                if ([model.messageId isEqualToString:messageId]) {
                     index = idx;
                     *stop = YES;
-                    messageData = [model.messageData copy];
+                    entity = [model copy];
                 }
 
             }];
             
-            messageData.file = newFileData;
-            ChatMessageModel *newModel = [[ChatMessageModel alloc] initWithMessageData:messageData thumbnail:thumbnail];
+            entity.file = newFileData;
+            entity.thumbnail = thumbnail;
             
-            [weakself.messageModels replaceObjectAtIndex:index withObject:newModel];
+            [weakself.messageModels replaceObjectAtIndex:index withObject:entity];
             weakself.filteredChats = weakself.messageModels;
 
             dispatch_async( dispatch_get_main_queue(), ^{
@@ -287,10 +256,10 @@
     });
 }
 
-- (void) selectChatMessage:(ChatMessageModel *) chat {
+- (void) selectChatMessage:(ChatDetailEntity *) chat {
     [_selectedModels addObject:chat];
-    for (ChatMessageModel *model in _messageModels) {
-        if (chat.messageData.messageId == model.messageData.messageId) {
+    for (ChatDetailEntity *model in _messageModels) {
+        if (chat.messageId == model.messageId) {
             
             model.selected = TRUE;
             break;
@@ -300,10 +269,10 @@
     
     [self.delegate didUpdateObject:chat];
 }
-- (void) deselectChatMessage:(ChatMessageModel *) chat {
+- (void) deselectChatMessage:(ChatDetailEntity *) chat {
     [_selectedModels removeObject:chat];
-    for (ChatMessageModel *model in _messageModels) {
-        if (chat.messageData.messageId == model.messageData.messageId) {
+    for (ChatDetailEntity *model in _messageModels) {
+        if (chat.messageId == model.messageId) {
             
             model.selected = FALSE;
             break;
@@ -314,11 +283,11 @@
 }
 
 - (void)deleteSelected {
-    for (ChatMessageModel* model in self.selectedModels) {
+    for (ChatDetailEntity* model in self.selectedModels) {
         
         __weak ChatDetailViewModel* weakself = self;
-        [self.downloadManager cancelDownloadOfUrl:model.messageData.file.filePath];
-        [self.storageManager deleteChatMessage:model.messageData completionBlock:^(BOOL isSuccess) {
+        [self.downloadManager cancelDownloadOfUrl:model.file.filePath];
+        [self.storageManager deleteChatMessage:model completionBlock:^(BOOL isSuccess) {
             if(isSuccess) {
                 [weakself.messageModels removeObject:model];
                 weakself.filteredChats = weakself.messageModels;
@@ -354,7 +323,11 @@
                 [weakself.storageManager cacheImageByKey:image withKey:messageData.file.checksum];
                 }
                
-                ChatMessageModel *newModel = [[ChatMessageModel alloc] initWithMessageData:messageData thumbnail:image];
+                
+                ChatDetailEntity *newModel = [[ChatDetailEntity alloc] init];
+                newModel.messageId = messageData.messageId;
+                newModel.file = messageData.file;
+                newModel.thumbnail = image;
                 
                 [weakself.messageModels insertObject:newModel atIndex:0];
                 weakself.filteredChats = weakself.messageModels;
@@ -401,11 +374,13 @@
             newFileData.type = Download;
             newFileData.fileId = fileId;
             newFileData.messageId = messageId;
-            
             newMessageData.file = newFileData;
             
-            ChatMessageModel *newModel = [[ChatMessageModel alloc] initWithMessageData:newMessageData thumbnail:nil];
             
+            ChatDetailEntity *newModel = [[ChatDetailEntity alloc] init];
+            newModel.messageId = newMessageData.messageId;
+            newModel.file = newMessageData.file;
+            newModel.thumbnail = nil;
             
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakself.messageModels insertObject:newModel atIndex:0];
@@ -445,7 +420,11 @@
     [_storageManager uploadImage:data withRoomId:_chatRoom.chatRoomId completionBlock:^(id object){
         ChatMessageData* messageData = (ChatMessageData*)object;
         UIImage *image = [UIImage imageWithData:data];
-        ChatMessageModel *newModel = [[ChatMessageModel alloc] initWithMessageData:messageData thumbnail:image];
+        
+        ChatDetailEntity *newModel = [[ChatDetailEntity alloc] init];
+        newModel.messageId = messageData.messageId;
+        newModel.file = messageData.file;
+        newModel.thumbnail = image;
 
         [weakself.messageModels insertObject:newModel atIndex:0];
         weakself.filteredChats = weakself.messageModels;

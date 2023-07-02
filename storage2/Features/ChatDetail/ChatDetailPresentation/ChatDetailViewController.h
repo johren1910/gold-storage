@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ChatMessageModel.h"
+#import "ChatDetailEntity.h"
 #import "ChatDetailViewModel.h"
 #import "ChatDetailViewController.h"
 @import IGListKit;

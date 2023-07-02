@@ -69,4 +69,13 @@
   return [self isEqual:object];
 }
 
+- (ChatDetailEntity*) toChatDetailEntity {
+    ChatDetailEntity* entity = [[ChatDetailEntity alloc] init];
+    entity.messageId = self.messageId;
+    entity.file = self.file;
+    entity.thumbnail = nil;
+    entity.selected = false;
+    return entity;
+}
+
 @end

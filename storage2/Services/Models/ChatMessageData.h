@@ -9,6 +9,7 @@
 
 @import IGListDiffKit;
 #import "FileData.h"
+#import "ChatDetailEntity.h"
 
 @interface ChatMessageData: NSObject <IGListDiffable, NSCopying>
 
@@ -22,5 +23,7 @@
 + (instancetype)new NS_UNAVAILABLE;
 
 - (instancetype)initWithMessage:(NSString *)message messageId:(NSString *)messageId chatRoomId:(NSString *)chatRoomId NS_DESIGNATED_INITIALIZER;
+
+- (ChatDetailEntity*) toChatDetailEntity;
 
 @end

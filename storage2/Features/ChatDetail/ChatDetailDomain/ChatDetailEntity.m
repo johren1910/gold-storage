@@ -1,22 +1,13 @@
 //
-//  ChatMessageModel.m
+//  ChatDetailEntity.m
 //  storage2
 //
-//  Created by LAP14885 on 21/06/2023.
+//  Created by LAP14885 on 02/07/2023.
 //
-#import "ChatMessageModel.h"
 
-@implementation ChatMessageModel
+#import "ChatDetailEntity.h"
 
-- (instancetype)initWithMessageData:(ChatMessageData *)messageData thumbnail:(UIImage *)thumbnail
-{
-  if ((self = [super init])) {
-    _messageData = [messageData copy];
-    _thumbnail = [thumbnail copy];
-  }
-
-  return self;
-}
+@implementation ChatDetailEntity
 
 - (id)copyWithZone:(nullable NSZone *)zone
 {
@@ -25,12 +16,12 @@
 
 - (id<NSObject>)diffIdentifier
 {
-  return _messageData.messageId;
+    return _messageId;
 }
 
 - (NSUInteger)hash
 {
-  NSUInteger subhashes[] = {[_messageData.message hash], [_messageData.messageId hash]};
+    NSUInteger subhashes[] =  {[_messageId hash]};
   NSUInteger result = subhashes[0];
   for (int ii = 1; ii < 3; ++ii) {
     unsigned long long base = (((unsigned long long)result) << 32 | subhashes[ii]);
@@ -45,7 +36,7 @@
   return result;
 }
 
-- (BOOL)isEqual:(ChatMessageModel *)object
+- (BOOL)isEqual:(ChatDetailEntity *)object
 {
   if (self == object && self.selected == object.selected && self.thumbnail == object.thumbnail && self.isError == object.isError) {
     return YES;
@@ -53,8 +44,7 @@
     return NO;
   }
   return
-    (_messageData.message == object->_messageData.message ? YES : [_messageData.message isEqual:object->_messageData.message]) &&
-    (_messageData.messageId == object->_messageData.messageId ? YES : [_messageData.messageId isEqual:object->_messageData.messageId])
+    (_messageId == object->_messageId ? YES : [_messageId isEqual:object->_messageId])
     && (_selected == object->_selected)
     && (_thumbnail == object->_thumbnail)
     && (_isError == object->_isError);
@@ -66,3 +56,4 @@
 }
 
 @end
+

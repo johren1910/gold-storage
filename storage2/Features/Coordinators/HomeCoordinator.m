@@ -15,6 +15,13 @@
 #import "StorageViewController.h"
 #import "StorageManager.h"
 
+// TODO: Migrate to ChatDetailDI
+#import "ChatDetailUseCase.h"
+#import "ChatDetailDataRepository.h"
+#import "ChatDetailDataRepository.h"
+#import "ChatDetailLocalDataSource.h"
+#import "ChatDetailRemoteDataSource.h"
+
 @interface HomeCoordinator () <HomeViewModelCoordinatorDelegate>
 
 @property (strong, nonatomic) UINavigationController * navigationController;
@@ -59,7 +66,22 @@
     //Navigate to chatRoom detail
     NSLog(@"Navigate to chatRoom");
     
-    ChatDetailViewModel* viewModel = [[ChatDetailViewModel alloc] initWithChatRoom:chatRoom];
+    ChatDetailLocalDataSource *localDataSource = [[ChatDetailLocalDataSource alloc] init];
+    localDataSource.storageManager = _storageManager;
+    
+    ChatDetailRemoteDataSource *remoteDataSource = [[ChatDetailRemoteDataSource alloc] init];
+    
+    ChatDetailDataRepository *dataRepository = [[ChatDetailDataRepository alloc] init];
+    
+    dataRepository.localDataSource = localDataSource;
+    dataRepository.remoteDataSource = remoteDataSource;
+    dataRepository.storageManager = _storageManager;
+    
+    ChatDetailUseCase *useCase = [[ChatDetailUseCase alloc] initWithRepository:dataRepository];
+
+    
+    ChatDetailViewModel* viewModel = [[ChatDetailViewModel alloc] initWithChatRoom:chatRoom andUsecase:useCase];
+    
     viewModel.storageManager = _storageManager;
     viewModel.downloadManager = _downloadManager;
     

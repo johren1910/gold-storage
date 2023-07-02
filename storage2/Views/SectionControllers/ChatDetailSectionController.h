@@ -6,14 +6,14 @@
 //
 
 @import IGListKit;
-#import "ChatMessageModel.h"
+#import "ChatDetailEntity.h"
 
 @protocol ChatDetailSectionControllerDelegate <NSObject>
 
-- (void) didSelect: (ChatMessageModel*) chat;
-- (void) didDeselect: (ChatMessageModel*) chat;
+- (void) didSelect: (ChatDetailEntity*) chat;
+- (void) didDeselect: (ChatDetailEntity*) chat;
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
-- (void) retryWithModel: (ChatMessageModel*)model;
+- (void) retryWithModel: (ChatDetailEntity*)model;
 @end
 
 
