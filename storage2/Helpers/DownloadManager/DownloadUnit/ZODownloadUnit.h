@@ -25,14 +25,17 @@ typedef NS_ENUM(NSUInteger,ZODownloadState) {
 typedef NS_ENUM(NSUInteger,ZODownloadPriority) {
     
     ZODownloadPriorityNormal            = 1,
-    ZODownloadPriorityHigh            = 2
+    ZODownloadPriorityHigh            = 2,
+    // For retry
+    ZODownloadPriorityRetryImmediate            = 3
 };
 
 typedef NS_ENUM(NSUInteger,ZODownloadErrorCode) {
     
     ZODownloadErrorNoInternet            = -1009,
     ZODownloadErrorNoTimeoutRequest            = -1001,
-    ZODownloadErrorCancelled        = -999
+    ZODownloadErrorCancelled        = -999,
+    ZODownloadErrorNetworkConnectionList        = -1005
 };
 
 /// This interface provide details info for a download
@@ -77,13 +80,19 @@ typedef NS_ENUM(NSUInteger,ZODownloadErrorCode) {
 @property (nonatomic, strong) NSMutableArray<ZODownloadCompletionBlock>* completionBlocks;
 
 /// [This property is] retain errorBlock of the task to notify the manager
-@property (nonatomic, strong) ZODownloadErrorBlock errorBlock;
+@property (nonatomic, strong) NSMutableArray<ZODownloadErrorBlock>* errorBlocks;
 
 /// [This property is] retain downloadState of the task to notify the manager
 @property (nonatomic, assign) ZODownloadState downloadState;
 
 /// [This property is]  priority of the task. Higher priority start download first
 @property (nonatomic, assign) ZODownloadPriority priority;
+
+/// [This property is]  maxinum number of retry before return as error
+@property (nonatomic, assign) int maxRetryCount;
+
+/// [This property is]  the current retry attemp fo the unit
+@property (nonatomic, assign) int currentRetryAttempt;
 
 /// [This function  is] compare priority of the task to
 - (NSComparisonResult)compare:(ZODownloadUnit *)object;

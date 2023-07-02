@@ -16,7 +16,7 @@ static  dispatch_queue_t compressQueue;
     compressQueue = dispatch_queue_create("com.compressor.queue", DISPATCH_QUEUE_SERIAL);
 }
 
--(void)compressImage:(UIImage *)image quality:(CompressQuality)quality completionBlock: (void (^)(UIImage* compressedImage))completionBlock; {
++(void)compressImage:(UIImage *)image quality:(CompressQuality)quality completionBlock: (void (^)(UIImage* compressedImage))completionBlock {
    
     dispatch_async(compressQueue, ^{
 

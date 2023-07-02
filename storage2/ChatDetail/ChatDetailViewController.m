@@ -113,6 +113,10 @@
     [_viewModel updateRamCache:image withKey:key];
 }
 
+- (void) retryWithModel:(ChatMessageModel *)model {
+    [_viewModel retryWithModel:model];
+}
+
 #pragma mark - Action
 
 - (IBAction)onDownloadButtonTouched:(id)sender {

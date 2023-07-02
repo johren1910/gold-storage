@@ -60,12 +60,26 @@
                     <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" hidesWhenStopped="YES" animating="YES" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="NW7-E3-ziK">
                         <rect key="frame" x="0.0" y="0.0" width="170" height="149"/>
                     </activityIndicatorView>
+                    <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="8o7-tD-U3r">
+                        <rect key="frame" x="16" y="16" width="138" height="117"/>
+                        <state key="normal" title="Button"/>
+                        <buttonConfiguration key="configuration" style="plain" title="RETRY">
+                            <color key="baseForegroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        </buttonConfiguration>
+                        <connections>
+                            <action selector="onRetryBtn:" destination="thJ-eq-QMi" eventType="touchUpInside" id="S3W-R2-6mw"/>
+                        </connections>
+                    </button>
                 </subviews>
                 <constraints>
+                    <constraint firstItem="8o7-tD-U3r" firstAttribute="top" secondItem="a6y-On-fa7" secondAttribute="top" constant="16" id="34X-Bs-BJk"/>
                     <constraint firstAttribute="trailing" secondItem="0Nm-GZ-alW" secondAttribute="trailing" constant="8" id="5ci-Zf-BDz"/>
                     <constraint firstAttribute="bottom" secondItem="4JD-tg-Tgk" secondAttribute="bottom" constant="8" id="A0N-ye-gzu"/>
                     <constraint firstAttribute="trailing" secondItem="NW7-E3-ziK" secondAttribute="trailing" id="HUq-jM-bu8"/>
+                    <constraint firstAttribute="bottom" secondItem="8o7-tD-U3r" secondAttribute="bottom" constant="16" id="HdV-uS-aAl"/>
+                    <constraint firstAttribute="trailing" secondItem="8o7-tD-U3r" secondAttribute="trailing" constant="16" id="ImQ-Vi-GqM"/>
                     <constraint firstAttribute="bottom" secondItem="x4H-Lh-7Yk" secondAttribute="bottom" constant="8" id="KWe-8l-tZV"/>
+                    <constraint firstItem="8o7-tD-U3r" firstAttribute="leading" secondItem="a6y-On-fa7" secondAttribute="leading" constant="16" id="KqY-Uh-DC1"/>
                     <constraint firstItem="x4H-Lh-7Yk" firstAttribute="leading" relation="greaterThanOrEqual" secondItem="4JD-tg-Tgk" secondAttribute="trailing" constant="8" id="NO3-Hk-AG0"/>
                     <constraint firstItem="0Nm-GZ-alW" firstAttribute="top" secondItem="a6y-On-fa7" secondAttribute="top" constant="8" id="QfJ-pm-RIp"/>
                     <constraint firstItem="HnK-OO-tAh" firstAttribute="top" secondItem="a6y-On-fa7" secondAttribute="top" constant="8" id="btV-P6-yz3"/>
@@ -84,6 +98,7 @@
             <size key="customSize" width="170" height="149"/>
             <connections>
                 <outlet property="loadingIndicator" destination="NW7-E3-ziK" id="cQi-OB-SFC"/>
+                <outlet property="retryBtn" destination="8o7-tD-U3r" id="zII-PX-sbw"/>
                 <outlet property="selectedImage" destination="0Nm-GZ-alW" id="BFy-4F-Pd9"/>
                 <outlet property="sizeLabel" destination="4JD-tg-Tgk" id="hnm-p8-3Pa"/>
                 <outlet property="thumbnailImageView" destination="6G3-iN-LWo" id="cPa-Fb-mwP"/>

@@ -20,6 +20,7 @@
 @property (strong, nonatomic) IBOutlet UILabel *timeLabel;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *loadingIndicator;
 @property (weak, nonatomic)  ChatMessageModel *cachedMessageModel;
+@property (strong, nonatomic) IBOutlet UIButton *retryBtn;
 
 @end
 
@@ -93,7 +94,17 @@
     [self.timeLabel setHidden:true];
     [self.typeIconView setHidden:true];
     [self.sizeLabel setHidden:true];
+    [self.retryBtn setHidden:true];
     [self.thumbnailImageView setBackgroundColor:[UIColor systemGrayColor]];
+}
+
+- (void) createErrorView {
+    [self.loadingIndicator stopAnimating];
+    [self.timeLabel setHidden:true];
+    [self.typeIconView setHidden:true];
+    [self.sizeLabel setHidden:true];
+    [self.retryBtn setHidden:false];
+    [self.thumbnailImageView setBackgroundColor:[UIColor systemRedColor]];
 }
 
 - (void)setChat:(ChatMessageModel *)chat {
@@ -101,6 +112,11 @@
     _chat = [chat copy];
     _cachedMessageModel = chat;
     
+    if (chat.isError) {
+        [self createErrorView];
+        return;
+    }
+    [self.retryBtn setHidden:true];
     if (_chat.messageData.file.type == Download) {
         [self createDownloadHolderView];
     } else {
@@ -145,6 +161,9 @@
         }
     }
 }
+- (IBAction)onRetryBtn:(id)sender {
+    [_delegate retryWithModel:_cachedMessageModel];
+}
 
 - (NSString *)timeFormat:(int)duration
 {
@@ -160,8 +179,5 @@
 
         return [NSString stringWithFormat:@"%02d:%02d", minutes, seconds];
     }
-    
-    
-    
 }
 @end

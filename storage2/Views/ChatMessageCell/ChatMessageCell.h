@@ -9,6 +9,7 @@
 
 @protocol ChatMessageCellDelegate <NSObject>
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
+- (void) retryWithModel: (ChatMessageModel*)model;
 @end
 
 @interface ChatMessageCell : UICollectionViewCell

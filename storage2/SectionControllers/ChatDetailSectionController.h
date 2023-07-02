@@ -13,6 +13,7 @@
 - (void) didSelect: (ChatMessageModel*) chat;
 - (void) didDeselect: (ChatMessageModel*) chat;
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
+- (void) retryWithModel: (ChatMessageModel*)model;
 @end
 
 

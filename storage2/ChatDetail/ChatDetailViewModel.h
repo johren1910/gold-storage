@@ -33,6 +33,8 @@
 - (void)deleteSelected;
 - (void)setCheat:(BOOL)isOn;
 
+- (void)retryWithModel:(ChatMessageModel *)model;
+
 @property (nonatomic, weak) id <ChatDetailViewModelDelegate>  delegate;
 @property (copy,nonatomic) NSArray<ChatMessageModel *> *filteredChats;
 @property (nonatomic, strong) id<StorageManagerType> storageManager;

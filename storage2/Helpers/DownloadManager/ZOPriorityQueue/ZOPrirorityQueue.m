@@ -22,7 +22,6 @@
 
 -(void) enqueue:(id) object {
     [_maxHeap insert:object];
-    
 }
 -(id) dequeue {
     return [_maxHeap extractMax];

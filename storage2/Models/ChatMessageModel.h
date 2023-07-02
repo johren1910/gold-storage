@@ -18,6 +18,9 @@
 @property (nonatomic,readwrite) UIImage* thumbnail;
 @property (nonatomic) BOOL selected;
 
+// TODO: Migrate to messageState
+@property (nonatomic) BOOL isError;
+
 - (instancetype)initWithMessageData:(ChatMessageData *)messageData thumbnail:(UIImage *)thumbnail NS_DESIGNATED_INITIALIZER;
 @end
 

@@ -64,4 +64,8 @@
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key {
     [_delegate updateRamCache:image withKey:key];
 }
+
+- (void) retryWithModel: (ChatMessageModel*)model {
+    [_delegate retryWithModel:model];
+}
 @end

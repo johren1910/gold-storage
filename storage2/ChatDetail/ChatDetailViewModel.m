@@ -123,6 +123,32 @@
     return _filteredChats;
 }
 
+- (void)retryWithModel:(ChatMessageModel *)model {
+    [self.downloadManager resumeDownloadOfUrl:model.messageData.file.filePath];
+    
+    ChatMessageModel *updateModel = [model copy];
+    updateModel.isError = FALSE;
+    __block int index = -1;
+    __weak ChatDetailViewModel* weakself = self;
+    [self.messageModels enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        ChatMessageModel *currentModel = (ChatMessageModel *)obj;
+        if ([model.messageData.messageId isEqualToString:updateModel.messageData.messageId]) {
+            index = idx;
+            *stop = YES;
+        }
+    }];
+    if (index == -1){
+        return;
+    }
+    
+    [self.messageModels replaceObjectAtIndex:index withObject:updateModel];
+    self.filteredChats = weakself.messageModels;
+
+    dispatch_async( dispatch_get_main_queue(), ^{
+        [self.delegate didUpdateObject:weakself.messageModels[index]];
+    });
+}
+
 - (void)downloadFileWithUrl:(NSString *)url {
     if (_isCheatOn) {
         [self fakeDownload100Images:url];
@@ -184,6 +210,23 @@
         [weakself addDownloadedMedia:destinationPath withFileId:fileId andMessageId:messageId];
         NSLog(@"destinationPath download: %@", destinationPath);
     } errorBlock:^(NSError *error) {
+        __block int index = -1;
+        [weakself.messageModels enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+            ChatMessageModel *currentModel = (ChatMessageModel *)obj;
+            if ([currentModel.messageData.messageId isEqualToString:messageId]) {
+                index = idx;
+                *stop = YES;
+            }
+        }];
+        if (index == -1){
+            return;
+        }
+        weakself.messageModels[index].isError = TRUE;
+        weakself.filteredChats = weakself.messageModels;
+
+        dispatch_async( dispatch_get_main_queue(), ^{
+            [self.delegate didUpdateObject:weakself.messageModels[index]];
+        });
         NSLog(@"error");
     }];
 }
@@ -340,9 +383,10 @@
     NSString* link9 = @"https://freetestdata.com/wp-content/uploads/2022/02/Free_Test_Data_2MB_MP4.mp4";
     NSString* link10 = @"https://freetestdata.com/wp-content/uploads/2021/10/Free_Test_Data_1MB_MOV.mov";
 
-    NSArray<NSString*>* rand = @[link1, link2,link3,link4,link5,link6,link7,link8,link9,link10];
+    NSArray<NSString*>* rand = @[link1];
     dispatch_async(_backgroundQueue, ^{
         for (int i=0; i<100; i++) {
+            NSLog(@"LOG 1");
             uint32_t rnd = arc4random_uniform(rand.count);
             NSString *chosenTest = [rand objectAtIndex:rnd];
             

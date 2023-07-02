@@ -16,7 +16,6 @@
 @property (nonatomic, strong) NSURLSession *defaultUrlSession;
 @property (nonatomic, strong) NSURLSession *backgroundUrlSession;
 
-
 @property (nonatomic, strong) dispatch_queue_t concurrentDispatchQueue;
 @property (nonatomic, strong) dispatch_queue_t serialDispatchQueue;
 
@@ -70,7 +69,7 @@
 - (NSURLSession *)defaultUrlSession {
     if (!_defaultUrlSession) {
         NSURLSessionConfiguration *defaultConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
-        defaultConfig.waitsForConnectivity = true;  // waits for connectitity, don't notify error immediately.
+        defaultConfig.waitsForConnectivity = NO;  // waits for connectitity, don't notify error immediately.
         defaultConfig.timeoutIntervalForRequest = MAX_DOWNLOAD_TIMEOUT;
         _defaultUrlSession = [NSURLSession sessionWithConfiguration:defaultConfig delegate:self delegateQueue:nil];
     }
@@ -115,21 +114,31 @@
         return;
     __weak ZODownloadManager* weakself = self;
     dispatch_async(_serialDispatchQueue, ^{
+        NSLog(@"LOG 2");
         ZODownloadUnit *unit = [weakself.currentDownloadUnits objectForKey:downloadUrl];
         if (unit) {
             [unit.completionBlocks addObject:completionBlock];
+            [unit.errorBlocks addObject:errorBlock];
+            if (unit.downloadState == ZODownloadStateError) {
+                [weakself retryWithUrl:downloadUrl];
+                [weakself checkDownloadPipeline];
+            }
+            
         } else {
             ZODownloadUnit* unit = [[ZODownloadUnit alloc] init];
+            unit.currentRetryAttempt = 0;
+            unit.maxRetryCount = MAX_RETRY;
             unit.requestUrl = downloadUrl;
             unit.downloadState = ZODownloadStatePending;
             unit.progressBlock = progressBlock;
             unit.completionBlocks = [[NSMutableArray alloc] init];
             unit.priority = priority;
             [unit.completionBlocks addObject:completionBlock];
-            unit.errorBlock = errorBlock;
+            unit.errorBlocks = [[NSMutableArray alloc]init];
+            [unit.errorBlocks addObject:errorBlock];
             unit.startDate = [NSDate date];
             unit.isBackgroundSession = isBackgroundDownload;
-            [self addPendingUnit:unit];
+            
             if (!dstDirectory) {
                 unit.destinationDirectoryPath = [FileHelper pathForApplicationSupportDirectory];
             } else {
@@ -145,6 +154,7 @@
                 }
                 return;
             }
+            [weakself addPendingUnit:unit];
             [weakself checkDownloadPipeline];
         }
     });
@@ -193,9 +203,15 @@
         
         ZODownloadUnit *unit = [weakself.currentDownloadUnits objectForKey:url];
         if (unit) {
-            unit.downloadState = ZODownloadStatePending;
-        } else {
-            // Create another item to start?
+            if (unit.task) {
+                if (unit.downloadError) {
+                    [unit.task cancel];
+                    unit.task = nil;
+                    unit.downloadError = nil;
+                }
+            }
+            
+            [weakself addPendingUnit:unit];
         }
         
         [weakself checkDownloadPipeline];
@@ -242,7 +258,6 @@
             [weakself.priorityQueue remove:unit];
         }
         
-       
         [weakself checkDownloadPipeline];
     });
    
@@ -273,7 +288,6 @@
 - (void)checkDownloadPipeline {
     
     if (self.isAllowNewDownload) {
-        self.currentDownloadingCount++;
         [self startDownloadItem:[self getNextDownloadUnit]];
     }
 }
@@ -291,54 +305,53 @@
     if (unit.requestUrl.length == 0) {
         return;
     }
-    __weak ZODownloadManager* weakself = self;
-    dispatch_async(_serialDispatchQueue, ^{
 
-        unit.downloadState = ZODownloadStateDownloading;
-//        [weakself cancelTaskOfUnit:unit];
-        
-        [[NSURLCache sharedURLCache] removeAllCachedResponses];
-        // TODO: CORNER CASE: If client A request ZODownloadManager to down linkA at background thread. The session is 50% done, another client B request ZODownloadManager to download the same file at foreground thread. Should we create a new download or reuse the current session of background thread?
-        
-        if (unit.isBackgroundSession) {
-            [[weakself getUrlSessionBasedOnUnit:unit] getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
-                [downloadTasks enumerateObjectsUsingBlock:^(id task, NSUInteger idx, BOOL *stop) {
-                    NSURLSessionTask *sessionTask = (NSURLSessionTask*) task;
-                    if ([unit.requestUrl isEqualToString:sessionTask.originalRequest.URL.absoluteString]) {
-                        
-                        if (sessionTask.state == NSURLSessionTaskStateCompleted
-                            && sessionTask.error) {
-                            // App terminated manully by user. All background session download cleared, create new download
-                            [sessionTask cancel];
-                            weakself.currentDownloadingCount--;
-                        } else {
-                            unit.task = (NSURLSessionDownloadTask*)sessionTask;
-                            [weakself.currentDownloadUnits setObject:unit forKey:unit.requestUrl];
-                            if (sessionTask.state == NSURLSessionTaskStateSuspended) {
-                                [sessionTask resume];
-                            }
-                            
+    __weak ZODownloadManager* weakself = self;
+    NSLog(@"LOG 3");
+    unit.downloadState = ZODownloadStateDownloading;
+    
+    [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    // TODO: CORNER CASE: If client A request ZODownloadManager to down linkA at background thread. The session is 50% done, another client B request ZODownloadManager to download the same file at foreground thread. Should we create a new download or reuse the current session of background thread?
+    
+    if (unit.isBackgroundSession) {
+        [[weakself getUrlSessionBasedOnUnit:unit] getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+            [downloadTasks enumerateObjectsUsingBlock:^(id task, NSUInteger idx, BOOL *stop) {
+                NSURLSessionTask *sessionTask = (NSURLSessionTask*) task;
+                if ([unit.requestUrl isEqualToString:sessionTask.originalRequest.URL.absoluteString]) {
+                    
+                    if (sessionTask.state == NSURLSessionTaskStateCompleted
+                        && sessionTask.error) {
+                        // App terminated manully by user. All background session download cleared, create new download
+                        [sessionTask cancel];
+                        weakself.currentDownloadingCount--;
+                    } else {
+                        unit.task = (NSURLSessionDownloadTask*)sessionTask;
+                        [weakself.currentDownloadUnits setObject:unit forKey:unit.requestUrl];
+                        if (sessionTask.state == NSURLSessionTaskStateSuspended) {
+                            [sessionTask resume];
                         }
+                        
                     }
-                }];
-                
-                if (!unit.task) {
-                    NSURLSessionDownloadTask *downloadTask = [weakself createDownloadTaskWithUnit:unit];
-                    
-                    unit.task = downloadTask;
-                    [weakself.currentDownloadUnits setObject:unit forKey:unit.requestUrl];
-                    [downloadTask resume];
-                    
                 }
             }];
-        } else {
-            NSURLSessionDownloadTask *downloadTask = [weakself createDownloadTaskWithUnit:unit];
             
-            unit.task = downloadTask;
-            [weakself.currentDownloadUnits setObject:unit forKey:unit.requestUrl];
-            [downloadTask resume];
-        }
-    });
+            if (!unit.task) {
+                weakself.currentDownloadingCount++;
+                NSURLSessionDownloadTask *downloadTask = [weakself createDownloadTaskWithUnit:unit];
+                
+                unit.task = downloadTask;
+                [weakself.currentDownloadUnits setObject:unit forKey:unit.requestUrl];
+                [downloadTask resume];
+                
+            }
+        }];
+    } else {
+        NSURLSessionDownloadTask *downloadTask = [weakself createDownloadTaskWithUnit:unit];
+        weakself.currentDownloadingCount++;
+        unit.task = downloadTask;
+        [weakself.currentDownloadUnits setObject:unit forKey:unit.requestUrl];
+        [downloadTask resume];
+    }
 }
 
 #pragma mark - Helpers
@@ -361,7 +374,7 @@
 }
 
 - (BOOL) isAllowNewDownload {
-    return (_currentDownloadingCount < self.maxConcurrentDownloads);
+    return (self.currentDownloadingCount < self.maxConcurrentDownloads);
 }
 
 - (NSURLSessionDownloadTask *)createDownloadTaskWithUnit:(ZODownloadUnit *)unit {
@@ -385,6 +398,25 @@
     CGFloat remainingTime = remainingBytes / speed;
     
     return (NSUInteger)remainingTime;
+}
+
+- (BOOL)retryWithUrl:(NSString *)url {
+    
+    ZODownloadUnit *unit = [self.currentDownloadUnits objectForKey:url];
+    
+    if (unit.currentRetryAttempt >= unit.maxRetryCount) {
+        unit.currentRetryAttempt = 0;
+        return FALSE;
+    }
+    unit.currentRetryAttempt++;
+    if (unit) {
+        [unit.task cancel];
+        unit.task = nil;
+        
+        unit.priority = ZODownloadPriorityRetryImmediate;
+        [self addPendingUnit:unit];
+    }
+    return TRUE;
 }
 
 #pragma mark - NSURLSessionDelegate, NSURLSessionDownloadDelegate
@@ -441,6 +473,7 @@ didFinishDownloadingToURL:(NSURL *)location {
         
         [unit.task cancel];
         unit.task = nil;
+        unit.downloadState = ZODownloadStateDone;
     } else {
         [downloadTask cancel];
     }
@@ -489,7 +522,16 @@ didCompleteWithError:(NSError *)error {
         {
             // Add retry count
             // Dispatch retry after an interval
+            
             _currentDownloadingCount--;
+            unit.downloadState = ZODownloadStateError;
+            if (![self retryWithUrl:urlString]){
+                for (ZODownloadErrorBlock errorBlock in unit.errorBlocks) {
+                    unit.downloadError = error;
+                    errorBlock(error);
+                }
+            }
+            
             break;
         }
  
@@ -498,11 +540,33 @@ didCompleteWithError:(NSError *)error {
             // Add retry count
             // Dispatch retry after an interval
             _currentDownloadingCount--;
+            unit.downloadState = ZODownloadStateError;
+            if (![self retryWithUrl:urlString]){
+                for (ZODownloadErrorBlock errorBlock in unit.errorBlocks) {
+                    unit.downloadError = error;
+                    errorBlock(error);
+                }
+            }
+            break;
+        }
+        case ZODownloadErrorNetworkConnectionList:{
+            _currentDownloadingCount--;
+            unit.downloadState = ZODownloadStateError;
+            if (![self retryWithUrl:urlString]){
+                for (ZODownloadErrorBlock errorBlock in unit.errorBlocks) {
+                    unit.downloadError = error;
+                    errorBlock(error);
+                }
+            }
             break;
         }
         default: {
             _currentDownloadingCount--;
-            unit.errorBlock(error);
+            unit.downloadState = ZODownloadStateError;
+            for (ZODownloadErrorBlock errorBlock in unit.errorBlocks) {
+                unit.downloadError = error;
+                errorBlock(error);
+            }
             break;
         }
     }

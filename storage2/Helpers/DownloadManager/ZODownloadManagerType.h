@@ -12,7 +12,8 @@
 #import "ServiceFactory.h"
 
 #define MAX_DOWNLOAD_CONCURRENT 3
-#define MAX_DOWNLOAD_TIMEOUT 10
+#define MAX_RETRY 3
+#define MAX_DOWNLOAD_TIMEOUT 5
 
 /// This protocol provide methods to handle all media/files download of a client that need to request from remote server or api.
 /// At this time this interface will support to download/pause/resume/cancel the download
