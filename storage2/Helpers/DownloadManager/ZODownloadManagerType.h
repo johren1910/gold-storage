@@ -9,7 +9,6 @@
 #import "ZODownloadUnit.h"
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
-#import "ServiceFactory.h"
 
 #define MAX_DOWNLOAD_CONCURRENT 3
 #define MAX_RETRY 3
@@ -33,7 +32,7 @@
 ///     - TODO: RETRY ON FAILED DOWNLOAD
 ///     - TODO: AUTO RETRY ON GAIN INTERNET
 ///
-@protocol ZODownloadManagerType <FactoryResolvable>
+@protocol ZODownloadManagerType
 
 /// The action to trigger new download.
 ///

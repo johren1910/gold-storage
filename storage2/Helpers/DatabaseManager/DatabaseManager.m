@@ -6,7 +6,7 @@
 //
 
 #import "DatabaseManager.h"
-#import "FileHelper.h";
+#import "FileHelper.h"
 
 static DatabaseManager *sharedInstance = nil;
 static sqlite3 *database = nil;

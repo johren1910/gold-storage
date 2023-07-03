@@ -109,7 +109,6 @@
 		F64BAFD42A4BD24A002B923F /* StorageManagerType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StorageManagerType.h; sourceTree = "<group>"; };
 		F64BAFE02A4C198E002B923F /* AppEnvironment.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppEnvironment.h; sourceTree = "<group>"; };
 		F64BAFE12A4C1A47002B923F /* AppEnvironment.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppEnvironment.m; sourceTree = "<group>"; };
-		F64BAFE42A4C1B8C002B923F /* ServiceFactory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ServiceFactory.h; sourceTree = "<group>"; };
 		F64BAFE62A4E7A1F002B923F /* ZOPriorityQueue.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZOPriorityQueue.h; sourceTree = "<group>"; };
 		F64BAFE72A4E7A2A002B923F /* ZOPrirorityQueue.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZOPrirorityQueue.m; sourceTree = "<group>"; };
 		F64BAFEA2A4E7FE9002B923F /* ZOHeap.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZOHeap.h; sourceTree = "<group>"; };
@@ -354,14 +353,6 @@
 			path = StorageManager;
 			sourceTree = "<group>";
 		};
-		F64BAFE32A4C1B7F002B923F /* Factory */ = {
-			isa = PBXGroup;
-			children = (
-				F64BAFE42A4C1B8C002B923F /* ServiceFactory.h */,
-			);
-			path = Factory;
-			sourceTree = "<group>";
-		};
 		F64BAFE52A4E7A12002B923F /* ZOPriorityQueue */ = {
 			isa = PBXGroup;
 			children = (
@@ -501,7 +492,6 @@
 			children = (
 				F64BAFFA2A5182D9002B923F /* ChatDetailDataSources */,
 				F6C43F1B2A3AF139001D8715 /* Models */,
-				F64BAFE32A4C1B7F002B923F /* Factory */,
 			);
 			path = Services;
 			sourceTree = "<group>";

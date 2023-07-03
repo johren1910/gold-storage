@@ -7,9 +7,8 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "ServiceFactory.h"
 
-@protocol CacheServiceType <FactoryResolvable>
+@protocol CacheServiceType
 
 -(void)cacheImageByKey:(UIImage*)image withKey:(NSString*)key;
 -(UIImage*)getImageByKey:(NSString*)key;

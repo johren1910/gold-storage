@@ -9,12 +9,11 @@
 #import <sqlite3.h>
 #import "ChatRoomModel.h"
 #import "FileData.h"
-#import "ServiceFactory.h"
 
 typedef void(^ZOCompletionBlock)(BOOL isSuccess);
 typedef void(^ZOFetchCompletionBlock)(id object);
 
-@protocol DatabaseManagerType <FactoryResolvable>
+@protocol DatabaseManagerType
 
 #pragma mark - ChatMessage
 - (void)saveChatMessageData:(ChatMessageData*) chatMessage  completionBlock:(ZOCompletionBlock)completionBlock;
