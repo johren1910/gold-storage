@@ -6,8 +6,9 @@
 //
 
 #import "AppDelegate.h"
-#import "HomeViewController.h"
+#import "ChatRoomViewController.h"
 #import "AppCoordinator.h"
+#import "AppDI.h"
 
 @interface AppDelegate ()
 @property (strong,nonatomic) AppCoordinator * appCoordinator;
@@ -22,6 +23,7 @@
     self.window = [[UIWindow alloc]initWithFrame:[[UIScreen mainScreen]bounds]];
     
     _appCoordinator = [[AppCoordinator alloc] init:_window];
+    
     [_appCoordinator start];
     
     return YES;

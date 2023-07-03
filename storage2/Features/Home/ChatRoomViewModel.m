@@ -7,15 +7,15 @@
 
 #import <Foundation/Foundation.h>
 
-#import "HomeViewModel.h"
+#import "ChatRoomViewModel.h"
 #import "ChatRoomModel.h"
 #import "HashHelper.h"
 
-@interface HomeViewModel ()
+@interface ChatRoomViewModel ()
 @property (retain,nonatomic) NSMutableArray<ChatRoomModel *> *selectedModels;
 @end
 
-@implementation HomeViewModel
+@implementation ChatRoomViewModel
 
 - (instancetype)init {
     self = [super init];
@@ -32,7 +32,7 @@
     _chats = [[NSMutableArray alloc] init];
     
     __weak id<StorageManagerType> weakStorageManager = _storageManager;
-    __weak HomeViewModel *weakself = self;
+    __weak ChatRoomViewModel *weakself = self;
     
     [weakStorageManager getChatRoomsByPage:1 completionBlock:^(id object){
         NSArray* result = (NSArray*)object;
@@ -89,7 +89,7 @@
 
 - (void)deleteSelected {
     
-    __weak HomeViewModel* weakself = self;
+    __weak ChatRoomViewModel* weakself = self;
     for (ChatRoomModel* model in weakself.selectedModels) {
         [self.storageManager deleteChatRoom:model completionBlock:^(BOOL isSuccess){
             if (isSuccess) {
@@ -115,7 +115,7 @@
     newChat.size = 0;
     [_chats insertObject:newChat atIndex: 0];
     
-    __weak HomeViewModel* weakself = self;
+    __weak ChatRoomViewModel* weakself = self;
     [_storageManager createChatRoom:newChat completionBlock:^(BOOL isSuccess){
         dispatch_async(dispatch_get_main_queue(), ^{
             [weakself.delegate didUpdateData];

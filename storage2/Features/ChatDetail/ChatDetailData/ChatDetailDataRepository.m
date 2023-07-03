@@ -38,4 +38,12 @@
                                     error:errorCompletion];
 }
 
+-(instancetype) initWithRemote:(id<ChatDetailRemoteDataSourceType>)remoteDataSource andLocal:(id<ChatDetailLocalDataSourceType>)localDataSource {
+    if (self == [super init]) {
+        self.localDataSource = localDataSource;
+        self.remoteDataSource = remoteDataSource;
+    }
+    return self;
+}
+
 @end

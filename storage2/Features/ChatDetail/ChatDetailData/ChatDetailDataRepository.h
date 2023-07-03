@@ -14,5 +14,6 @@
 @property (nonatomic) id<ChatDetailLocalDataSourceType> localDataSource;
 @property (nonatomic) id<ChatDetailRemoteDataSourceType> remoteDataSource;
 @property (nonatomic) id<StorageManagerType> storageManager;
+-(instancetype) initWithRemote:(id<ChatDetailRemoteDataSourceType>)remoteDataSource andLocal:(id<ChatDetailLocalDataSourceType>)localDataSource;
 
 @end

@@ -5,34 +5,40 @@
 //  Created by LAP14885 on 15/06/2023.
 //
 
-#import "HomeViewController.h"
+#import "ChatRoomViewController.h"
 @import IGListKit;
 #import "ChatRoomModel.h"
 #import "ChatRoomCell.h"
 #import "ChatRoomSectionController.h"
-#import "HomeViewModel.h"
+#import "ChatRoomViewModel.h"
 #import "ChatDetailViewController.h"
 #import "StorageViewController.h"
 #import "Coordinator.h"
 #import "ZOStatePresentable.h"
 
 
-@interface HomeViewController () <IGListAdapterDataSource, HomeViewModelDelegate>
+@interface ChatRoomViewController () <IGListAdapterDataSource, ChatRoomViewModelDelegate>
 
 @property (nonatomic, strong) IGListAdapter *adapter;
-@property (nonatomic, strong) HomeViewModel *viewModel;
+@property (nonatomic, strong) ChatRoomViewModel *viewModel;
 @property (strong, nonatomic) IBOutlet UIView *collectionViewHolder;
 @property (nonatomic, strong) id<ZOStatePresentable> statePresenter;
 
 @end
 
-@implementation HomeViewController
+@implementation ChatRoomViewController
 
 #pragma mark - View Lifecycle
 
-- (void)setViewModel:(HomeViewModel *)viewModel {
-    _viewModel = viewModel;
-    _viewModel.delegate = self;
+- (instancetype)initWithViewModel:(ChatRoomViewModel*)viewModel {
+    
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"ChatRoomView" bundle:nil];
+    ChatRoomViewController *ivc = [storyboard instantiateViewControllerWithIdentifier:@"ChatRoomViewController"];
+    
+    self = ivc;
+    self.viewModel = viewModel;
+    self.viewModel.delegate = self;
+    return self;
 }
 
 - (void)viewDidLoad {
@@ -68,7 +74,7 @@
 }
 
 - (void)getData {
-    __weak HomeViewController *weakself = self;
+    __weak ChatRoomViewController *weakself = self;
     [self.statePresenter startLoading:YES completionHandler:nil];
     [self.viewModel getData:^(NSMutableArray<ChatRoomModel *> * _Nonnull chats){
         BOOL hasContent = (chats.count == 0);
@@ -136,7 +142,7 @@
         textField.borderStyle = UITextBorderStyleRoundedRect;
     }];
     
-    __weak HomeViewController *weakSelf = self;
+    __weak ChatRoomViewController *weakSelf = self;
     [alertController addAction:[UIAlertAction actionWithTitle:@"OK" style:UIAlertActionStyleDefault handler:^(UIAlertAction *action) {
         NSArray * textfields = alertController.textFields;
         UITextField * namefield = textfields[0];

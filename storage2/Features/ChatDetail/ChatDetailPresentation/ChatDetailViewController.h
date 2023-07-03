@@ -19,9 +19,6 @@
 #import <AssetsLibrary/AssetsLibrary.h>
 
 @interface ChatDetailViewController : UIViewController <ChatDetailSectionControllerDelegate>
-@property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
-@property (strong, nonatomic) IBOutlet UISegmentedControl *segmentBar;
-
 - (instancetype)initWithViewModel:(ChatDetailViewModel *)viewModel;
 @end
 

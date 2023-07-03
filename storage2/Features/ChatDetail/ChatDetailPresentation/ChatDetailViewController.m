@@ -10,6 +10,8 @@
 @interface ChatDetailViewController () <IGListAdapterDataSource, UIDocumentPickerDelegate, UIImagePickerControllerDelegate, ChatDetailViewModelDelegate>
 
 @property (nonatomic, strong) IGListAdapter *adapter;
+@property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
+@property (strong, nonatomic) IBOutlet UISegmentedControl *segmentBar;
 @property (strong, nonatomic) IBOutlet UISwitch *cheatSwitch;
 @property (nonatomic, strong) ChatDetailViewModel *viewModel;
 @property (nonatomic, readonly) NSInteger selectedIndex;
@@ -59,9 +61,12 @@
 }
 
 - (instancetype)initWithViewModel:(ChatDetailViewModel *)viewModel {
-    if (!self) return nil;
     
-    _viewModel = viewModel;
+    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"ChatDetailView" bundle:nil];
+    ChatDetailViewController *ivc = [storyboard instantiateViewControllerWithIdentifier:@"ChatDetailViewController"];
+    
+    self = ivc;
+    self.viewModel = viewModel;
     
     return self;
 }

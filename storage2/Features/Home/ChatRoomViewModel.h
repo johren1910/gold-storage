@@ -11,7 +11,7 @@
 #import "StorageManagerType.h"
 #import "ZODownloadManagerType.h"
 
-@protocol HomeViewModelDelegate
+@protocol ChatRoomViewModelDelegate
 
 - (void) didUpdateData;
 - (void) didUpdateObject:(ChatRoomModel*)model;
@@ -19,14 +19,14 @@
 
 @end
 
-@protocol HomeViewModelCoordinatorDelegate <NSObject>
+@protocol ChatRoomViewModelCoordinatorDelegate <NSObject>
 
 -(void)didTapSetting;
 -(void)didTapChatRoom: (ChatRoomModel*) chatRoom;
 
 @end
 
-@interface HomeViewModel : NSObject
+@interface ChatRoomViewModel : NSObject
 - (void) selectChatRoom:(ChatRoomModel *) chatRoom;
 - (void) deselectChatRoom:(ChatRoomModel *) chatRoom;
 - (void) deleteSelected;
@@ -38,8 +38,8 @@
 
 @property (strong,nonatomic) NSMutableArray<ChatRoomModel *> *chats;
 
-@property (nonatomic, weak) id <HomeViewModelDelegate>  delegate;
-@property (nonatomic, strong) id <HomeViewModelCoordinatorDelegate>  coordinatorDelegate;
+@property (nonatomic, weak) id <ChatRoomViewModelDelegate>  delegate;
+@property (nonatomic, strong) id <ChatRoomViewModelCoordinatorDelegate>  coordinatorDelegate;
 @property (nonatomic, strong) id<StorageManagerType> storageManager;
 @property (nonatomic, strong) id<ZODownloadManagerType> downloadManager;
 

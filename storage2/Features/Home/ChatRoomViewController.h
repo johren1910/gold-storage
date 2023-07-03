@@ -7,11 +7,11 @@
 
 #import <UIKit/UIKit.h>
 #import "ChatRoomModel.h"
-#import "HomeViewModel.h"
+#import "ChatRoomViewModel.h"
 #import "ZOStatePresentable.h"
 
-@interface HomeViewController : UIViewController <ChatRoomSectionControllerDelegate>
+@interface ChatRoomViewController : UIViewController <ChatRoomSectionControllerDelegate>
 
 @property (strong, nonatomic) IBOutlet UICollectionView *homeCollectionView;
-- (void)setViewModel:(HomeViewModel *)viewModel;
+- (instancetype)initWithViewModel:(ChatRoomViewModel*)viewModel;
 @end

@@ -7,11 +7,14 @@
 
 #import <Foundation/Foundation.h>
 #import "AppCoordinator.h"
-#import "HomeCoordinator.h"
-#import "HomeViewController.h"
+#import "ChatRoomCoordinator.h"
+#import "ChatRoomViewController.h"
 
-@interface AppCoordinator () <HomeCoordinatorDelegate>
-@property (strong, nonatomic) AppService* appService;
+@interface AppCoordinator () <ChatRoomCoordinatorDelegate>
+@property (strong, nonatomic) UIWindow * window;
+@property (strong, nonatomic) AppEnvironment* appEnvironment;
+@property (strong, nonatomic) AppDI* appDI;
+
 @end
 
 @implementation AppCoordinator
@@ -25,8 +28,8 @@
     if (_window == nil) {
         return;
     }
-    _appService = [[AppService alloc] init];
-//    [_appService registerServices];
+    _appEnvironment = [[AppEnvironment alloc] init];
+    _appDI = [AppDI shared];
     
     _rootViewController = [[UINavigationController alloc] init];
 
@@ -36,13 +39,11 @@
 }
 
 - (void) homeFLow {
-    HomeCoordinator* homeCoordinator = [[HomeCoordinator alloc] init:_rootViewController];
+    ChatRoomCoordinator* chatRoomCoordinator = [[ChatRoomCoordinator alloc] init:_rootViewController andAppDI:_appDI];
     
-    homeCoordinator.storageManager = [_appService getService:StorageManager.class];
-    homeCoordinator.downloadManager = [_appService getService:ZODownloadManager.class];
-    homeCoordinator.delegate = self;
-    [self store:homeCoordinator];
-    [homeCoordinator start];
+    chatRoomCoordinator.delegate = self;
+    [self store:chatRoomCoordinator];
+    [chatRoomCoordinator start];
 }
 
 @end

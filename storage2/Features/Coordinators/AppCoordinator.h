@@ -6,11 +6,10 @@
 //
 #import "BaseCoordinator.h"
 #import <UIKit/UIKit.h>
-#import "AppService.h"
+#import "AppEnvironment.h"
+#import "AppDI.h"
 
 @interface AppCoordinator : BaseCoordinator
-
-@property (strong, nonatomic) UIWindow * window;
 
 @property (strong, nonatomic) UINavigationController* rootViewController;
 
