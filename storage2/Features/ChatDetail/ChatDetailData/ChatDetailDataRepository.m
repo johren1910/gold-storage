@@ -59,12 +59,8 @@
     }];
 }
 
--(void)startDownloadWithUrl:(NSString *)downloadUrl destinationDirectory:(NSString *)dstDirectory
-       isBackgroundDownload:(BOOL)isBackgroundDownload
-              priority:(ZODownloadPriority)priority  progressBlock:(ZODownloadProgressBlock)progressBlock
-                 completionBlock:(ZODownloadCompletionBlock)completionBlock
-                 errorBlock:(ZODownloadErrorBlock)errorBlock {
-    [_remoteDataSource startDownloadWithUrl:downloadUrl destinationDirectory:dstDirectory isBackgroundDownload:isBackgroundDownload priority:priority progressBlock:progressBlock completionBlock:completionBlock errorBlock:errorBlock];
+- (void)startDownloadWithUnit:(ZODownloadUnit*)unit {
+    [_remoteDataSource startDownloadWithUnit:unit];
 }
 
 - (void)saveMedia:(NSString*)filePath forMessage:(ChatMessageData*)message completionBlock:(void(^)(FileData* fileData, UIImage* thumbnail))completionBlock {

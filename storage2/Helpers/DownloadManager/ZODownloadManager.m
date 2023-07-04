@@ -104,52 +104,45 @@
 
 #pragma mark - Session manager
 
-- (void)startDownloadWithUrl:(NSString *)downloadUrl destinationDirectory:(NSString *)dstDirectory
-        isBackgroundDownload:(BOOL)isBackgroundDownload
-               priority:(ZODownloadPriority)priority  progressBlock:(ZODownloadProgressBlock)progressBlock
-                  completionBlock:(ZODownloadCompletionBlock)completionBlock
-                     errorBlock:(ZODownloadErrorBlock)errorBlock {
-    if (downloadUrl.length == 0)
+- (void)startDownloadWithUnit:(ZODownloadUnit*)unit {
+    if (unit.requestUrl.length == 0)
         return;
     __weak ZODownloadManager* weakself = self;
     
     dispatch_async(_serialDispatchQueue, ^{
         NSLog(@"LOG 2");
-        ZODownloadUnit *unit = [weakself.currentDownloadUnits objectForKey:downloadUrl];
-        if (unit) {
-            [unit.completionBlocks addObject:completionBlock];
-            [unit.errorBlocks addObject:errorBlock];
-            if (unit.downloadState == ZODownloadStateError) {
-                [weakself retryWithUrl:downloadUrl];
+        ZODownloadUnit *existUnit = [weakself.currentDownloadUnits objectForKey:unit.requestUrl];
+        if (existUnit) {
+            [existUnit.otherCompletionBlocks addObject:unit.completionBlock];
+            [existUnit.otherErrorBlocks addObject:unit.errorBlock];
+            if (existUnit.downloadState == ZODownloadStateError) {
+                [weakself retryWithUrl:existUnit.requestUrl];
                 [weakself checkDownloadPipeline];
             }
             
         } else {
-            ZODownloadUnit* unit = [[ZODownloadUnit alloc] init];
             unit.currentRetryAttempt = 0;
             unit.maxRetryCount = MAX_RETRY;
-            unit.requestUrl = downloadUrl;
+//            unit.requestUrl = downloadUrl;
             unit.downloadState = ZODownloadStatePending;
-            unit.progressBlock = progressBlock;
-            unit.completionBlocks = [[NSMutableArray alloc] init];
-            unit.priority = priority;
-            [unit.completionBlocks addObject:completionBlock];
-            unit.errorBlocks = [[NSMutableArray alloc]init];
-            [unit.errorBlocks addObject:errorBlock];
+//            unit.progressBlock = progressBlock;
+            unit.otherCompletionBlocks = [[NSMutableArray alloc] init];
+//            unit.priority = priority;
+            unit.otherErrorBlocks = [[NSMutableArray alloc]init];
+
             unit.startDate = [NSDate date];
-            unit.isBackgroundSession = isBackgroundDownload;
+//            unit.isBackgroundSession = isBackgroundDownload;
             
-            if (!dstDirectory) {
+            if (!unit.destinationDirectoryPath) {
                 unit.destinationDirectoryPath = [FileHelper pathForApplicationSupportDirectory];
-            } else {
-                unit.destinationDirectoryPath = dstDirectory;
             }
             
             // Check if already exist at destinationPath
-            NSString* destinationPath = [unit.destinationDirectoryPath stringByAppendingPathComponent:[downloadUrl lastPathComponent]];
+            NSString* destinationPath = [unit.destinationDirectoryPath stringByAppendingPathComponent:[unit.requestUrl lastPathComponent]];
             if ([FileHelper existsItemAtPath:destinationPath]) {
                 // File already downloaded
-                for (ZODownloadCompletionBlock block in unit.completionBlocks) {
+                unit.completionBlock(destinationPath);
+                for (ZODownloadCompletionBlock block in unit.otherCompletionBlocks) {
                     block(destinationPath);
                 }
                 return;
@@ -462,12 +455,13 @@ didFinishDownloadingToURL:(NSURL *)location {
         [FileHelper createDirectoriesForFileAtPath:destinationPath];
         [FileHelper copyItemAtPath:location toPath:dstUrl error:&error];
         
-        if (unit.completionBlocks) {
-            for (ZODownloadCompletionBlock block in unit.completionBlocks) {
+        unit.completionBlock(destinationPath);
+        if (unit.otherCompletionBlocks) {
+            for (ZODownloadCompletionBlock block in unit.otherCompletionBlocks) {
                 block(destinationPath);
             }
-            [FileHelper removeItemAtPath:unit.tempFilePath];
         }
+        [FileHelper removeItemAtPath:unit.tempFilePath];
         
         [weakself.currentDownloadUnits removeObjectForKey:unit.requestUrl];
         
@@ -528,8 +522,9 @@ didCompleteWithError:(NSError *)error {
             weakself.currentDownloadingCount--;
             unit.downloadState = ZODownloadStateError;
             if (![weakself retryWithUrl:urlString]){
-                for (ZODownloadErrorBlock errorBlock in unit.errorBlocks) {
-                    unit.downloadError = error;
+                unit.errorBlock(error);
+                unit.downloadError = error;
+                for (ZODownloadErrorBlock errorBlock in unit.otherErrorBlocks) {
                     errorBlock(error);
                 }
             }
@@ -544,8 +539,9 @@ didCompleteWithError:(NSError *)error {
             weakself.currentDownloadingCount--;
             unit.downloadState = ZODownloadStateError;
             if (![weakself retryWithUrl:urlString]){
-                for (ZODownloadErrorBlock errorBlock in unit.errorBlocks) {
-                    unit.downloadError = error;
+                unit.errorBlock(error);
+                unit.downloadError = error;
+                for (ZODownloadErrorBlock errorBlock in unit.otherErrorBlocks) {
                     errorBlock(error);
                 }
             }
@@ -555,8 +551,9 @@ didCompleteWithError:(NSError *)error {
             weakself.currentDownloadingCount--;
             unit.downloadState = ZODownloadStateError;
             if (![self retryWithUrl:urlString]){
-                for (ZODownloadErrorBlock errorBlock in unit.errorBlocks) {
-                    unit.downloadError = error;
+                unit.errorBlock(error);
+                unit.downloadError = error;
+                for (ZODownloadErrorBlock errorBlock in unit.otherErrorBlocks) {
                     errorBlock(error);
                 }
             }
@@ -565,8 +562,9 @@ didCompleteWithError:(NSError *)error {
         default: {
             weakself.currentDownloadingCount--;
             unit.downloadState = ZODownloadStateError;
-            for (ZODownloadErrorBlock errorBlock in unit.errorBlocks) {
-                unit.downloadError = error;
+            unit.errorBlock(error);
+            unit.downloadError = error;
+            for (ZODownloadErrorBlock errorBlock in unit.otherErrorBlocks) {
                 errorBlock(error);
             }
             break;

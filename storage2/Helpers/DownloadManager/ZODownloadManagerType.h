@@ -40,18 +40,14 @@
 /// By default `isBackgroundDownload` is false
 ///
 /// - Parameters:
-///    - downloadUrl: an URL to download the files
+///    - unit: ZODownloadUnit config
 ///    - progressBlock: Call back with progress, speed and remainingSeconds parameter to keep track of file downloading.
 ///    if this parameters is `false` and `hasContent` is `false` the will show empty state
 ///    - completionBlack: Call back with a returned destinationPath where the downloaded file stored
 ///    - errorBlock:Call back with a returned error
-///    - isBackgroundDownload:Define if the url session is background supported. Alrnlow to download & resume even when the app crash.
 ///
-- (void)startDownloadWithUrl:(NSString *)downloadUrl destinationDirectory:(NSString *)dstDirectory
-        isBackgroundDownload:(BOOL)isBackgroundDownload
-               priority:(ZODownloadPriority)priority  progressBlock:(ZODownloadProgressBlock)progressBlock
-                  completionBlock:(ZODownloadCompletionBlock)completionBlock
-                     errorBlock:(ZODownloadErrorBlock)errorBlock;
+
+- (void)startDownloadWithUnit:(ZODownloadUnit*)unit;
 
 /// The action to suspend download of the according URL
 ///

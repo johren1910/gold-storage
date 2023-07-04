@@ -76,11 +76,17 @@ typedef NS_ENUM(NSUInteger,ZODownloadErrorCode) {
 /// [This property is] retain progressBlock of the task to notify the manager
 @property (nonatomic, strong) ZODownloadProgressBlock progressBlock;
 
-/// [This property is] retain completionBlock of the task to notify the manager
-@property (nonatomic, strong) NSMutableArray<ZODownloadCompletionBlock>* completionBlocks;
+/// [This property is] retain self completionBlock of the task to notify the manager
+@property (nonatomic, strong) ZODownloadCompletionBlock completionBlock;
 
-/// [This property is] retain errorBlock of the task to notify the manager
-@property (nonatomic, strong) NSMutableArray<ZODownloadErrorBlock>* errorBlocks;
+/// [This property is] retain other completionBlocks that want to notify
+@property (nonatomic, strong) NSMutableArray<ZODownloadCompletionBlock>* otherCompletionBlocks;
+
+/// [This property is] retain self completionBlock of the task to notify the manager
+@property (nonatomic, strong) ZODownloadErrorBlock errorBlock;
+
+/// [This property is] retain other errorBlocks to notify
+@property (nonatomic, strong) NSMutableArray<ZODownloadErrorBlock>* otherErrorBlocks;
 
 /// [This property is] retain downloadState of the task to notify the manager
 @property (nonatomic, assign) ZODownloadState downloadState;

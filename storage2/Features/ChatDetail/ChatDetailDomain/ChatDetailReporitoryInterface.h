@@ -25,10 +25,6 @@
 
 - (void)updateFileData:(FileData*) fileData completionBlock:(void(^)(BOOL isFinish))completionBlock;
 
--(void)startDownloadWithUrl:(NSString *)downloadUrl destinationDirectory:(NSString *)dstDirectory
-       isBackgroundDownload:(BOOL)isBackgroundDownload
-              priority:(ZODownloadPriority)priority  progressBlock:(ZODownloadProgressBlock)progressBlock
-                 completionBlock:(ZODownloadCompletionBlock)completionBlock
-                    errorBlock:(ZODownloadErrorBlock)errorBlock;
+- (void)startDownloadWithUnit:(ZODownloadUnit*)unit;
 
 @end
