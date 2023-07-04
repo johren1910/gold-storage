@@ -21,6 +21,8 @@
 
 - (void)saveMedia:(NSString*)filePath forMessage:(ChatMessageData*)message completionBlock:(void(^)(FileData* fileData, UIImage* thumbnail))completionBlock;
 
+- (void)deleteChatMessages:(NSArray<ChatDetailEntity*>*)messages completionBlock:(void(^)(BOOL isComplete))completionBlock;
+
 - (void)updateFileData:(FileData*) fileData completionBlock:(void(^)(BOOL isFinish))completionBlock;
 
 -(void)startDownloadWithUrl:(NSString *)downloadUrl destinationDirectory:(NSString *)dstDirectory

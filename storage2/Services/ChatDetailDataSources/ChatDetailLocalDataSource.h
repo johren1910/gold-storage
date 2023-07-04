@@ -14,6 +14,8 @@
 
 - (void) saveMedia:(NSString*)filePath forMessage:(ChatMessageData*)message;
 
+- (void)deleteChatMessages:(NSArray<ChatDetailEntity*>*)messages completionBlock:(void(^)(BOOL isComplete))completionBlock;
+
 - (void)updateFileData:(FileData*) fileData completionBlock:(void(^)(BOOL isFinish))completionBlock;
 
 - (void) saveImageWithData:(NSData*)data;

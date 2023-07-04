@@ -29,4 +29,12 @@
     }];
 }
 
+- (void)deleteChatMessages:(NSArray<ChatMessageData*>*)messages completionBlock:(void(^)(BOOL isComplete))completionBlock {
+    for (ChatMessageData* message in messages) {
+        [_storageManager deleteChatMessage:message completionBlock:nil];
+    }
+    completionBlock(true);
+    
+}
+
 @end

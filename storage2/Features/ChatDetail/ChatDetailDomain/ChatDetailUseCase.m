@@ -130,6 +130,10 @@
     }];
 }
 
+- (void)deleteChatEntities:(NSArray<ChatDetailEntity*>*)entities completionBlock:(void (^)(BOOL isSuccess))completionBlock {
+    [_chatDetailRepository deleteChatMessages:entities completionBlock:completionBlock];
+}
+
 - (void)_startDownload:(NSString *)url forMessage:(ChatMessageData*)message
                 ofRoom:(ChatRoomModel*)model completionBlock:(void(^)(ChatDetailEntity* entity))completionBlock {
     
@@ -143,10 +147,8 @@
 
     } completionBlock:^(NSString *destinationPath) {
         
-        dispatch_async(weakself.backgroundQueue, ^{
-            [weakself _saveDownloadedMedia:destinationPath forMessage:message completionBlock:completionBlock];
-            NSLog(@"destinationPath download: %@", destinationPath);
-        });
+        [weakself _saveDownloadedMedia:destinationPath forMessage:message completionBlock:completionBlock];
+        NSLog(@"destinationPath download: %@", destinationPath);
     } errorBlock:^(NSError *error) {
         //        __block int index = -1;
         //        [weakself.messageModels enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
@@ -169,6 +171,4 @@
         
     }];
 }
-
-
 @end

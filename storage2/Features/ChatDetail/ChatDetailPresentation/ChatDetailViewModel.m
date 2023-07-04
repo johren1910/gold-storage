@@ -62,7 +62,7 @@
         
         for (ChatDetailEntity* entity in entities) {
             if (entity.file.type == Download) {
-                [weakself requestDownloadForEntity:entity];
+                [weakself _requestDownloadForEntity:entity];
             }
         }
         
@@ -77,7 +77,7 @@
     }];
 }
 
--(void) requestDownloadForEntity:(ChatDetailEntity*) entity {
+-(void)_requestDownloadForEntity:(ChatDetailEntity*) entity {
     
     __weak ChatDetailViewModel* weakself = self;
     [_chatDetailUsecase resumeDownloadForEntity:entity OfRoom:_chatRoom completionBlock:^(ChatDetailEntity* entity){
@@ -231,26 +231,21 @@
 }
 
 - (void)deleteSelected {
-    for (ChatDetailEntity* model in self.selectedModels) {
-        
-        __weak ChatDetailViewModel* weakself = self;
-        [self.downloadManager cancelDownloadOfUrl:model.file.filePath];
-        [self.storageManager deleteChatMessage:model completionBlock:^(BOOL isSuccess) {
-            if(isSuccess) {
-                [weakself.messageModels removeObject:model];
-                weakself.filteredChats = weakself.messageModels;
-                
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [weakself.delegate didUpdateData];
-                });
-                
-            }
-        }];
-    }
-    
+    __weak ChatDetailViewModel* weakself = self;
+    [_chatDetailUsecase deleteChatEntities:self.selectedModels completionBlock:^(BOOL isSuccess){
+        if (isSuccess) {
+            [weakself.messageModels removeObjectsInArray:weakself.selectedModels];
+            weakself.filteredChats = weakself.messageModels;
+            [weakself.selectedModels removeAllObjects];
+            
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakself.delegate didUpdateData];
+            });
+        }
+    }];
 }
 
-- (void)fakeUpload100Images:(NSData *)data {
+- (void)_fakeUpload100Images:(NSData *)data {
     __weak ChatDetailViewModel* weakself = self;
     
     dispatch_async(_backgroundQueue, ^{
@@ -267,7 +262,7 @@
 
 - (void)requestAddImage:(NSData *)data {
     if (self.isCheatOn) {
-        [self fakeUpload100Images:data];
+        [self _fakeUpload100Images:data];
         return;
     } else {
         [self _addImage:data];

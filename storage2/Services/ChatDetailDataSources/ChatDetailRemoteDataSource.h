@@ -14,6 +14,7 @@
               priority:(ZODownloadPriority)priority  progressBlock:(ZODownloadProgressBlock)progressBlock
                  completionBlock:(ZODownloadCompletionBlock)completionBlock
                     errorBlock:(ZODownloadErrorBlock)errorBlock;
+-(void)cancelDownloadOfUrl:(NSString*)downloadUrl;
 
 @end
 

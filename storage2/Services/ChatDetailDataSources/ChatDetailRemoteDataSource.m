@@ -15,6 +15,10 @@
     [_downloadManager startDownloadWithUrl:downloadUrl destinationDirectory:dstDirectory isBackgroundDownload:isBackgroundDownload priority:priority progressBlock:progressBlock completionBlock:completionBlock errorBlock:errorBlock];
 }
 
+-(void)cancelDownloadOfUrl:(NSString*)downloadUrl {
+    [_downloadManager cancelDownloadOfUrl:downloadUrl];
+}
+
 -(instancetype)init:(NSString*) baseUrl {
     if (self == [super init]) {
         
