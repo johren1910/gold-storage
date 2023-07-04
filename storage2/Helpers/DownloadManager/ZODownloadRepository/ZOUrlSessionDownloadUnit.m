@@ -26,6 +26,7 @@
         self.requestUrl = unit.requestUrl;
         self.destinationDirectoryPath = unit.destinationDirectoryPath;
         self.otherCompletionBlocks = unit.otherCompletionBlocks;
+        self.progressBlock = unit.progressBlock;
         self.otherErrorBlocks = unit.otherErrorBlocks;
         self.isBackgroundSession = unit.isBackgroundSession;
         self.downloadError = unit.downloadError;

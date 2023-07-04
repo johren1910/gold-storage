@@ -122,12 +122,11 @@
     CMTime time = CMTimeMake(1, 65);
     CGImageRef refImg = [generateImg copyCGImageAtTime:time actualTime:NULL error:&error];
     NSLog(@"error==%@, Refimage==%@", error, refImg);
-
     UIImage *frameImage= [[UIImage alloc] initWithCGImage:refImg];
     
     CMTime duration = [asset duration];
     int seconds = ceil(duration.value/duration.timescale);
-    
+    CGImageRelease(refImg);
     ZOMediaInfo *info = [[ZOMediaInfo alloc] init];
     info.thumbnail = frameImage;
     info.duration = seconds;
@@ -650,6 +649,17 @@
     return [self writeFileAtPath:path content:content error:nil];
 }
 
++(FileType)getFileExtension:(NSString *)path {
+    NSString* extension = [path pathExtension];
+    extension = [extension lowercaseString];
+    if ([extension isEqualToString:@"jpeg"] || [extension isEqualToString:@"png"]) {
+        return Picture;
+    } else if ([extension isEqualToString:@"mp4"] || [extension isEqualToString:@"mov"]) {
+        return Video;
+    } else {
+        return Unknown;
+    }
+}
 
 +(BOOL)writeFileAtPath:(NSString *)path content:(NSObject *)content error:(NSError **)error
 {

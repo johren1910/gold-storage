@@ -8,6 +8,7 @@
 #import <Foundation/Foundation.h>
 #import <ImageIO/ImageIO.h>
 #import <UIKit/UIKit.h>
+#import "FileType.h"
 
 @interface ZOMediaInfo : NSObject
 @property (nonatomic) UIImage* thumbnail;
@@ -29,6 +30,7 @@
 
 +(BOOL)createFileAtPath:(NSString *)path withContent:(NSObject *)content;
 
++(FileType)getFileExtension:(NSString *)path;
 
 +(BOOL)clearCachesDirectory;
 +(BOOL)clearTemporaryDirectory;

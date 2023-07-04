@@ -12,7 +12,7 @@ typedef NS_ENUM(NSInteger, FileType) {
     Video = 1,
     Picture,
     Download,
-    Uknown
+    Unknown
     
 };
 

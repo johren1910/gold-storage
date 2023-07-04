@@ -66,13 +66,32 @@
 - (void)saveMedia:(NSString*)filePath forMessage:(ChatMessageData*)message completionBlock:(void(^)(FileData* fileData, UIImage* thumbnail))completionBlock {
     __weak ChatDetailDataRepository* weakself = self;
     dispatch_async(_backgroundQueue, ^{
+        
+        FileType fileType = [weakself.storageManager getFileTypeOfFilePath:filePath];
         NSData *fileData = [FileHelper readFileAtPathAsData:filePath];
         NSString *checkSum = [HashHelper hashDataMD5:fileData];
         UIImage *thumbnail = [weakself.storageManager getImageByKey:checkSum];
+        
         ZOMediaInfo *mediaInfo = [FileHelper getMediaInfoOfFilePath:filePath];
-        if (!thumbnail) {
-            thumbnail = mediaInfo.thumbnail;
-            [weakself.storageManager compressThenCache:thumbnail withKey:checkSum];
+        
+        switch (fileType) {
+            case Picture:
+                if (!thumbnail) {
+                    thumbnail = [UIImage imageWithData:fileData];
+                    NSData* compressed = UIImageJPEGRepresentation(thumbnail, 0.5);
+                    thumbnail = [UIImage imageWithData:compressed];
+                    compressed = nil;
+                    [weakself.storageManager compressThenCache:thumbnail withKey:checkSum];
+                }
+                break;
+            case Video:
+                if (!thumbnail) {
+                    thumbnail = mediaInfo.thumbnail;
+                    [weakself.storageManager compressThenCache:thumbnail withKey:checkSum];
+                }
+                break;
+            default:
+                break;
         }
         
         double size = ((double)fileData.length/1024.0f)/1024.0f; // MB
@@ -84,7 +103,7 @@
         newFileData.fileName = [filePath lastPathComponent];
         newFileData.fileId = message.file.fileId;
         newFileData.messageId = message.messageId;
-        newFileData.type = [weakself.storageManager getFileTypeOfFilePath:filePath];
+        newFileData.type = fileType;
         newFileData.size = size;
         newFileData.filePath = filePath;
         newFileData.createdAt = timeStamp;

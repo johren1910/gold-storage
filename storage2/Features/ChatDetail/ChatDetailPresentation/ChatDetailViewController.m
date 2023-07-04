@@ -135,7 +135,8 @@
                                                                        preferredStyle:UIAlertControllerStyleAlert];
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
         textField.placeholder = @"Link";
-        textField.text = @"https://joy1.videvo.net/videvo_files/video/free/2016-08/large_watermarked/VID_20160517_175443_preview.mp4";
+        textField.text = @"https://www.adobe.com/express/feature/image/media_16ad2258cac6171d66942b13b8cd4839f0b6be6f3.png";
+   
         textField.textColor = [UIColor blueColor];
         textField.clearButtonMode = UITextFieldViewModeWhileEditing;
         textField.borderStyle = UITextBorderStyleRoundedRect;
@@ -146,12 +147,8 @@
         NSArray * textfields = alertController.textFields;
         UITextField * namefield = textfields[0];
         NSString *name = namefield.text;
-        NSURL* checkUrl = [[NSURL alloc] initWithString:name];
         
-        // Check valid url
-        if (checkUrl && [checkUrl scheme] && [checkUrl host]) {
-            [weakSelf.viewModel requestDownloadFileWithUrl:name];
-        }
+        [weakSelf.viewModel requestDownloadFileWithUrl:name];
     }]];
 
     [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler: nil]];

@@ -41,10 +41,7 @@
             unit.task = nil;
         }
         [weakself.currentDownloadUnits removeObjectForKey:url];
-        //        [weakself.priorityQueue remove:unit];
     }
-    
-    //    [weakself checkDownloadPipeline];
 }
 
 - (void)cancelAllDownload {
@@ -88,9 +85,6 @@
     
     ZOUrlSessionDownloadUnit* sessionUnit = [[ZOUrlSessionDownloadUnit alloc] initWithUnit:unit];
     __weak ZOUrlSessionDownloadRepository* weakself = self;
-    if (!sessionUnit.task) {
-        NSLog(@"4");
-    }
     sessionUnit.downloadState = ZODownloadStateDownloading;
     
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
@@ -128,7 +122,6 @@
         }];
     } else {
         NSURLSessionDownloadTask *downloadTask = [weakself _createDownloadTaskWithUnit:sessionUnit];
-        //        weakself.currentDownloadingCount++;
         sessionUnit.task = downloadTask;
         [weakself.currentDownloadUnits setObject:sessionUnit forKey:sessionUnit.requestUrl];
         completionBlock(TRUE);
@@ -298,14 +291,9 @@ didCompleteWithError:(NSError *)error {
             // Add retry count
             // Dispatch retry after an interval
             
-//            weakself.currentDownloadingCount--;
             unit.downloadState = ZODownloadStateError;
             if (![weakself _retryWithUrl:urlString]){
-                unit.errorBlock(error);
-                unit.downloadError = error;
-                for (ZODownloadErrorBlock errorBlock in unit.otherErrorBlocks) {
-                    errorBlock(error);
-                }
+                errorBlock(error, unit);
             }
             
             break;
@@ -315,36 +303,22 @@ didCompleteWithError:(NSError *)error {
         {
             // Add retry count
             // Dispatch retry after an interval
-//            weakself.currentDownloadingCount--;
             unit.downloadState = ZODownloadStateError;
             if (![weakself _retryWithUrl:urlString]){
-                unit.errorBlock(error);
-                unit.downloadError = error;
-                for (ZODownloadErrorBlock errorBlock in unit.otherErrorBlocks) {
-                    errorBlock(error);
-                }
+                errorBlock(error, unit);
             }
             break;
         }
         case ZODownloadErrorNetworkConnectionList:{
-//            weakself.currentDownloadingCount--;
             unit.downloadState = ZODownloadStateError;
             if (![weakself _retryWithUrl:urlString]){
-                unit.errorBlock(error);
-                unit.downloadError = error;
-                for (ZODownloadErrorBlock errorBlock in unit.otherErrorBlocks) {
-                    errorBlock(error);
-                }
+                errorBlock(error, unit);
             }
             break;
         }
         default: {
             unit.downloadState = ZODownloadStateError;
-            unit.errorBlock(error);
-            unit.downloadError = error;
-            for (ZODownloadErrorBlock errorBlock in unit.otherErrorBlocks) {
-                errorBlock(error);
-            }
+            errorBlock(error, unit);
             break;
         }
     }
@@ -374,9 +348,6 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
     CGFloat progress = (CGFloat)totalBytesWritten/ (CGFloat)totalBytesExpectedToWrite;
     NSUInteger remainingTime = [self remainingTimeForDownload:unit bytesTransferred:totalBytesWritten totalBytesExpectedToWrite:totalBytesExpectedToWrite];
     NSUInteger speed = bytesWritten/1024;
-    if (unit.progressBlock) {
-        unit.progressBlock(progress, speed, remainingTime);
-    }
     if (unit.progressBlock) {
         unit.progressBlock(progress, speed, remainingTime);
     }

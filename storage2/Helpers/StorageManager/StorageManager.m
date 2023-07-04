@@ -241,7 +241,7 @@
 
 # pragma mark - Helper Operation
 -(FileType)getFileTypeOfFilePath:(NSString*)filePath {
-    FileType type = Uknown;
+    FileType type = Unknown;
     CFStringRef fileExtension = (__bridge CFStringRef) [filePath pathExtension];
     CFStringRef fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, NULL);
     

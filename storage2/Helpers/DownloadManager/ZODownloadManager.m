@@ -51,17 +51,13 @@
     __weak ZODownloadManager* weakself = self;
     
     dispatch_async(_serialDispatchQueue, ^{
-        NSLog(@"LOG 2");
         ZODownloadUnit *existUnit = [weakself.currentDownloadUnits objectForKey:unit.requestUrl];
-        if (existUnit) {
+        if (existUnit && existUnit.downloadState != ZODownloadStateDownloading && existUnit.downloadState != ZODownloadStateDone) {
             [existUnit.otherCompletionBlocks addObject:unit.completionBlock];
             [existUnit.otherErrorBlocks addObject:unit.errorBlock];
-            if (existUnit.downloadState == ZODownloadStateError) {
-//                [weakself retryWithUrl:existUnit.requestUrl];
-//                [weakself checkDownloadPipeline];
-            }
             
         } else {
+            NSLog(@"LOG 2");
             unit.currentRetryAttempt = 0;
             unit.maxRetryCount = MAX_RETRY;
             unit.downloadState = ZODownloadStatePending;
@@ -135,10 +131,13 @@
     dispatch_async(_serialDispatchQueue, ^{
         
         [weakself.downloadRepository cancelDownloadOfUrl:url];
-
+        ZODownloadUnit* unit = [weakself.currentDownloadUnits objectForKey:url];
+        [weakself.priorityQueue remove:unit];
+        [weakself.currentDownloadUnits removeObjectForKey:url];
         // TODO: CHECK cancel downloading -> --count
 //        ZODownloadUnit *unit = [weakself.currentDownloadUnits objectForKey:url];
-//        [weakself checkDownloadPipeline];
+        [weakself checkDownloadPipeline];
+        
     });
    
 }
@@ -164,7 +163,7 @@
 
 #pragma mark - Reachability
 
-- (void)networkChanged:(NSNotification *)note {
+- (void)_networkChanged:(NSNotification *)note {
     __weak ZODownloadManager* weakself = self;
     dispatch_async(_serialDispatchQueue, ^{
         ReachabilityHelper* reachability = [note object];
@@ -206,23 +205,33 @@
 -(void)_handlerCompletion {
     __weak ZODownloadManager* weakself = self;
     self.downloadRepository.completionBlock = ^(NSString *filePath, ZODownloadUnit* unit) {
+        dispatch_async(weakself.serialDispatchQueue, ^{
+            unit.completionBlock(filePath);
+            for (ZODownloadCompletionBlock block in unit.otherCompletionBlocks) {
+                block(filePath);
+            }
+            ZODownloadUnit *manageUnit = [weakself.currentDownloadUnits objectForKey:unit.requestUrl];
+            manageUnit.downloadState = ZODownloadStateDone;
+            weakself.currentDownloadingCount--;
+            [weakself checkDownloadPipeline];
+        });
         
-        unit.completionBlock(filePath);
-        for (ZODownloadCompletionBlock block in unit.otherCompletionBlocks) {
-            block(filePath);
-        }
-        weakself.currentDownloadingCount--;
-        [weakself checkDownloadPipeline];
     };
     
     self.downloadRepository.errorBlock = ^(NSError* error, ZODownloadUnit* unit) {
-        
-        unit.errorBlock(error);
-        for (ZODownloadErrorBlock block in unit.otherErrorBlocks) {
-            block(error);
-        }
-        weakself.currentDownloadingCount--;
-        [weakself checkDownloadPipeline];
+        dispatch_async(weakself.serialDispatchQueue, ^{
+            if (unit) {
+                unit.errorBlock(error);
+                for (ZODownloadErrorBlock block in unit.otherErrorBlocks) {
+                    block(error);
+                }
+                
+                ZODownloadUnit *manageUnit = [weakself.currentDownloadUnits objectForKey:unit.requestUrl];
+                manageUnit.downloadState = ZODownloadStateError;
+                weakself.currentDownloadingCount--;
+                [weakself checkDownloadPipeline];
+            }
+        });
     };
 }
 
@@ -236,10 +245,9 @@
     _downloadRepository = [[ZOUrlSessionDownloadRepository alloc] init];
     _allowAutoRetry = FALSE;
     _retryTimeout = MAX_DOWNLOAD_TIMEOUT;
-    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(networkChanged:) name:kReachabilityChangedNotification object:nil];
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(_networkChanged:) name:kReachabilityChangedNotification object:nil];
     self.reachabilityHelper = [ReachabilityHelper reachabilityForLocalWiFi];
     [self.reachabilityHelper startNotifier];
-    
 }
 
 
@@ -272,6 +280,7 @@
         return;
     }
     __weak ZODownloadManager* weakself = self;
+    unit.downloadState = ZODownloadStateDownloading;
     NSLog(@"LOG 3");
     [self.downloadRepository startDownloadWithUnit:unit completionBlock:^(BOOL isDownloadStarted) {
         if(isDownloadStarted) {

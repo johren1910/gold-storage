@@ -123,7 +123,7 @@
                 ofRoom:(ChatRoomModel*)model completionBlock:(void(^)(ChatDetailEntity* entity))completionBlock {
     
     NSString *chatRoomName = model.chatRoomId;
-    NSString *folderPath = [FileHelper pathForApplicationSupportDirectoryWithPath:chatRoomName];
+    NSString *folderPath = [FileHelper pathForApplicationSupportDirectoryWithPath:@"Videos"];
 
     __weak ChatDetailUseCase* weakself = self;
     
