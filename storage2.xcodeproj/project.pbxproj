@@ -62,6 +62,8 @@
 		F6EFC93B2A5272AE00DDEDF4 /* AppDI.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC93A2A5272AE00DDEDF4 /* AppDI.m */; };
 		F6EFC93E2A5272C300DDEDF4 /* ChatDetailDI.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC93D2A5272C300DDEDF4 /* ChatDetailDI.m */; };
 		F6EFC9422A52771800DDEDF4 /* ChatRoomDI.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC9412A52771800DDEDF4 /* ChatRoomDI.m */; };
+		F6EFC9502A53D7A600DDEDF4 /* ZOUrlSessionDownloadRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC94F2A53D7A600DDEDF4 /* ZOUrlSessionDownloadRepository.m */; };
+		F6EFC9532A53F9D100DDEDF4 /* ZOUrlSessionDownloadUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC9522A53F9D100DDEDF4 /* ZOUrlSessionDownloadUnit.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -172,6 +174,11 @@
 		F6EFC93D2A5272C300DDEDF4 /* ChatDetailDI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailDI.m; sourceTree = "<group>"; };
 		F6EFC9402A5275AB00DDEDF4 /* ChatRoomDI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatRoomDI.h; sourceTree = "<group>"; };
 		F6EFC9412A52771800DDEDF4 /* ChatRoomDI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatRoomDI.m; sourceTree = "<group>"; };
+		F6EFC94D2A53D78C00DDEDF4 /* ZODownloadRepositoryInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZODownloadRepositoryInterface.h; sourceTree = "<group>"; };
+		F6EFC94E2A53D79A00DDEDF4 /* ZOUrlSessionDownloadRepostiory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZOUrlSessionDownloadRepostiory.h; sourceTree = "<group>"; };
+		F6EFC94F2A53D7A600DDEDF4 /* ZOUrlSessionDownloadRepository.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZOUrlSessionDownloadRepository.m; sourceTree = "<group>"; };
+		F6EFC9512A53F9C400DDEDF4 /* ZOUrlSessionDownloadUnit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZOUrlSessionDownloadUnit.h; sourceTree = "<group>"; };
+		F6EFC9522A53F9D100DDEDF4 /* ZOUrlSessionDownloadUnit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZOUrlSessionDownloadUnit.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -316,6 +323,7 @@
 		F64BABCB2A4839DC002B923F /* DownloadManager */ = {
 			isa = PBXGroup;
 			children = (
+				F6EFC94C2A53D77C00DDEDF4 /* ZODownloadRepository */,
 				F64BAFE52A4E7A12002B923F /* ZOPriorityQueue */,
 				F64BABCF2A483A07002B923F /* DownloadUnit */,
 				F64BABCC2A4839EF002B923F /* ZODownloadManager.h */,
@@ -603,6 +611,18 @@
 			path = AppDI;
 			sourceTree = "<group>";
 		};
+		F6EFC94C2A53D77C00DDEDF4 /* ZODownloadRepository */ = {
+			isa = PBXGroup;
+			children = (
+				F6EFC94D2A53D78C00DDEDF4 /* ZODownloadRepositoryInterface.h */,
+				F6EFC94E2A53D79A00DDEDF4 /* ZOUrlSessionDownloadRepostiory.h */,
+				F6EFC94F2A53D7A600DDEDF4 /* ZOUrlSessionDownloadRepository.m */,
+				F6EFC9512A53F9C400DDEDF4 /* ZOUrlSessionDownloadUnit.h */,
+				F6EFC9522A53F9D100DDEDF4 /* ZOUrlSessionDownloadUnit.m */,
+			);
+			path = ZODownloadRepository;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -725,6 +745,7 @@
 			files = (
 				F6EFC93B2A5272AE00DDEDF4 /* AppDI.m in Sources */,
 				F6C43F2C2A3B0D15001D8715 /* ChatDetailViewController.m in Sources */,
+				F6EFC9502A53D7A600DDEDF4 /* ZOUrlSessionDownloadRepository.m in Sources */,
 				F6C43F2F2A3B0D45001D8715 /* ChatDetailViewModel.m in Sources */,
 				F64BAFD22A4AECBE002B923F /* StorageManager.m in Sources */,
 				F64BAFE82A4E7A2A002B923F /* ZOPrirorityQueue.m in Sources */,
@@ -764,6 +785,7 @@
 				F6C43F272A3AF139001D8715 /* ChatRoomCell.m in Sources */,
 				F64BAB822A3F0F06002B923F /* ChatRoomCoordinator.m in Sources */,
 				F6C43EF72A3AEF0D001D8715 /* SceneDelegate.m in Sources */,
+				F6EFC9532A53F9D100DDEDF4 /* ZOUrlSessionDownloadUnit.m in Sources */,
 				F64BABDA2A493BC8002B923F /* ReachabilityHelper.m in Sources */,
 				F6C43F262A3AF139001D8715 /* ChatRoomSectionController.m in Sources */,
 				F64BABCE2A4839FA002B923F /* ZODownloadManager.m in Sources */,

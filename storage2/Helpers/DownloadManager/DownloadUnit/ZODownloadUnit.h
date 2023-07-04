@@ -39,9 +39,9 @@ typedef NS_ENUM(NSUInteger,ZODownloadErrorCode) {
 };
 
 /// This interface provide details info for a download
-@interface ZODownloadUnit : NSObject
+@interface ZODownloadUnit : NSObject <NSCopying>
 /// [This property is] define unique id of each download unit
-@property (nonatomic, readonly) NSString* downloadId;
+@property (nonatomic) NSString* downloadId;
 
 /// [This property is] define url that the client request to be downloaded
 @property (nonatomic, copy) NSString *requestUrl;
@@ -49,9 +49,6 @@ typedef NS_ENUM(NSUInteger,ZODownloadErrorCode) {
 /// [This property is] define the destination directory where the files will be downloaded to
 ///  - Note: Default is DocumentDirectory
 @property (nonatomic, copy) NSString *destinationDirectoryPath;
-
-/// [This property is] hold the task of the according requestUrl
-@property (nonatomic, strong) NSURLSessionDownloadTask *task;
 
 /// [This property is] define the destination directory where the files will be downloaded to
 ///  - Note: Default is DocumentDirectory
@@ -69,9 +66,6 @@ typedef NS_ENUM(NSUInteger,ZODownloadErrorCode) {
 
 /// [This property is] retain the resume data when the download task pause.
 @property (copy, nonatomic) NSData *resumeData;
-
-/// [This property is] define whether the error with resume data on didComplete is valid
-@property (copy, nonatomic) NSData *isValidResumeData;
 
 /// [This property is] retain progressBlock of the task to notify the manager
 @property (nonatomic, strong) ZODownloadProgressBlock progressBlock;

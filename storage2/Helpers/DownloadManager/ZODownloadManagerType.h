@@ -9,6 +9,7 @@
 #import "ZODownloadUnit.h"
 #import <UIKit/UIKit.h>
 #import "AppDelegate.h"
+#import "ZODownloadRepositoryInterface.h"
 
 #define MAX_DOWNLOAD_CONCURRENT 3
 #define MAX_RETRY 3
@@ -87,4 +88,9 @@
 ///
 /// - Note: This also clear the temp directory
 - (void)cancelAllDownload;
+
+/// Set the download repository for manager
+///
+/// - Note: Default is UrlSessionDownloadRepository
+-(void)setDownloadRepository:(id<ZODownloadRepositoryInterface>)repository;
 @end

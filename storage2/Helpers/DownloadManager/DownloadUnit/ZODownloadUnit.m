@@ -34,5 +34,12 @@
     return (_downloadId == object.downloadId);
 }
 
+-(id)copyWithZone:(NSZone *)zone
+{
+    ZODownloadUnit *clone = [[[self class] allocWithZone:zone] init];
+    // other statements
+    return clone;
+}
+
 @end
 
