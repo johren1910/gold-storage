@@ -84,7 +84,7 @@
         [weakself.adapter performUpdatesAnimated:true completion:nil];
         
        
-    } error:^(NSError * _Nonnull error) {
+    } errorBlock:^(NSError * _Nonnull error) {
         
     }];
 }

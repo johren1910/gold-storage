@@ -30,7 +30,7 @@
 - (void) selectChatRoom:(ChatRoomModel *) chatRoom;
 - (void) deselectChatRoom:(ChatRoomModel *) chatRoom;
 - (void) deleteSelected;
-- (void)getData:(void (^)(NSMutableArray<ChatRoomModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion;
+- (void)getData:(void (^)(NSMutableArray<ChatRoomModel *> *chats))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
 
 - (ChatRoomModel *)itemAtIndexPath:(NSIndexPath *)indexPath;
 - (NSUInteger) numberOfSections;

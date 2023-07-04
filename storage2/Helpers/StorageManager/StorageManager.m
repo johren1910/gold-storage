@@ -16,6 +16,8 @@
 @property (nonatomic) NSUInteger currentUploadCount;
 @property (nonatomic) NSUInteger maxUploadCount;
 @property (nonatomic, strong) NSMutableArray *currentPendingUpload;
+@property (strong,nonatomic) id<CacheServiceType> cacheService;
+@property (strong,nonatomic) id<DatabaseManagerType> databaseManager;
 @end
 
 @implementation StorageManager
@@ -72,15 +74,16 @@
         for (int i=0; i<currentArray.count; i++) {
             
             ChatMessageData* messageData = (ChatMessageData*) currentArray[i];
-            [self getFileOfMessageId:messageData.messageId completionBlock:^(id file) {
-                messageData.file = (FileData*)file;
-                [result addObject:messageData];
-                if(result.count == currentArray.count) {
-                    completionBlock(result);
-                }
-            }];
+            [result addObject:messageData];
+            if(result.count == currentArray.count) {
+                completionBlock(result);
+            }
         }
     }];
+}
+
+- (void) getMessageOfId:(NSString*)messageId completionBlock:(ZOFetchCompletionBlock)completionBlock {
+    [_databaseManager getMessageOfId:messageId completionBlock:completionBlock];
 }
 
 /// 1 - Get all messages of room
@@ -128,17 +131,12 @@
     });
 }
 
-- (void)createFile:(FileData*) fileData completionBlock:(ZOCompletionBlock)completionBlock {
+- (void)createFile:(FileData*) fileData withNSData:(NSData*)data completionBlock:(ZOCompletionBlock)completionBlock {
     
     __weak StorageManager* weakself = self;
     dispatch_async(_storageQueue, ^{
-        if (fileData.tempData) {
-            [weakself writeToFilePath:fileData.filePath withData:fileData.tempData];
-            
-//            UIImage *image = [UIImage imageWithData:fileData.tempData];
-//            if (image) {
-//                [weakself compressThenCache:image withKey:fileData.checksum];
-//            }
+        if (data) {
+            [weakself writeToFilePath:fileData.filePath withData:data];
         }
         [weakself.databaseManager saveFileData:fileData completionBlock:completionBlock];
     });
@@ -209,11 +207,10 @@
         fileData.size = size;
         fileData.lastAccessed = timeStamp;
         fileData.lastModified = timeStamp;
-        fileData.tempData = data;
         fileData.type = Picture;
         
         [weakself createChatMessage:newMessageData completionBlock:^(BOOL isSuccess){
-            [weakself createFile:fileData completionBlock:^(BOOL isSaved){
+            [weakself createFile:fileData withNSData:data completionBlock:^(BOOL isSaved){
                 if (isSaved) {
                     newMessageData.file = fileData;
                     completionBlock(newMessageData);

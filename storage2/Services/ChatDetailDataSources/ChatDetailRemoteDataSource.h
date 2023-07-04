@@ -6,12 +6,18 @@
 //
 
 #import "ChatMessageData.h"
+#import "ZODownloadManagerType.h"
 
 @protocol ChatDetailRemoteDataSourceType
+-(void)startDownloadWithUrl:(NSString *)downloadUrl destinationDirectory:(NSString *)dstDirectory
+       isBackgroundDownload:(BOOL)isBackgroundDownload
+              priority:(ZODownloadPriority)priority  progressBlock:(ZODownloadProgressBlock)progressBlock
+                 completionBlock:(ZODownloadCompletionBlock)completionBlock
+                    errorBlock:(ZODownloadErrorBlock)errorBlock;
 
-- (void)getChatDataOfRoomId:(NSString*)roomId successCompletion:(void (^)(NSArray<ChatMessageData *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion;
 @end
 
 @interface ChatDetailRemoteDataSource : NSObject <ChatDetailRemoteDataSourceType>
 -(instancetype)init:(NSString*) baseUrl;
+@property (nonatomic) id<ZODownloadManagerType> downloadManager;
 @end

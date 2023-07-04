@@ -9,7 +9,14 @@
 #import "StorageManager.h"
 
 @protocol ChatDetailLocalDataSourceType
-- (void)getChatDataOfRoomId:(NSString*)roomId successCompletion:(void (^)(NSArray<ChatMessageData *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion;
+- (void)getChatDataOfRoomId:(NSString*)roomId completionBlock:(void (^)(NSArray<ChatMessageData *> *chats))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
+- (void) getFileOfMessageId:(NSString*)messageId completionBlock:(void(^)(FileData* fileData))completionBlock;
+
+- (void) saveMedia:(NSString*)filePath forMessage:(ChatMessageData*)message;
+
+- (void)updateFileData:(FileData*) fileData completionBlock:(void(^)(BOOL isFinish))completionBlock;
+
+- (void) saveImageWithData:(NSData*)data;
 @end
 
 @interface ChatDetailLocalDataSource : NSObject <ChatDetailLocalDataSourceType>

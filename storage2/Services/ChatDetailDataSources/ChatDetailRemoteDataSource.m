@@ -7,9 +7,12 @@
 #import "ChatDetailRemoteDataSource.h"
 
 @implementation ChatDetailRemoteDataSource
-- (void)getChatDataOfRoomId:(NSString*)roomId successCompletion:(void (^)(NSArray<ChatMessageData *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion {
-    successCompletion(@[]);
-    
+-(void)startDownloadWithUrl:(NSString *)downloadUrl destinationDirectory:(NSString *)dstDirectory
+       isBackgroundDownload:(BOOL)isBackgroundDownload
+              priority:(ZODownloadPriority)priority  progressBlock:(ZODownloadProgressBlock)progressBlock
+                 completionBlock:(ZODownloadCompletionBlock)completionBlock
+                 errorBlock:(ZODownloadErrorBlock)errorBlock {
+    [_downloadManager startDownloadWithUrl:downloadUrl destinationDirectory:dstDirectory isBackgroundDownload:isBackgroundDownload priority:priority progressBlock:progressBlock completionBlock:completionBlock errorBlock:errorBlock];
 }
 
 -(instancetype)init:(NSString*) baseUrl {

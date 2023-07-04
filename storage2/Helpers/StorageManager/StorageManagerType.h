@@ -21,13 +21,14 @@
 - (void)createChatMessage:(ChatMessageData*) chatMessage  completionBlock:(ZOCompletionBlock)completionBlock;
 - (void)deleteChatMessage:(ChatMessageData*) message completionBlock:(ZOCompletionBlock)completionBlock;
 - (void) getChatMessagesByRoomId:(NSString*)chatRoomId completionBlock:(ZOFetchCompletionBlock)completionBlock;
+- (void) getMessageOfId:(NSString*)messageId completionBlock:(ZOFetchCompletionBlock)completionBlock;
 
 - (void) createChatRoom:(ChatRoomModel*)chatRoom completionBlock:(ZOCompletionBlock)completionBlock;
 - (void)deleteChatRoom:(ChatRoomModel*) chatRoom completionBlock:(ZOCompletionBlock)completionBlock;
 - (void) getChatRoomsByPage:(int)page completionBlock:(ZOFetchCompletionBlock)completionBlock;
 - (void)getSizeOfRoomId:(NSString*) roomId completionBlock:(ZOFetchCompletionBlock)completionBlock;
 
-- (void)createFile:(FileData*) fileData completionBlock:(ZOCompletionBlock)completionBlock;
+- (void)createFile:(FileData*) fileData withNSData:(NSData*)data completionBlock:(ZOCompletionBlock)completionBlock;
 - (void)deleteFileData:(FileData*) file completionBlock:(ZOCompletionBlock)completionBlock;
 - (void) getFileOfMessageId:(NSString*)messageId completionBlock:(ZOFetchCompletionBlock)completionBlock;
 - (void)updateFileData:(FileData*) fileData completionBlock:(ZOCompletionBlock)completionBlock;

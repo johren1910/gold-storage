@@ -27,7 +27,7 @@
     return self;
 }
 
-- (void)getData:(void (^)(NSMutableArray<ChatRoomModel *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion {
+- (void)getData:(void (^)(NSMutableArray<ChatRoomModel *> *chats))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
     
     _chats = [[NSMutableArray alloc] init];
     
@@ -40,7 +40,7 @@
             weakself.chats = [result mutableCopy];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [weakself.delegate didUpdateData];
-                successCompletion(weakself.chats);
+                completionBlock(weakself.chats);
             });
             
         }

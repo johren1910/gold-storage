@@ -34,9 +34,10 @@
     
     NSString *baseUrl = _environment.baseUrl;
     ChatDetailRemoteDataSource* remoteDataSource = [[ChatDetailRemoteDataSource alloc] init:baseUrl];
+    remoteDataSource.downloadManager = _environment.downloadManager;
     ChatDetailLocalDataSource *localDataSource = [[ChatDetailLocalDataSource alloc] init];
     localDataSource.storageManager = _environment.storageManager;
-    ChatDetailDataRepository* repository = [[ChatDetailDataRepository alloc] initWithRemote:remoteDataSource andLocal:localDataSource];
+    ChatDetailDataRepository* repository = [[ChatDetailDataRepository alloc] initWithRemote:remoteDataSource andLocal:localDataSource andStorageManager:_environment.storageManager];
     
     // Domain layer
     ChatDetailUseCase* chatDetailUseCase = [[ChatDetailUseCase alloc] initWithRepository:repository];

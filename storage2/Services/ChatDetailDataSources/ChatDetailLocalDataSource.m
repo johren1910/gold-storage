@@ -10,10 +10,22 @@
 
 @implementation ChatDetailLocalDataSource
 
-- (void)getChatDataOfRoomId:(NSString*)roomId successCompletion:(void (^)(NSArray<ChatMessageData *> *chats))successCompletion error:(void (^)(NSError *error))errorCompletion {
+- (void)getChatDataOfRoomId:(NSString*)roomId completionBlock:(void (^)(NSArray<ChatMessageData *> *chats))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
     [_storageManager getChatMessagesByRoomId:roomId completionBlock:^(id object){
-        successCompletion(object);
+        completionBlock(object);
         
+    }];
+}
+
+- (void) getFileOfMessageId:(NSString*)messageId completionBlock:(void(^)(FileData* fileData))completionBlock {
+    [_storageManager getFileOfMessageId:messageId completionBlock:^(id object){
+        completionBlock(object);
+    }];
+}
+
+- (void)updateFileData:(FileData*) fileData completionBlock:(void(^)(BOOL isFinish))completionBlock {
+    [_storageManager updateFileData:fileData completionBlock:^(BOOL isFinish) {
+        completionBlock(isFinish);
     }];
 }
 

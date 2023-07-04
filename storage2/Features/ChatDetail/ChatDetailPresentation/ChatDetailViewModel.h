@@ -29,9 +29,8 @@
 - (void)changeSegment: (NSInteger) index;
 - (ChatDetailEntity *)itemAtIndexPath:(NSIndexPath *)indexPath;
 - (NSUInteger) numberOfSections;
-- (void)addImage:(NSData *)data;
-- (void)addFile:(NSData *)data;
-- (void)downloadFileWithUrl:(NSString *)url;
+- (void)requestAddImage:(NSData *)data;
+- (void)requestDownloadFileWithUrl:(NSString *)url;
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
 - (void)deleteSelected;
 - (void)setCheat:(BOOL)isOn;

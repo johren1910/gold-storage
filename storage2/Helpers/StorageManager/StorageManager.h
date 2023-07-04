@@ -17,7 +17,4 @@
 
 -(instancetype) initWithCacheService:(id<CacheServiceType>)cacheService andDatabaseManager:(id<DatabaseManagerType>)databaseManager;
 
-@property (strong,nonatomic) id<CacheServiceType> cacheService;
-@property (strong,nonatomic) id<DatabaseManagerType> databaseManager;
-
 @end

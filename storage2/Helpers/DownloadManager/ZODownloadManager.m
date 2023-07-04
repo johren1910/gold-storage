@@ -42,7 +42,6 @@
 -(instancetype)init {
     if (self == [super init]) {
         [self prepare];
-        
     }
     return self;
 }
@@ -113,6 +112,7 @@
     if (downloadUrl.length == 0)
         return;
     __weak ZODownloadManager* weakself = self;
+    
     dispatch_async(_serialDispatchQueue, ^{
         NSLog(@"LOG 2");
         ZODownloadUnit *unit = [weakself.currentDownloadUnits objectForKey:downloadUrl];
@@ -155,6 +155,7 @@
                 return;
             }
             [weakself addPendingUnit:unit];
+            [weakself.currentDownloadUnits setObject:unit forKey:unit.requestUrl];
             [weakself checkDownloadPipeline];
         }
     });
@@ -446,7 +447,6 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
       downloadTask:(NSURLSessionDownloadTask *)downloadTask
 didFinishDownloadingToURL:(NSURL *)location {
     __weak ZODownloadManager* weakself = self;
-    
     NSString *urlString = downloadTask.currentRequest.URL.absoluteString;
     if (!urlString) {
         urlString = downloadTask.originalRequest.URL.absoluteString;
@@ -484,14 +484,16 @@ didFinishDownloadingToURL:(NSURL *)location {
 - (void)URLSession:(NSURLSession *)session
               task:(NSURLSessionTask *)task
 didCompleteWithError:(NSError *)error {
+    
     if (!error) return;
     
+    __weak ZODownloadManager* weakself = self;
     NSString *urlString = task.currentRequest.URL.absoluteString;
     if (!urlString) {
         urlString = task.originalRequest.URL.absoluteString;
     }
     
-    ZODownloadUnit* unit = [self.currentDownloadUnits objectForKey:urlString];
+    ZODownloadUnit* unit = [weakself.currentDownloadUnits objectForKey:urlString];
     
     switch (error.code) {
         case ZODownloadErrorCancelled:
@@ -508,11 +510,11 @@ didCompleteWithError:(NSError *)error {
                     // Try resume data
                     NSData* resumeData = [error.userInfo objectForKey:NSURLSessionDownloadTaskResumeData];
                     if (resumeData) {
-                        unit.task = [[self getUrlSessionBasedOnUnit:unit] downloadTaskWithResumeData:resumeData];
+                        unit.task = [[weakself getUrlSessionBasedOnUnit:unit] downloadTaskWithResumeData:resumeData];
                         [task resume];
                     } else {
                         [task cancel];
-                        _currentDownloadingCount--;
+                        weakself.currentDownloadingCount--;
                     }
                     
                 }
@@ -523,9 +525,9 @@ didCompleteWithError:(NSError *)error {
             // Add retry count
             // Dispatch retry after an interval
             
-            _currentDownloadingCount--;
+            weakself.currentDownloadingCount--;
             unit.downloadState = ZODownloadStateError;
-            if (![self retryWithUrl:urlString]){
+            if (![weakself retryWithUrl:urlString]){
                 for (ZODownloadErrorBlock errorBlock in unit.errorBlocks) {
                     unit.downloadError = error;
                     errorBlock(error);
@@ -539,9 +541,9 @@ didCompleteWithError:(NSError *)error {
         {
             // Add retry count
             // Dispatch retry after an interval
-            _currentDownloadingCount--;
+            weakself.currentDownloadingCount--;
             unit.downloadState = ZODownloadStateError;
-            if (![self retryWithUrl:urlString]){
+            if (![weakself retryWithUrl:urlString]){
                 for (ZODownloadErrorBlock errorBlock in unit.errorBlocks) {
                     unit.downloadError = error;
                     errorBlock(error);
@@ -550,7 +552,7 @@ didCompleteWithError:(NSError *)error {
             break;
         }
         case ZODownloadErrorNetworkConnectionList:{
-            _currentDownloadingCount--;
+            weakself.currentDownloadingCount--;
             unit.downloadState = ZODownloadStateError;
             if (![self retryWithUrl:urlString]){
                 for (ZODownloadErrorBlock errorBlock in unit.errorBlocks) {
@@ -561,7 +563,7 @@ didCompleteWithError:(NSError *)error {
             break;
         }
         default: {
-            _currentDownloadingCount--;
+            weakself.currentDownloadingCount--;
             unit.downloadState = ZODownloadStateError;
             for (ZODownloadErrorBlock errorBlock in unit.errorBlocks) {
                 unit.downloadError = error;
@@ -571,7 +573,7 @@ didCompleteWithError:(NSError *)error {
         }
     }
     
-    [self checkDownloadPipeline];
+    [weakself checkDownloadPipeline];
 }
 
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
@@ -585,20 +587,24 @@ didCompleteWithError:(NSError *)error {
 #pragma mark - Reachability
 
 - (void)networkChanged:(NSNotification *)note {
-    ReachabilityHelper* reachability = [note object];
-    NetworkStatus netStatus = [reachability currentReachabilityStatus];
-    switch (netStatus) {
-        case ReachableViaWiFi:
-        case ReachableViaWWAN:
-        {
-            if (_allowAutoRetry) {
-                //TODO: Auto Retry
-                //[self resumeAllDownload];
+    __weak ZODownloadManager* weakself = self;
+    dispatch_async(_serialDispatchQueue, ^{
+        ReachabilityHelper* reachability = [note object];
+        NetworkStatus netStatus = [reachability currentReachabilityStatus];
+        switch (netStatus) {
+            case ReachableViaWiFi:
+            case ReachableViaWWAN:
+            {
+                if (weakself.allowAutoRetry) {
+                    //TODO: Auto Retry
+                    //[self resumeAllDownload];
+                }
             }
+                
+            default:
+                break;
         }
-            
-        default:
-            break;
-    }
+    });
+    
 }
 @end

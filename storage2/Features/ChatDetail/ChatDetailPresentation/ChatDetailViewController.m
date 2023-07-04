@@ -135,6 +135,7 @@
                                                                        preferredStyle:UIAlertControllerStyleAlert];
     [alertController addTextFieldWithConfigurationHandler:^(UITextField *textField) {
         textField.placeholder = @"Link";
+        textField.text = @"https://joy1.videvo.net/videvo_files/video/free/2016-08/large_watermarked/VID_20160517_175443_preview.mp4";
         textField.textColor = [UIColor blueColor];
         textField.clearButtonMode = UITextFieldViewModeWhileEditing;
         textField.borderStyle = UITextBorderStyleRoundedRect;
@@ -149,34 +150,12 @@
         
         // Check valid url
         if (checkUrl && [checkUrl scheme] && [checkUrl host]) {
-            [weakSelf.viewModel downloadFileWithUrl:name];
+            [weakSelf.viewModel requestDownloadFileWithUrl:name];
         }
     }]];
 
     [alertController addAction:[UIAlertAction actionWithTitle:@"Cancel" style:UIAlertActionStyleDefault handler: nil]];
     [self presentViewController:alertController animated:YES completion:nil];
-}
-
-
-#pragma mark - DocumentPickerDelegate
-- (void)documentPicker:(UIDocumentPickerViewController *)controller didPickDocumentsAtURLs:(NSArray<NSURL *> *)urls
-{
-    
-    NSURL* url = urls.firstObject;
-    NSFileCoordinator *coordinator = [[NSFileCoordinator alloc] initWithFilePresenter:nil];
-    NSError *error = nil;
-    
-    
-    __weak ChatDetailViewController *weakself = self;
-    [coordinator coordinateReadingItemAtURL:url options:0 error:&error byAccessor:^(NSURL *newURL) {
-        NSData *data = [NSData dataWithContentsOfURL:newURL];
-        NSLog(@"data %@", data);
-        [weakself.viewModel addFile:data];
-        // Do something
-    }];
-    if (error) {
-        // Do something else
-    }
 }
 
 #pragma mark - UIImagePickerControllerDelegate
@@ -194,7 +173,7 @@ didFinishPickingMediaWithInfo:(NSDictionary *)info
         __weak ChatDetailViewController *weakself = self;
         [[PHImageManager defaultManager] requestImageDataForAsset:asset options:nil resultHandler:^(NSData * _Nullable imageData, NSString * _Nullable dataUTI, UIImageOrientation orientation, NSDictionary * _Nullable info) {
             
-            [weakself.viewModel addImage:imageData];
+            [weakself.viewModel requestAddImage:imageData];
         }];
         [picker dismissViewControllerAnimated:YES completion:nil];
     }
