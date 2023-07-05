@@ -614,13 +614,21 @@
 		F6EFC94C2A53D77C00DDEDF4 /* ZODownloadRepository */ = {
 			isa = PBXGroup;
 			children = (
+				F6EFC9542A550DF600DDEDF4 /* ZOUrlSessionDownload */,
 				F6EFC94D2A53D78C00DDEDF4 /* ZODownloadRepositoryInterface.h */,
+			);
+			path = ZODownloadRepository;
+			sourceTree = "<group>";
+		};
+		F6EFC9542A550DF600DDEDF4 /* ZOUrlSessionDownload */ = {
+			isa = PBXGroup;
+			children = (
 				F6EFC94E2A53D79A00DDEDF4 /* ZOUrlSessionDownloadRepostiory.h */,
 				F6EFC94F2A53D7A600DDEDF4 /* ZOUrlSessionDownloadRepository.m */,
 				F6EFC9512A53F9C400DDEDF4 /* ZOUrlSessionDownloadUnit.h */,
 				F6EFC9522A53F9D100DDEDF4 /* ZOUrlSessionDownloadUnit.m */,
 			);
-			path = ZODownloadRepository;
+			path = ZOUrlSessionDownload;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

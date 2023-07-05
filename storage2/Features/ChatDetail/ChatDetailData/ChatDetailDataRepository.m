@@ -144,6 +144,10 @@
     }];
 }
 
+- (void) updateRamCache: (UIImage*)image withKey:(NSString*)key {
+    [_storageManager cacheImageByKey:image withKey:key];
+}
+
 -(instancetype) initWithRemote:(id<ChatDetailRemoteDataSourceType>)remoteDataSource andLocal:(id<ChatDetailLocalDataSourceType>)localDataSource andStorageManager:(id<StorageManagerType>)storageManager {
     if (self == [super init]) {
         self.localDataSource = localDataSource;

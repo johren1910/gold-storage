@@ -297,6 +297,6 @@
 }
 
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key {
-    [_storageManager cacheImageByKey:image withKey:key];
+    [_chatDetailUsecase updateRamCache:image withKey:key];
 }
 @end

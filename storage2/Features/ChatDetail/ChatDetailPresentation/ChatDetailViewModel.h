@@ -7,8 +7,6 @@
 #import <Foundation/Foundation.h>
 #import "ChatDetailSectionController.h"
 #import "ChatRoomModel.h"
-#import "StorageManagerType.h"
-#import "ZODownloadManager.h"
 #import "ChatDetailUseCase.h"
 
 @protocol ChatDetailViewModelDelegate <NSObject>
@@ -23,24 +21,25 @@
 
 @property (nonatomic) id<ChatDetailUseCaseInterface> chatDetailUsecase;
 
-- (void) selectChatMessage:(ChatDetailEntity *) chat;
-- (void) deselectChatMessage:(ChatDetailEntity *) chat;
-- (void) onViewDidLoad;
-- (void)changeSegment: (NSInteger) index;
+#pragma mark - Delete
 - (ChatDetailEntity *)itemAtIndexPath:(NSIndexPath *)indexPath;
 - (NSUInteger) numberOfSections;
-- (void)requestAddImage:(NSData *)data;
-- (void)requestDownloadFileWithUrl:(NSString *)url;
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
+- (void) onViewDidLoad;
+
+#pragma mark - Actions
+- (void) selectChatMessage:(ChatDetailEntity *) chat;
+- (void) deselectChatMessage:(ChatDetailEntity *) chat;
+- (void)retryWithModel:(ChatDetailEntity *)model;
 - (void)deleteSelected;
 - (void)setCheat:(BOOL)isOn;
+- (void)changeSegment: (NSInteger) index;
 
-- (void)retryWithModel:(ChatDetailEntity *)model;
+- (void)requestAddImage:(NSData *)data;
+- (void)requestDownloadFileWithUrl:(NSString *)url;
 
 @property (nonatomic, weak) id <ChatDetailViewModelDelegate> delegate;
 @property (copy,nonatomic) NSArray<ChatDetailEntity *> *filteredChats;
-@property (nonatomic, strong) id<StorageManagerType> storageManager;
-@property (nonatomic, strong) id<ZODownloadManagerType> downloadManager;
 
 -(instancetype) initWithChatRoom:(ChatRoomModel*)chatRoom andUsecase:(id<ChatDetailUseCaseInterface>)chatDetailUsecase;
 @end

@@ -37,4 +37,16 @@
     
 }
 
+- (void) saveImageWithData:(NSData*)data ofRoomId:(NSString*)roomId completionBlock:(void(^)(ChatMessageData* entity)) completionBlock {
+    [_storageManager uploadImage:data withRoomId:roomId completionBlock:completionBlock];
+}
+
+- (void)getChatDataForMessageId:(NSString*)messageId completionBlock:(void (^)(ChatMessageData* chat))completionBlock {
+    [_storageManager getMessageOfId:messageId completionBlock:completionBlock];
+}
+
+- (void) updateRamCache: (UIImage*)image withKey:(NSString*)key {
+    [_storageManager cacheImageByKey:image withKey:key];
+}
+
 @end

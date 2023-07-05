@@ -6,7 +6,7 @@
 //
 #import "ChatDetailEntity.h"
 #import "ChatMessageData.h"
-#import "ZODownloadManagerType.h"
+#import "ZODownloadUnit.h"
 
 @protocol ChatDetailRepositoryInterface
 
@@ -27,4 +27,5 @@
 
 - (void)startDownloadWithUnit:(ZODownloadUnit*)unit;
 
+- (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
 @end

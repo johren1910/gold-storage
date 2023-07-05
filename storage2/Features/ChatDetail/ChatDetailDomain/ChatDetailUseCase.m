@@ -164,4 +164,9 @@
     };
     [_chatDetailRepository startDownloadWithUnit:unit];
 }
+
+- (void)updateRamCache:(UIImage*)image withKey:(NSString*)key {
+    [_chatDetailRepository updateRamCache:image withKey:key];
+}
+
 @end
