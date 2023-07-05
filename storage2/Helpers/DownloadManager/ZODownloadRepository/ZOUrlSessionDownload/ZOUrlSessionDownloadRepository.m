@@ -229,14 +229,24 @@ didFinishDownloadingToURL:(NSURL *)location {
     unit.tempFilePath = location.path;
     if (unit) {
         NSError *error;
-        NSString* destinationPath = [unit.destinationDirectoryPath stringByAppendingPathComponent:[urlString lastPathComponent]];
-        NSURL *dstUrl = [FileHelper urlForItemAtPath:destinationPath];
-        [FileHelper createDirectoriesForFileAtPath:destinationPath];
-        [FileHelper copyItemAtPath:location toPath:dstUrl error:&error];
-        
-        completionBlock(destinationPath, unit);
-        
-        [FileHelper removeItemAtPath:unit.tempFilePath];
+        if (unit.destinationDirectoryPath) {
+            NSString* destinationPath = [unit.destinationDirectoryPath stringByAppendingPathComponent:[urlString lastPathComponent]];
+            NSURL *dstUrl = [FileHelper urlForItemAtPath:destinationPath];
+            [FileHelper createDirectoriesForFileAtPath:destinationPath];
+            [FileHelper copyItemAtPath:location toPath:dstUrl error:&error];
+            [FileHelper removeItemAtPath:location.path];
+            completionBlock(destinationPath, unit);
+        } else {
+            NSString* fileName = [urlString lastPathComponent];
+            NSString* tempFolder = [location.path stringByDeletingLastPathComponent];
+            NSString* newFilePath = [tempFolder stringByAppendingPathComponent:fileName];
+            NSURL *dstUrl = [FileHelper urlForItemAtPath:newFilePath];
+            
+            [FileHelper copyItemAtPath:location toPath:dstUrl error:&error];
+            [FileHelper removeItemAtPath:location.path];
+            // If no destinationDirectoryPath, return temp file path.
+            completionBlock(newFilePath, unit);
+        }
         
         [weakself.currentDownloadUnits removeObjectForKey:unit.requestUrl];
         

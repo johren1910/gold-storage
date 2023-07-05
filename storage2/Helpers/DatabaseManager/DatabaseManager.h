@@ -25,7 +25,6 @@ typedef void(^ZOFetchCompletionBlock)(id object);
 - (void) saveChatRoomData:(ChatRoomModel*)chatRoom completionBlock:(ZOCompletionBlock)completionBlock;
 - (void)deleteChatRoom:(ChatRoomModel*) chatRoom completionBlock:(ZOCompletionBlock)completionBlock;
 - (void) getChatRoomsByPage:(int)page completionBlock:(ZOFetchCompletionBlock)completionBlock;
-- (void)getSizeOfRoomId:(NSString*) roomId completionBlock:(ZOFetchCompletionBlock)completionBlock;
 
 #pragma mark - File
 - (void)saveFileData:(FileData*) fileData completionBlock:(ZOCompletionBlock)completionBlock;

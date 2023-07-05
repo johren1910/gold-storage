@@ -18,6 +18,8 @@
 
 @interface FileHelper : NSObject
 
++(NSString*) getDefaultDirectoryByFileType:(FileType)fileType;
+
 +(NSString *)documentsPathForFileName:(NSString *)name;
 
 +(id)attributeOfItemAtPath:(NSString *)path forKey:(NSString *)key;

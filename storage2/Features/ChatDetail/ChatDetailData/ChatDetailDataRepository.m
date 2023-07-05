@@ -59,8 +59,64 @@
     }];
 }
 
-- (void)startDownloadWithUnit:(ZODownloadUnit*)unit {
+- (void)startDownloadWithUnit:(ZODownloadUnit*)unit
+                   forMessage: (ChatMessageData*)message completionBlock:(void(^)(FileData* fileData, UIImage* thumbnail))completionBlock {
+    
+    __weak ChatDetailDataRepository* weakself = self;
+    __weak ZODownloadUnit* weakunit = unit;
+    unit.completionBlock = ^(NSString *filePath) {
+        FileType fileType = [weakself.storageManager getFileTypeOfFilePath:filePath];
+        NSString *currentFilePath = filePath;
+        if (!weakunit.destinationDirectoryPath) {
+            currentFilePath = [weakself _moveFileToGeneralFolders:filePath forFileType:fileType andSetName:[message.file.filePath lastPathComponent]];
+        }
+        
+        [weakself saveMedia:currentFilePath forMessage:message completionBlock:completionBlock];
+        NSLog(@"destinationPath download: %@", currentFilePath);
+    };
+    
+    unit.errorBlock = ^(NSError *error) {
+        //        __block int index = -1;
+        //        [weakself.messageModels enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        //            ChatDetailEntity *currentModel = (ChatDetailEntity *)obj;
+        //            if ([currentModel.messageData.messageId isEqualToString:messageId]) {
+        //                index = idx;
+        //                *stop = YES;
+        //            }
+        //        }];
+        //        if (index == -1){
+        //            return;
+        //        }
+        //        weakself.messageModels[index].isError = TRUE;
+        //        weakself.filteredChats = weakself.messageModels;
+        //
+        //        dispatch_async( dispatch_get_main_queue(), ^{
+        //            [self.delegate didUpdateObject:weakself.messageModels[index]];
+        //        });
+        NSLog(@"error");
+    };
+    
     [_remoteDataSource startDownloadWithUnit:unit];
+}
+
+- (NSString*)_moveFileToGeneralFolders:(NSString*) currentfilePath forFileType:(FileType)fileType andSetName:(NSString*)name {
+    
+    NSString* folderPath = [FileHelper getDefaultDirectoryByFileType:fileType];
+    NSString* fileRelativePath = [folderPath stringByAppendingPathComponent:name];
+    
+    NSString* absolutePath = [FileHelper pathForApplicationSupportDirectoryWithPath:fileRelativePath];
+    
+    if ([FileHelper existsItemAtPath:absolutePath]) {
+        return absolutePath;
+    }
+    [FileHelper createDirectoriesForFileAtPath:absolutePath];
+    
+    NSError *error;
+    NSURL *srcUrl = [FileHelper urlForItemAtPath:currentfilePath];
+    NSURL *dstUrl = [FileHelper urlForItemAtPath:absolutePath];
+    [FileHelper copyItemAtPath:srcUrl toPath:dstUrl error:&error];
+    [FileHelper removeItemAtPath:currentfilePath];
+    return absolutePath;
 }
 
 - (void)saveMedia:(NSString*)filePath forMessage:(ChatMessageData*)message completionBlock:(void(^)(FileData* fileData, UIImage* thumbnail))completionBlock {
@@ -71,9 +127,8 @@
         NSData *fileData = [FileHelper readFileAtPathAsData:filePath];
         NSString *checkSum = [HashHelper hashDataMD5:fileData];
         UIImage *thumbnail = [weakself.storageManager getImageByKey:checkSum];
-        
-        ZOMediaInfo *mediaInfo = [FileHelper getMediaInfoOfFilePath:filePath];
-        
+        double duration = 0;
+        ZOMediaInfo *mediaInfo = nil;
         switch (fileType) {
             case Picture:
                 if (!thumbnail) {
@@ -82,9 +137,12 @@
                     thumbnail = [UIImage imageWithData:compressed];
                     compressed = nil;
                     [weakself.storageManager compressThenCache:thumbnail withKey:checkSum];
+                    thumbnail = nil;
                 }
                 break;
             case Video:
+                mediaInfo = [FileHelper getMediaInfoOfFilePath:filePath];
+                duration = mediaInfo.duration;
                 if (!thumbnail) {
                     thumbnail = mediaInfo.thumbnail;
                     [weakself.storageManager compressThenCache:thumbnail withKey:checkSum];
@@ -107,7 +165,7 @@
         newFileData.size = size;
         newFileData.filePath = filePath;
         newFileData.createdAt = timeStamp;
-        newFileData.duration = mediaInfo.duration;
+        newFileData.duration = duration;
         
         [weakself updateFileData:newFileData completionBlock:^(BOOL isFinish){
             completionBlock(newFileData, thumbnail);
@@ -131,9 +189,13 @@
 }
 
 - (void) saveImageWithData:(NSData*)data ofRoomId:(NSString*)roomId completionBlock:(void(^)(ChatDetailEntity* entity)) completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
+    
+    __weak ChatDetailDataRepository* weakself = self;
     [_storageManager uploadImage:data withRoomId:roomId completionBlock:^(id object) {
         ChatMessageData* data = (ChatMessageData*)object;
-        completionBlock([data toChatDetailEntity]);
+        ChatDetailEntity*entity = [data  toChatDetailEntity];
+        entity.thumbnail = [weakself.storageManager getImageByKey:entity.file.checksum];
+        completionBlock(entity);
     }];
 }
 

@@ -26,7 +26,6 @@
 - (void) createChatRoom:(ChatRoomModel*)chatRoom completionBlock:(ZOCompletionBlock)completionBlock;
 - (void)deleteChatRoom:(ChatRoomModel*) chatRoom completionBlock:(ZOCompletionBlock)completionBlock;
 - (void) getChatRoomsByPage:(int)page completionBlock:(ZOFetchCompletionBlock)completionBlock;
-- (void)getSizeOfRoomId:(NSString*) roomId completionBlock:(ZOFetchCompletionBlock)completionBlock;
 
 - (void)createFile:(FileData*) fileData withNSData:(NSData*)data completionBlock:(ZOCompletionBlock)completionBlock;
 - (void)deleteFileData:(FileData*) file completionBlock:(ZOCompletionBlock)completionBlock;

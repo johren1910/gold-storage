@@ -36,11 +36,7 @@
     
     __weak ChatDetailUseCase* weakself = self;
     [weakself.chatDetailRepository saveImageWithData:data ofRoomId:roomId completionBlock:^(ChatDetailEntity* entity){
-        
-        ChatDetailEntity* newEntity = entity;
-        UIImage *thumbnail = [UIImage imageWithData:data];
-        newEntity.thumbnail = thumbnail;
-        completionBlock(newEntity);
+        completionBlock(entity);
     } errorBlock:^(NSError* error) {
         
     }];
@@ -104,7 +100,6 @@
 - (void)_saveDownloadedMedia:(NSString *)filePath forMessage:(ChatMessageData*)message
     completionBlock:(void(^)(ChatDetailEntity* entity))completionBlock {
     
-    __weak ChatDetailUseCase* weakself = self;
     [_chatDetailRepository saveMedia:filePath forMessage:message completionBlock:^(FileData* fileData, UIImage* thumbnail){
         
         message.file = fileData;
@@ -121,48 +116,26 @@
 
 - (void)_startDownload:(NSString *)url forMessage:(ChatMessageData*)message
                 ofRoom:(ChatRoomModel*)model completionBlock:(void(^)(ChatDetailEntity* entity))completionBlock {
-    
-    NSString *chatRoomName = model.chatRoomId;
-    NSString *folderPath = [FileHelper pathForApplicationSupportDirectoryWithPath:@"Videos"];
 
     __weak ChatDetailUseCase* weakself = self;
     
     ZODownloadUnit* unit = [[ZODownloadUnit alloc] init];
     unit.requestUrl = url;
-    unit.destinationDirectoryPath = folderPath;
+    unit.destinationDirectoryPath = nil;
     unit.isBackgroundSession = false;
     unit.priority = ZODownloadPriorityHigh;
     unit.progressBlock = ^(CGFloat progress, NSUInteger speed, NSUInteger remainingSeconds) {
         NSLog(@"progress: %f\nspeed: %ld\nremainSeconds:%ld", progress,speed,remainingSeconds);
     };
     
-    unit.completionBlock = ^(NSString *destinationPath) {
+    [_chatDetailRepository startDownloadWithUnit:unit forMessage:message completionBlock:^(FileData* fileData, UIImage* thumbnail){
         
-        [weakself _saveDownloadedMedia:destinationPath forMessage:message completionBlock:completionBlock];
-        NSLog(@"destinationPath download: %@", destinationPath);
-    };
-    
-    unit.errorBlock = ^(NSError *error) {
-        //        __block int index = -1;
-        //        [weakself.messageModels enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        //            ChatDetailEntity *currentModel = (ChatDetailEntity *)obj;
-        //            if ([currentModel.messageData.messageId isEqualToString:messageId]) {
-        //                index = idx;
-        //                *stop = YES;
-        //            }
-        //        }];
-        //        if (index == -1){
-        //            return;
-        //        }
-        //        weakself.messageModels[index].isError = TRUE;
-        //        weakself.filteredChats = weakself.messageModels;
-        //
-        //        dispatch_async( dispatch_get_main_queue(), ^{
-        //            [self.delegate didUpdateObject:weakself.messageModels[index]];
-        //        });
-        NSLog(@"error");
-    };
-    [_chatDetailRepository startDownloadWithUnit:unit];
+        message.file = fileData;
+        ChatDetailEntity* result = [message toChatDetailEntity];
+        result.thumbnail = thumbnail;
+        completionBlock(result);
+        
+    }];
 }
 
 - (void)updateRamCache:(UIImage*)image withKey:(NSString*)key {

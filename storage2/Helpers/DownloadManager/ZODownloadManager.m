@@ -64,27 +64,58 @@
             unit.otherCompletionBlocks = [[NSMutableArray alloc] init];
             unit.otherErrorBlocks = [[NSMutableArray alloc]init];
             unit.startDate = [NSDate date];
-
-            if (!unit.destinationDirectoryPath) {
-                unit.destinationDirectoryPath = [FileHelper pathForApplicationSupportDirectory];
-            }
             
             // Check if already exist at destinationPath
-            NSString* destinationPath = [unit.destinationDirectoryPath stringByAppendingPathComponent:[unit.requestUrl lastPathComponent]];
-            if ([FileHelper existsItemAtPath:destinationPath]) {
-                // File already downloaded
-                unit.completionBlock(destinationPath);
-                for (ZODownloadCompletionBlock block in unit.otherCompletionBlocks) {
-                    block(destinationPath);
+            if (unit.destinationDirectoryPath) {
+                NSString* destinationPath = [unit.destinationDirectoryPath stringByAppendingPathComponent:[unit.requestUrl lastPathComponent]];
+                if ([FileHelper existsItemAtPath:destinationPath]) {
+                    // File already downloaded
+                    unit.completionBlock(destinationPath);
+                    for (ZODownloadCompletionBlock block in unit.otherCompletionBlocks) {
+                        block(destinationPath);
+                    }
+                    return;
                 }
-                return;
+            } else {
+               
+                NSString* fileName = [unit.requestUrl lastPathComponent];
+                NSString* filePath = [weakself _checkExistAtDefaultDirectory:fileName];
+                if (filePath) {
+                    unit.completionBlock(filePath);
+                    for (ZODownloadCompletionBlock block in unit.otherCompletionBlocks) {
+                        block(filePath);
+                    }
+                    return;
+                }
             }
+            
             [weakself _addPendingUnit:unit];
             [weakself.currentDownloadUnits setObject:unit forKey:unit.requestUrl];
             [weakself checkDownloadPipeline];
         }
     });
+}
+
+
+-(NSString*)_checkExistAtDefaultDirectory:(NSString*)fileName {
     
+    NSString* pictureFolder = [FileHelper getDefaultDirectoryByFileType:Picture];
+    NSString* videoFolder = [FileHelper getDefaultDirectoryByFileType:Video];
+    pictureFolder = [FileHelper pathForApplicationSupportDirectoryWithPath:pictureFolder];
+    
+    videoFolder = [FileHelper pathForApplicationSupportDirectoryWithPath:videoFolder];
+    
+    NSString* filePath = [pictureFolder stringByAppendingPathComponent:fileName];
+    if ([FileHelper existsItemAtPath:filePath]) {
+        return filePath;
+    }
+    
+    filePath = [videoFolder stringByAppendingPathComponent:fileName];
+    if ([FileHelper existsItemAtPath:filePath]) {
+        return filePath;
+    }
+    
+    return nil;
 }
 
 - (void)suspendDownloadOfUrl:(NSString *)url{

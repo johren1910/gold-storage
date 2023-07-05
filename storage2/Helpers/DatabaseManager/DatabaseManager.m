@@ -336,48 +336,6 @@ static sqlite3_stmt *statement = nil;
     });
 }
 
-- (void)getSizeOfRoomId:(NSString*) roomId completionBlock:(ZOFetchCompletionBlock)completionBlock {
-    
-    __weak DatabaseManager* weakself = self;
-    dispatch_async(_databaseQueue, ^{
-        [weakself getChatMessageIdsByRoomId:roomId completionBlock:^(id object) {
-            NSArray<NSString*>* messageIds = (NSArray*)object;
-            
-            if (messageIds.count == 0) {
-                completionBlock(nil);
-                return;
-            }
-            
-            double size = 0;
-            const char *dbpath = [weakself.databasePath UTF8String];
-            NSString* idsQueryString = @"(";
-            for (NSString* messageId in messageIds) {
-                idsQueryString = [idsQueryString stringByAppendingString:[NSString stringWithFormat:@"\"%@\",", messageId]];
-            }
-            NSString *truncatedQueryString = [idsQueryString substringToIndex:[idsQueryString length]-1];
-           
-            truncatedQueryString = [truncatedQueryString stringByAppendingString:@")"];
-            if (sqlite3_open(dbpath, &database) == SQLITE_OK) {
-                
-                NSString *querySum = [NSString stringWithFormat:@"select SUM(size) from (select distinct checksum, size, messageId from file) where messageId in %@", truncatedQueryString];
-                const char *stml = [querySum UTF8String];
-                sqlite3_prepare_v2(database, stml,-1, &statement, NULL);
-                
-                if (sqlite3_step(statement) == SQLITE_ROW) {
-                    size = sqlite3_column_double(statement, 0);
-                } else {
-                    completionBlock(nil);
-                    return;
-                }
-                
-            }
-            sqlite3_finalize(statement);
-            sqlite3_close(database);
-            completionBlock([[NSNumber alloc] initWithDouble:size]);
-        }];
-    });
-}
-
 - (void) saveChatRoomData:(ChatRoomModel*)chatRoom completionBlock:(ZOCompletionBlock)completionBlock {
     
     __weak DatabaseManager* weakself = self;

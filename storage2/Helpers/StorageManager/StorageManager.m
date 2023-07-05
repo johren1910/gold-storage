@@ -116,10 +116,6 @@
     completionBlock(TRUE);
 }
 
-- (void)getSizeOfRoomId:(NSString*) roomId completionBlock:(ZOFetchCompletionBlock)completionBlock {
-    return [_databaseManager getSizeOfRoomId:roomId completionBlock:completionBlock];
-}
-
 - (void)compressThenCache: (UIImage*)image withKey:(NSString*) key {
     
     __weak StorageManager *weakself = self;
@@ -182,6 +178,12 @@
     _currentUploadCount++;
     dispatch_async(_storageQueue, ^{
         NSString *checkSum = [HashHelper hashDataMD5:data];
+        UIImage *temp = [weakself.cacheService getImageByKey:checkSum];
+        if (!temp) {
+            temp = [UIImage imageWithData:data];
+            [weakself.cacheService cacheImageByKey:temp withKey:checkSum];
+        }
+        temp = nil;
         NSString *messageId = [[NSUUID UUID] UUIDString];
       
         double size = ((double)data.length/1024.0f)/1024.0f; // MB
@@ -190,10 +192,11 @@
         
         ChatMessageData *newMessageData = [[ChatMessageData alloc] initWithMessage:messageId messageId:messageId chatRoomId:roomId];
         
-        NSString *chatRoomName = roomId;
-        
         NSString *fileName = [NSString stringWithFormat:@"%@.png", checkSum];
-        NSString *componentFolderPath = [chatRoomName stringByAppendingPathComponent:fileName];
+        
+        //TODO: -DETECT NSDATA FILE TYPE
+        NSString*folderName = [FileHelper getDefaultDirectoryByFileType:Picture];
+        NSString *componentFolderPath = [folderName stringByAppendingPathComponent:fileName];
         NSString *filePath = [FileHelper pathForApplicationSupportDirectoryWithPath:componentFolderPath];
         
         newMessageData.createdAt = timeStamp;

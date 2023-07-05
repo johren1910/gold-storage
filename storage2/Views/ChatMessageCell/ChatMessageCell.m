@@ -67,12 +67,12 @@
     [self.selectedImage setHidden: true];
 }
 
-- (void) handleLoadingImageWithUrl:(NSString*) filePath {
+- (void) handleLoadingImageWithUrl:(NSString*) filePath andChecksum:(NSString*)checksum {
     [_loadingIndicator startAnimating];
     __weak ChatMessageCell *weakself = self;
   
     UIImage *image = [FileHelper readFileAtPathAsImage:filePath];
-    
+    [self compressThenCache:image withKey:checksum];
     dispatch_async(dispatch_get_main_queue(), ^{
         [weakself.thumbnailImageView setImage:image];
         [weakself.loadingIndicator stopAnimating];
@@ -134,23 +134,24 @@
             self.selectedImage.image = [UIImage imageNamed:@"circle-empty"];
         }
         
+        UIImage* thumbnail = _chat.thumbnail;
         switch (_chat.file.type) {
             case Video:
                 self.typeIconView.image = [UIImage imageNamed:@"video"];
                 [self.typeIconView setHidden:false];
                 [self.timeLabel setHidden:false];
                 self.timeLabel.text = [self timeFormat:_chat.file.duration];
-                if (_chat.thumbnail != nil) {
-                    [_thumbnailImageView setImage:_chat.thumbnail];
+                if (thumbnail) {
+                    [_thumbnailImageView setImage:thumbnail];
                 } else {
                     // TODO: Default video icon
                 }
                 break;
             case Picture:
-                if (_chat.thumbnail != nil) {
-                    [_thumbnailImageView setImage:_chat.thumbnail];
+                if (thumbnail) {
+                    [_thumbnailImageView setImage:thumbnail];
                 } else {
-                    [self handleLoadingImageWithUrl:chat.file.filePath];
+                    [self handleLoadingImageWithUrl:chat.file.filePath andChecksum:chat.file.checksum];
                 }
                 break;
             default:

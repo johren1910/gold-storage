@@ -171,15 +171,15 @@
                 uint32_t rnd = arc4random_uniform(rand.count);
                 NSString *chosenUrl = [rand objectAtIndex:rnd];
                 
-                [self downloadFileWithUrl:chosenUrl];
+                [self _downloadFileWithUrl:chosenUrl];
             }
         });
     } else {
-        [self downloadFileWithUrl:url];
+        [self _downloadFileWithUrl:url];
     }
 }
 
-- (void)downloadFileWithUrl:(NSString *)url {
+- (void)_downloadFileWithUrl:(NSString *)url {
     
     __weak ChatDetailViewModel* weakself = self;
     [_chatDetailUsecase requestDownloadFileWithUrl:url forRoom:_chatRoom completionBlock:^(ChatDetailEntity* entity, BOOL isDownloaded) {
@@ -283,17 +283,20 @@
 
 - (void)_addImage:(NSData*) data {
     __weak ChatDetailViewModel *weakself = self;
-    [_chatDetailUsecase saveImageWithData:data ofRoomId:_chatRoom.chatRoomId completionBlock:^(ChatDetailEntity* entity){
+    dispatch_async(_backgroundQueue, ^{
+        [weakself.chatDetailUsecase saveImageWithData:data ofRoomId:weakself.chatRoom.chatRoomId completionBlock:^(ChatDetailEntity* entity){
 
-        [weakself.messageModels insertObject:entity atIndex:0];
-        weakself.filteredChats = weakself.messageModels;
+            [weakself.messageModels insertObject:entity atIndex:0];
+            weakself.filteredChats = weakself.messageModels;
 
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakself.delegate didUpdateData];
-        });
-    } errorBlock:^(NSError* error) {
-        
-    }];
+            dispatch_async(dispatch_get_main_queue(), ^{
+                [weakself.delegate didUpdateData];
+            });
+        } errorBlock:^(NSError* error) {
+            
+        }];
+    });
+    
 }
 
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key {

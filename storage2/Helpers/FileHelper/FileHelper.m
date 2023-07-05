@@ -649,6 +649,17 @@
     return [self writeFileAtPath:path content:content error:nil];
 }
 
++(NSString*) getDefaultDirectoryByFileType:(FileType)fileType {
+    switch (fileType) {
+        case Picture:
+            return @"Media/Pictures";
+        case Video:
+            return @"Media/Videos";
+        default:
+            return @"";
+    }
+}
+
 +(FileType)getFileExtension:(NSString *)path {
     NSString* extension = [path pathExtension];
     extension = [extension lowercaseString];
