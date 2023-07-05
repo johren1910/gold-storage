@@ -113,6 +113,8 @@
     return result;
 }
 -(void)deleteImageByKey:(NSString*)key {
+    if (!key)
+        return;
     [_ramImageCaches removeObjectForKey: key];
     __weak CacheService *weakself = self;
     dispatch_async(_cacheQueue, ^{

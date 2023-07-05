@@ -13,6 +13,7 @@
 
 @interface StorageManager ()
 @property (nonatomic, strong) dispatch_queue_t storageQueue;
+@property (nonatomic, strong) dispatch_queue_t databaseQueue;
 @property (nonatomic) NSUInteger currentUploadCount;
 @property (nonatomic) NSUInteger maxUploadCount;
 @property (nonatomic, strong) NSMutableArray *currentPendingUpload;
@@ -26,6 +27,7 @@
     
     if (self == [super init]) {
         self.storageQueue = dispatch_queue_create("com.storagemanager.queue", DISPATCH_QUEUE_SERIAL);
+        self.databaseQueue = dispatch_queue_create("com.storagemanager.database.queue", DISPATCH_QUEUE_SERIAL);
         self.cacheService = cacheService;
         self.databaseManager = databaseManager;
         self.currentUploadCount = 0;
@@ -38,15 +40,27 @@
 #pragma mark - DB Operation
 
 - (void) createChatRoom:(ChatRoomModel*)chatRoom  completionBlock:(ZOCompletionBlock)completionBlock {
-    return [_databaseManager saveChatRoomData:chatRoom completionBlock:completionBlock];
+    
+    __weak StorageManager* weakself = self;
+    dispatch_async(_databaseQueue, ^{
+        [weakself.databaseManager saveChatRoomData:chatRoom completionBlock:completionBlock];
+    });
 }
 
 - (void)createChatMessage:(ChatMessageData*) chatMessage  completionBlock:(ZOCompletionBlock)completionBlock {
-    return [_databaseManager saveChatMessageData:chatMessage completionBlock:completionBlock];
+    __weak StorageManager* weakself = self;
+    dispatch_async(_databaseQueue, ^{
+       ChatMessageDBRepository* messageDBRepository = [weakself.databaseManager getChatMessageDBRepository];
+        BOOL result = [messageDBRepository save:chatMessage];
+        completionBlock(result);
+    });
 }
 
 - (void) getChatRoomsByPage:(int)page completionBlock:(ZOFetchCompletionBlock)completionBlock {
-    return [_databaseManager getChatRoomsByPage:page completionBlock:completionBlock];
+    __weak StorageManager* weakself = self;
+    dispatch_async(_databaseQueue, ^{
+        [weakself.databaseManager getChatRoomsByPage:page completionBlock:completionBlock];
+    });
 }
 
 // 1 - Delete from DB
@@ -57,33 +71,51 @@
 - (void)deleteChatMessage:(ChatMessageData*) message completionBlock:(ZOCompletionBlock)completionBlock {
     
     __weak StorageManager* weakself = self;
-    [_databaseManager deleteChatMessage:message completionBlock:^(BOOL dbDeleted){
-        [weakself.cacheService deleteImageByKey:message.file.checksum];
-        [FileHelper removeItemAtPath:message.file.filePath];
-        [weakself.databaseManager deleteFileData:message.file completionBlock:^(BOOL fileDeleted) {
-            completionBlock(dbDeleted);
-        }];
-    }];
+    dispatch_async(_databaseQueue, ^{
+        ChatMessageDBRepository* messageDBRepository = [weakself.databaseManager getChatMessageDBRepository];
+         BOOL result = [messageDBRepository remove:message];
+        
+        if (result) {
+            [weakself.cacheService deleteImageByKey:message.file.checksum];
+            [FileHelper removeItemAtPath:message.file.filePath];
+            [weakself.databaseManager deleteFileData:message.file completionBlock:^(BOOL fileDeleted) {
+                
+            }];
+            if(completionBlock)
+                completionBlock(true);
+        }
+    });
 }
 
 - (void) getChatMessagesByRoomId:(NSString*)chatRoomId completionBlock:(ZOFetchCompletionBlock)completionBlock {
     
-    [_databaseManager getChatMessagesByRoomId:chatRoomId completionBlock:^(id object) {
-        NSArray* currentArray = (NSArray*)object;
+    __weak StorageManager* weakself = self;
+    dispatch_async(_databaseQueue, ^{
+        
+        ChatMessageDBRepository* messageDBRepository = [weakself.databaseManager getChatMessageDBRepository];
+        
+        NSString* whereStr = [NSString stringWithFormat:@"chatRoomId=\"%@\"",chatRoomId];
+        NSArray* objects = [messageDBRepository getObjectsWhere:whereStr];
         NSMutableArray* result = [[NSMutableArray alloc] init];
-        for (int i=0; i<currentArray.count; i++) {
+        for (int i=0; i<objects.count; i++) {
             
-            ChatMessageData* messageData = (ChatMessageData*) currentArray[i];
+            ChatMessageData* messageData = (ChatMessageData*) objects[i];
             [result addObject:messageData];
-            if(result.count == currentArray.count) {
-                completionBlock(result);
-            }
         }
-    }];
+        completionBlock(result);
+    });
 }
 
 - (void) getMessageOfId:(NSString*)messageId completionBlock:(ZOFetchCompletionBlock)completionBlock {
-    [_databaseManager getMessageOfId:messageId completionBlock:completionBlock];
+    __weak StorageManager* weakself = self;
+    dispatch_async(_databaseQueue, ^{
+        
+        ChatMessageDBRepository* messageDBRepository = [weakself.databaseManager getChatMessageDBRepository];
+        
+        NSString* whereStr = [NSString stringWithFormat:@"messageId=\"%@\"",messageId];
+        ChatMessageData* object = [messageDBRepository getObjectWhere:whereStr];
+        completionBlock(object);
+    });
 }
 
 /// 1 - Get all messages of room
@@ -93,7 +125,7 @@
 - (void)deleteChatRoom:(ChatRoomModel*) chatRoom completionBlock:(ZOCompletionBlock)completionBlock {
     
     __weak StorageManager* weakself = self;
-    dispatch_async(_storageQueue, ^{
+    dispatch_async(_databaseQueue, ^{
         [weakself getChatMessagesByRoomId:chatRoom.chatRoomId completionBlock:^(id object){
             
             NSArray* messages = (NSArray*)object;
@@ -130,7 +162,7 @@
 - (void)createFile:(FileData*) fileData withNSData:(NSData*)data completionBlock:(ZOCompletionBlock)completionBlock {
     
     __weak StorageManager* weakself = self;
-    dispatch_async(_storageQueue, ^{
+    dispatch_async(_databaseQueue, ^{
         if (data) {
             [weakself writeToFilePath:fileData.filePath withData:data];
         }
@@ -138,14 +170,25 @@
     });
 }
 - (void)deleteFileData:(FileData*) file completionBlock:(ZOCompletionBlock)completionBlock {
-    return [_databaseManager deleteFileData:file completionBlock:completionBlock];
+    __weak StorageManager* weakself = self;
+    dispatch_async(_databaseQueue, ^{
+        [weakself.databaseManager deleteFileData:file completionBlock:completionBlock];
+    });
 }
 - (void) getFileOfMessageId:(NSString*)messageId completionBlock:(ZOFetchCompletionBlock)completionBlock {
-    return [_databaseManager getFileOfMessageId:messageId completionBlock:completionBlock];
+    
+    __weak StorageManager* weakself = self;
+    dispatch_async(_databaseQueue, ^{
+        [weakself.databaseManager getFileOfMessageId:messageId completionBlock:completionBlock];
+    });
+    
 }
 
 - (void)updateFileData:(FileData*) fileData completionBlock:(ZOCompletionBlock)completionBlock {
-    [_databaseManager updateFileData:fileData completionBlock:completionBlock];
+    __weak StorageManager* weakself = self;
+    dispatch_async(_databaseQueue, ^{
+        [weakself.databaseManager updateFileData:fileData completionBlock:completionBlock];
+    });
 }
 
 - (void) checkUploadPipeline {

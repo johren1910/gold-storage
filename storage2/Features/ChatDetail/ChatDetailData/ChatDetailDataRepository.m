@@ -177,6 +177,7 @@
     NSMutableArray<ChatMessageData*>* datas = [[NSMutableArray alloc] init];
     for (ChatDetailEntity* entity in messages) {
         ChatMessageData* messageData = [[ChatMessageData alloc] initWithMessage:entity.messageId messageId:entity.messageId chatRoomId:nil];
+        messageData.file = entity.file;
         [datas addObject:messageData];
         [_remoteDataSource cancelDownloadOfUrl:entity.file.filePath];
     }
