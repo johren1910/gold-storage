@@ -19,11 +19,8 @@
 #pragma mark - ChatRoom
 - (id<DBRepositoryInterface>) getChatRoomDBRepository;
 
-#pragma mark - File 
-- (void)saveFileData:(FileData*) fileData completionBlock:(ZOCompletionBlock)completionBlock;
-- (void)deleteFileData:(FileData*) file completionBlock:(ZOCompletionBlock)completionBlock;
-- (void) getFileOfMessageId:(NSString*)messageId completionBlock:(ZOFetchCompletionBlock)completionBlock;
-- (void)updateFileData:(FileData*) fileData completionBlock:(ZOCompletionBlock)completionBlock;
+#pragma mark - File
+- (id<DBRepositoryInterface>) getFileDBRepository;
 
 @end
 

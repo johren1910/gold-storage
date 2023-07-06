@@ -246,7 +246,9 @@
     __weak ChatDetailViewModel* weakself = self;
     [_chatDetailUsecase deleteChatEntities:self.selectedModels completionBlock:^(BOOL isSuccess){
         if (isSuccess) {
-            [weakself.messageModels removeObjectsInArray:weakself.selectedModels];
+            for (ChatDetailEntity* entity in weakself.selectedModels) {
+                [weakself.messageModels removeObject:entity];
+            }
             weakself.filteredChats = weakself.messageModels;
             [weakself.selectedModels removeAllObjects];
             

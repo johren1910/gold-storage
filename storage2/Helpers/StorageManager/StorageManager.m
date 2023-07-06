@@ -86,9 +86,7 @@
                 NSLog(@"File removed %d", isDeleted);
             }
             
-            [weakself.databaseService deleteFileData:message.file completionBlock:^(BOOL fileDeleted) {
-                
-            }];
+            [[weakself.databaseService getFileDBRepository] remove:message.file];
             if(completionBlock)
                 completionBlock(true);
         }
@@ -163,20 +161,24 @@
         if (data) {
             [weakself writeToFilePath:fileData.filePath withData:data];
         }
-        [weakself.databaseService saveFileData:fileData completionBlock:completionBlock];
+        BOOL result = [[weakself.databaseService getFileDBRepository] save:fileData];
+        completionBlock(result);
     });
 }
 - (void)deleteFileData:(FileData*) file completionBlock:(ZOCompletionBlock)completionBlock {
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
-        [weakself.databaseService deleteFileData:file completionBlock:completionBlock];
+        BOOL result = [[weakself.databaseService getFileDBRepository] remove:file];
+        completionBlock(result);
     });
 }
 - (void) getFileOfMessageId:(NSString*)messageId completionBlock:(ZOFetchCompletionBlock)completionBlock {
     
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
-        [weakself.databaseService getFileOfMessageId:messageId completionBlock:completionBlock];
+        NSString* whereStr = [NSString stringWithFormat:@"messageId = \"%@\"", messageId];
+        FileData* object = [[weakself.databaseService getFileDBRepository] getObjectWhere:whereStr];
+        completionBlock(object);
     });
     
 }
@@ -184,7 +186,8 @@
 - (void)updateFileData:(FileData*) fileData completionBlock:(ZOCompletionBlock)completionBlock {
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
-        [weakself.databaseService updateFileData:fileData completionBlock:completionBlock];
+        BOOL result = [[weakself.databaseService getFileDBRepository] update:fileData];
+        completionBlock(result);
     });
 }
 
