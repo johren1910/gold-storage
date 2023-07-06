@@ -9,7 +9,6 @@
 #import <sqlite3.h>
 #import "ChatRoomModel.h"
 #import "FileData.h"
-#import "ChatMessageDBRepository.h"
 #import "DBRepositoryInterface.h"
 
 @protocol DatabaseServiceType
@@ -18,9 +17,7 @@
 - (id<DBRepositoryInterface>) getChatMessageDBRepository;
 
 #pragma mark - ChatRoom
-- (void) saveChatRoomData:(ChatRoomModel*)chatRoom completionBlock:(ZOCompletionBlock)completionBlock;
-- (void)deleteChatRoom:(ChatRoomModel*) chatRoom completionBlock:(ZOCompletionBlock)completionBlock;
-- (void) getChatRoomsByPage:(int)page completionBlock:(ZOFetchCompletionBlock)completionBlock;
+- (id<DBRepositoryInterface>) getChatRoomDBRepository;
 
 #pragma mark - File 
 - (void)saveFileData:(FileData*) fileData completionBlock:(ZOCompletionBlock)completionBlock;

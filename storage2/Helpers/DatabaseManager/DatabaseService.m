@@ -7,6 +7,8 @@
 
 #import "DatabaseService.h"
 #import "FileHelper.h"
+#import "ChatMessageDBRepository.h"
+#import "ChatRoomDBRepository.h"
 
 static DatabaseService *sharedInstance = nil;
 static sqlite3 *database = nil;
@@ -17,6 +19,7 @@ static sqlite3_stmt *statement = nil;
 @interface DatabaseService ()
 @property (nonatomic) NSString* databasePath;
 @property (nonatomic) id<DBRepositoryInterface> chatMessageDBRepository;
+@property (nonatomic) id<DBRepositoryInterface> chatRoomDBRepository;
 @end
 
 @implementation DatabaseService
@@ -48,7 +51,17 @@ static sqlite3_stmt *statement = nil;
     return _chatMessageDBRepository;
 }
 
-#pragma mark - initialization methods
+- (id<DBRepositoryInterface>) getChatRoomDBRepository {
+    
+    if (!_chatRoomDBRepository) {
+        _chatRoomDBRepository = [[ChatRoomDBRepository alloc] init];
+    }
+   
+    [_chatRoomDBRepository setDatabasePath:_databasePath];
+    return _chatRoomDBRepository;
+}
+
+#pragma mark - initialization
 
 -(BOOL)_createChatDatabase {
     
@@ -131,7 +144,7 @@ static sqlite3_stmt *statement = nil;
         isSuccess = NO;
         NSLog(@"Failed to open/create database");
     }
-    sqlite3_close(database);
+    sqlite3_close_v2(database);
     return isSuccess;
 }
 
@@ -161,7 +174,7 @@ static sqlite3_stmt *statement = nil;
         sqlite3_finalize(statement);
     }
     
-    sqlite3_close(database);
+    sqlite3_close_v2(database);
     completionBlock(result);
 }
 
@@ -198,7 +211,7 @@ static sqlite3_stmt *statement = nil;
         }
     }
     sqlite3_finalize(statement);
-    sqlite3_close(database);
+    sqlite3_close_v2(database);
     completionBlock(result);
 }
 
@@ -223,34 +236,8 @@ static sqlite3_stmt *statement = nil;
         sqlite3_finalize(statement);
     }
     
-    sqlite3_close(database);
+    sqlite3_close_v2(database);
     completionBlock(result);
-}
-
-- (void)deleteChatRoom:(ChatRoomModel*) chatRoom completionBlock:(ZOCompletionBlock)completionBlock {
-    
-    __weak DatabaseService* weakself = self;
-    BOOL result = NO;
-    const char *dbpath = [weakself.databasePath UTF8String];
-    
-    if (sqlite3_open_v2(dbpath, &database, SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
-        
-        NSString *deleteSQL = [NSString stringWithFormat:@"delete from chatRoom where chatRoomId =\"%@\"",
-                               chatRoom.chatRoomId];
-        const char *stmt = [deleteSQL UTF8String];
-        sqlite3_prepare_v2(database, stmt,-1, &statement, NULL);
-        int code = sqlite3_step(statement);
-        if (code == SQLITE_DONE) {
-            result = YES;
-        } else {
-            result = NO;
-        }
-        sqlite3_finalize(statement);
-    }
-    
-    sqlite3_close(database);
-    completionBlock(result);
-    
 }
 
 - (void)updateFileData:(FileData*) fileData completionBlock:(ZOCompletionBlock)completionBlock {
@@ -281,67 +268,8 @@ static sqlite3_stmt *statement = nil;
         sqlite3_finalize(statement);
     }
     
-    sqlite3_close(database);
+    sqlite3_close_v2(database);
     completionBlock(result);
-}
-
-- (void) saveChatRoomData:(ChatRoomModel*)chatRoom completionBlock:(ZOCompletionBlock)completionBlock {
-    
-    __weak DatabaseService* weakself = self;
-    BOOL result = NO;
-    const char *dbpath = [weakself.databasePath UTF8String];
-    
-    if (sqlite3_open_v2(dbpath, &database, SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
-        NSString *insertSQL = [NSString stringWithFormat:@"insert into chatRoom (chatRoomId,name, createdAt, size) values (\"%@\",\"%@\", %f, %d)",chatRoom.chatRoomId, chatRoom.name, chatRoom.createdAt, 0];
-        const char *insert_stmt = [insertSQL UTF8String];
-        sqlite3_prepare_v2(database, insert_stmt,-1, &statement, NULL);
-        
-        if (sqlite3_step(statement) == SQLITE_DONE) {
-            result = YES;
-        } else {
-            result = NO;
-        }
-    }
-    sqlite3_finalize(statement);
-    sqlite3_close(database);
-    completionBlock(result);
-}
-
-- (void) getChatRoomsByPage:(int)page completionBlock:(ZOFetchCompletionBlock)completionBlock {
-    
-    __weak DatabaseService* weakself = self;
-    const char *dbpath = [weakself.databasePath UTF8String];
-    int limit = page * 10;
-    NSMutableArray<ChatRoomModel*>* result = [@[] mutableCopy] ;
-    
-    if (sqlite3_open_v2(dbpath, &database, SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
-        NSString *querySQL = [NSString stringWithFormat:
-                              @"select * from chatRoom order by createdAt DESC limit %d ", limit];
-        const char *query_stmt = [querySQL UTF8String];
-        if (sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK) {
-            
-            while (sqlite3_step(statement)==SQLITE_ROW)
-            {
-                ChatRoomModel *chat = [[ChatRoomModel alloc] init];
-                chat.chatRoomId = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 0)];
-                chat.name = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 1)];
-                
-                chat.size =  sqlite3_column_double(statement, 2);
-                chat.createdAt =  sqlite3_column_double(statement, 3);
-                [result addObject:chat];
-                chat = nil;
-            }
-           
-            
-            sqlite3_finalize(statement);
-            sqlite3_close(database);
-            completionBlock(result);
-            return;
-        }
-    }
-    sqlite3_finalize(statement);
-    sqlite3_close(database);
-    completionBlock(nil);
 }
 
 - (void) getChatMessageIdsByRoomId:(NSString*)chatRoomId completionBlock:(ZOFetchCompletionBlock)completionBlock {
@@ -366,13 +294,13 @@ static sqlite3_stmt *statement = nil;
             }
             
             sqlite3_finalize(statement);
-            sqlite3_close(database);
+            sqlite3_close_v2(database);
             completionBlock(result);
             return;
         }
     }
     sqlite3_finalize(statement);
-    sqlite3_close(database);
+    sqlite3_close_v2(database);
     completionBlock(nil);
 }
 

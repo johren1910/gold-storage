@@ -35,6 +35,7 @@
 		F64BB0022A518FD5002B923F /* ChatDetailRemoteDataSource.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BB0012A518FD5002B923F /* ChatDetailRemoteDataSource.m */; };
 		F64BB0042A51AC7A002B923F /* ChatDetailEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BB0032A51AC7A002B923F /* ChatDetailEntity.m */; };
 		F64BB0062A51AEC9002B923F /* ChatDetailDataRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BB0052A51AEC9002B923F /* ChatDetailDataRepository.m */; };
+		F658796B2A56AC0900293FFD /* ChatRoomDBRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = F658796A2A56AC0900293FFD /* ChatRoomDBRepository.m */; };
 		F6C43EF42A3AEF0D001D8715 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */; };
 		F6C43EF72A3AEF0D001D8715 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF62A3AEF0D001D8715 /* SceneDelegate.m */; };
 		F6C43EFA2A3AEF0D001D8715 /* ChatRoomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF92A3AEF0D001D8715 /* ChatRoomViewController.m */; };
@@ -127,6 +128,7 @@
 		F64BB0012A518FD5002B923F /* ChatDetailRemoteDataSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailRemoteDataSource.m; sourceTree = "<group>"; };
 		F64BB0032A51AC7A002B923F /* ChatDetailEntity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailEntity.m; sourceTree = "<group>"; };
 		F64BB0052A51AEC9002B923F /* ChatDetailDataRepository.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailDataRepository.m; sourceTree = "<group>"; };
+		F658796A2A56AC0900293FFD /* ChatRoomDBRepository.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatRoomDBRepository.m; sourceTree = "<group>"; };
 		F6C43EEF2A3AEF0D001D8715 /* storage2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = storage2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6C43EF22A3AEF0D001D8715 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -442,6 +444,31 @@
 			path = ChatDetailDataSources;
 			sourceTree = "<group>";
 		};
+		F65879672A56ABE000293FFD /* ChatMessageDBRepository */ = {
+			isa = PBXGroup;
+			children = (
+				F6EFC9562A5552AD00DDEDF4 /* ChatMessageDBRepository.h */,
+				F6EFC95A2A5554BB00DDEDF4 /* ChatMessageDBRepository.m */,
+			);
+			path = ChatMessageDBRepository;
+			sourceTree = "<group>";
+		};
+		F65879682A56ABEF00293FFD /* ChatRoomDBRepository */ = {
+			isa = PBXGroup;
+			children = (
+				F6EFC9572A5552B700DDEDF4 /* ChatRoomDBRepository.h */,
+				F658796A2A56AC0900293FFD /* ChatRoomDBRepository.m */,
+			);
+			path = ChatRoomDBRepository;
+			sourceTree = "<group>";
+		};
+		F65879692A56ABF600293FFD /* FileDBRepository */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = FileDBRepository;
+			sourceTree = "<group>";
+		};
 		F6C43EE62A3AEF0D001D8715 = {
 			isa = PBXGroup;
 			children = (
@@ -641,9 +668,9 @@
 		F6EFC9552A55529300DDEDF4 /* DBRepository */ = {
 			isa = PBXGroup;
 			children = (
-				F6EFC9562A5552AD00DDEDF4 /* ChatMessageDBRepository.h */,
-				F6EFC95A2A5554BB00DDEDF4 /* ChatMessageDBRepository.m */,
-				F6EFC9572A5552B700DDEDF4 /* ChatRoomDBRepository.h */,
+				F65879692A56ABF600293FFD /* FileDBRepository */,
+				F65879682A56ABEF00293FFD /* ChatRoomDBRepository */,
+				F65879672A56ABE000293FFD /* ChatMessageDBRepository */,
 				F6EFC9582A5552C400DDEDF4 /* FileDBRepository.h */,
 				F6EFC9592A5552D900DDEDF4 /* DBRepositoryInterface.h */,
 			);
@@ -792,6 +819,7 @@
 				F64BABD22A483A3F002B923F /* ZODownloadUnit.m in Sources */,
 				F64BABB82A42DB46002B923F /* CacheService.m in Sources */,
 				F64BAFFE2A518842002B923F /* ChatDetailUseCase.m in Sources */,
+				F658796B2A56AC0900293FFD /* ChatRoomDBRepository.m in Sources */,
 				F64BABBC2A42DF25002B923F /* CompressorHelper.m in Sources */,
 				F6EFC93E2A5272C300DDEDF4 /* ChatDetailDI.m in Sources */,
 				F64BAFEC2A4E7FF1002B923F /* ZOHeap.m in Sources */,

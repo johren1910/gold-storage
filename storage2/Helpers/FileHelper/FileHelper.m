@@ -73,7 +73,7 @@
         return path;
     }
     else {
-        return [self pathForDocumentsDirectoryWithPath:path];
+        return [self pathForApplicationSupportDirectoryWithPath:path];
     }
 }
 

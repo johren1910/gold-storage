@@ -43,15 +43,15 @@
     
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
-        [weakself.databaseService saveChatRoomData:chatRoom completionBlock:completionBlock];
+        BOOL result =  [[weakself.databaseService getChatRoomDBRepository] save:chatRoom];
+        completionBlock(result);
     });
 }
 
 - (void)createChatMessage:(ChatMessageData*) chatMessage  completionBlock:(ZOCompletionBlock)completionBlock {
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
-       ChatMessageDBRepository* messageDBRepository = [weakself.databaseService getChatMessageDBRepository];
-        BOOL result = [messageDBRepository save:chatMessage];
+        BOOL result = [[weakself.databaseService getChatMessageDBRepository] save:chatMessage];
         completionBlock(result);
     });
 }
@@ -59,7 +59,8 @@
 - (void) getChatRoomsByPage:(int)page completionBlock:(ZOFetchCompletionBlock)completionBlock {
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
-        [weakself.databaseService getChatRoomsByPage:page completionBlock:completionBlock];
+        NSArray* result = [[weakself.databaseService getChatRoomDBRepository] getObjectsWhere:nil];
+        completionBlock(result);
     });
 }
 
@@ -72,8 +73,7 @@
     
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
-        ChatMessageDBRepository* messageDBRepository = [weakself.databaseService getChatMessageDBRepository];
-         BOOL result = [messageDBRepository remove:message];
+         BOOL result = [[weakself.databaseService getChatMessageDBRepository] remove:message];
         
         if (result) {
             [weakself.cacheService deleteImageByKey:message.file.checksum];
@@ -99,11 +99,9 @@
     
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
-        
-        ChatMessageDBRepository* messageDBRepository = [weakself.databaseService getChatMessageDBRepository];
-        
+
         NSString* whereStr = [NSString stringWithFormat:@"chatRoomId=\"%@\"",chatRoomId];
-        NSArray* objects = [messageDBRepository getObjectsWhere:whereStr];
+        NSArray* objects = [[weakself.databaseService getChatMessageDBRepository] getObjectsWhere:whereStr];
         NSMutableArray* result = [[NSMutableArray alloc] init];
         for (int i=0; i<objects.count; i++) {
             
@@ -117,11 +115,8 @@
 - (void) getMessageOfId:(NSString*)messageId completionBlock:(ZOFetchCompletionBlock)completionBlock {
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
-        
-        ChatMessageDBRepository* messageDBRepository = [weakself.databaseService getChatMessageDBRepository];
-        
         NSString* whereStr = [NSString stringWithFormat:@"chatMessage.messageId=\"%@\"",messageId];
-        ChatMessageData* object = [messageDBRepository getObjectWhere:whereStr];
+        ChatMessageData* object = [[weakself.databaseService getChatMessageDBRepository] getObjectWhere:whereStr];
         completionBlock(object);
     });
 }
@@ -144,12 +139,7 @@
             }];
         }];
         
-        [weakself.databaseService deleteChatRoom:chatRoom completionBlock:^(BOOL isSuccess){
-            
-            if (isSuccess) {
-                
-            }
-        }];
+        [[weakself.databaseService getChatRoomDBRepository] remove:chatRoom];
     });
     
     completionBlock(TRUE);
