@@ -9,7 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "CacheService.h"
 #import "HashHelper.h"
-#import "DatabaseManager.h"
+#import "DatabaseService.h"
 #import "FileHelper.h"
 #import "ChatRoomModel.h"
 #import "FileData.h"

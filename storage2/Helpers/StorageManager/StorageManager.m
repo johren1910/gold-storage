@@ -18,18 +18,18 @@
 @property (nonatomic) NSUInteger maxUploadCount;
 @property (nonatomic, strong) NSMutableArray *currentPendingUpload;
 @property (strong,nonatomic) id<CacheServiceType> cacheService;
-@property (strong,nonatomic) id<DatabaseManagerType> databaseManager;
+@property (strong,nonatomic) id<DatabaseServiceType> databaseService;
 @end
 
 @implementation StorageManager
 
--(instancetype) initWithCacheService:(id<CacheServiceType>)cacheService andDatabaseManager:(id<DatabaseManagerType>)databaseManager {
+-(instancetype) initWithCacheService:(id<CacheServiceType>)cacheService andDatabaseService:(id<DatabaseServiceType>)databaseService {
     
     if (self == [super init]) {
         self.storageQueue = dispatch_queue_create("com.storagemanager.queue", DISPATCH_QUEUE_SERIAL);
         self.databaseQueue = dispatch_queue_create("com.storagemanager.database.queue", DISPATCH_QUEUE_SERIAL);
         self.cacheService = cacheService;
-        self.databaseManager = databaseManager;
+        self.databaseService = databaseService;
         self.currentUploadCount = 0;
         self.currentPendingUpload = [[NSMutableArray alloc]init];
         self.maxUploadCount = 10;
@@ -43,14 +43,14 @@
     
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
-        [weakself.databaseManager saveChatRoomData:chatRoom completionBlock:completionBlock];
+        [weakself.databaseService saveChatRoomData:chatRoom completionBlock:completionBlock];
     });
 }
 
 - (void)createChatMessage:(ChatMessageData*) chatMessage  completionBlock:(ZOCompletionBlock)completionBlock {
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
-       ChatMessageDBRepository* messageDBRepository = [weakself.databaseManager getChatMessageDBRepository];
+       ChatMessageDBRepository* messageDBRepository = [weakself.databaseService getChatMessageDBRepository];
         BOOL result = [messageDBRepository save:chatMessage];
         completionBlock(result);
     });
@@ -59,7 +59,7 @@
 - (void) getChatRoomsByPage:(int)page completionBlock:(ZOFetchCompletionBlock)completionBlock {
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
-        [weakself.databaseManager getChatRoomsByPage:page completionBlock:completionBlock];
+        [weakself.databaseService getChatRoomsByPage:page completionBlock:completionBlock];
     });
 }
 
@@ -72,13 +72,13 @@
     
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
-        ChatMessageDBRepository* messageDBRepository = [weakself.databaseManager getChatMessageDBRepository];
+        ChatMessageDBRepository* messageDBRepository = [weakself.databaseService getChatMessageDBRepository];
          BOOL result = [messageDBRepository remove:message];
         
         if (result) {
             [weakself.cacheService deleteImageByKey:message.file.checksum];
             [FileHelper removeItemAtPath:message.file.filePath];
-            [weakself.databaseManager deleteFileData:message.file completionBlock:^(BOOL fileDeleted) {
+            [weakself.databaseService deleteFileData:message.file completionBlock:^(BOOL fileDeleted) {
                 
             }];
             if(completionBlock)
@@ -92,7 +92,7 @@
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
         
-        ChatMessageDBRepository* messageDBRepository = [weakself.databaseManager getChatMessageDBRepository];
+        ChatMessageDBRepository* messageDBRepository = [weakself.databaseService getChatMessageDBRepository];
         
         NSString* whereStr = [NSString stringWithFormat:@"chatRoomId=\"%@\"",chatRoomId];
         NSArray* objects = [messageDBRepository getObjectsWhere:whereStr];
@@ -110,7 +110,7 @@
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
         
-        ChatMessageDBRepository* messageDBRepository = [weakself.databaseManager getChatMessageDBRepository];
+        ChatMessageDBRepository* messageDBRepository = [weakself.databaseService getChatMessageDBRepository];
         
         NSString* whereStr = [NSString stringWithFormat:@"messageId=\"%@\"",messageId];
         ChatMessageData* object = [messageDBRepository getObjectWhere:whereStr];
@@ -136,7 +136,7 @@
             }];
         }];
         
-        [weakself.databaseManager deleteChatRoom:chatRoom completionBlock:^(BOOL isSuccess){
+        [weakself.databaseService deleteChatRoom:chatRoom completionBlock:^(BOOL isSuccess){
             
             if (isSuccess) {
                 NSString*folderPath = [FileHelper pathForApplicationSupportDirectoryWithPath:chatRoom.chatRoomId];
@@ -166,20 +166,20 @@
         if (data) {
             [weakself writeToFilePath:fileData.filePath withData:data];
         }
-        [weakself.databaseManager saveFileData:fileData completionBlock:completionBlock];
+        [weakself.databaseService saveFileData:fileData completionBlock:completionBlock];
     });
 }
 - (void)deleteFileData:(FileData*) file completionBlock:(ZOCompletionBlock)completionBlock {
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
-        [weakself.databaseManager deleteFileData:file completionBlock:completionBlock];
+        [weakself.databaseService deleteFileData:file completionBlock:completionBlock];
     });
 }
 - (void) getFileOfMessageId:(NSString*)messageId completionBlock:(ZOFetchCompletionBlock)completionBlock {
     
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
-        [weakself.databaseManager getFileOfMessageId:messageId completionBlock:completionBlock];
+        [weakself.databaseService getFileOfMessageId:messageId completionBlock:completionBlock];
     });
     
 }
@@ -187,7 +187,7 @@
 - (void)updateFileData:(FileData*) fileData completionBlock:(ZOCompletionBlock)completionBlock {
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
-        [weakself.databaseManager updateFileData:fileData completionBlock:completionBlock];
+        [weakself.databaseService updateFileData:fileData completionBlock:completionBlock];
     });
 }
 

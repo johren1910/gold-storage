@@ -166,7 +166,6 @@
         [weakself.priorityQueue remove:unit];
         [weakself.currentDownloadUnits removeObjectForKey:url];
         // TODO: CHECK cancel downloading -> --count
-//        ZODownloadUnit *unit = [weakself.currentDownloadUnits objectForKey:url];
         [weakself checkDownloadPipeline];
         
     });
@@ -289,21 +288,6 @@
 - (BOOL)_retryWithUrl:(NSString *)url {
     
     return false;
-//    ZODownloadUnit *unit = [self.currentDownloadUnits objectForKey:url];
-//
-//    if (unit.currentRetryAttempt >= unit.maxRetryCount) {
-//        unit.currentRetryAttempt = 0;
-//        return FALSE;
-//    }
-//    unit.currentRetryAttempt++;
-//    if (unit) {
-//        [unit.task cancel];
-//        unit.task = nil;
-//
-//        unit.priority = ZODownloadPriorityRetryImmediate;
-//        [self addPendingUnit:unit];
-//    }
-//    return TRUE;
 }
 
 - (void)_startDownloadItem:(ZODownloadUnit *)unit {

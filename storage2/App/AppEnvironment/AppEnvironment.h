@@ -6,7 +6,7 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "DatabaseManager.h"
+#import "DatabaseService.h"
 #import "StorageManager.h"
 #import "CacheService.h"
 #import "ZODownloadManager.h"
@@ -15,7 +15,7 @@
 @interface AppEnvironment : NSObject
 @property (nonatomic) NSString* baseUrl;
 @property (nonatomic) id<CacheServiceType> cacheService;
-@property (nonatomic) id<DatabaseManagerType> databaseManager;
+@property (nonatomic) id<DatabaseServiceType> databaseService;
 @property (nonatomic) id<StorageManagerType> storageManager;
 @property (nonatomic) id<ZODownloadManagerType> downloadManager;
 @end

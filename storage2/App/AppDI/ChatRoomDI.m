@@ -12,7 +12,7 @@
 #import "ChatDetailDataRepository.h"
 #import "StorageManager.h"
 #import "CacheService.h"
-#import "DatabaseManager.h"
+#import "DatabaseService.h"
 #import "ChatRoomModel.h"
 
 @interface ChatRoomDI ()

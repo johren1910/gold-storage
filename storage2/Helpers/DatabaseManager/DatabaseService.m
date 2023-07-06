@@ -1,27 +1,27 @@
 //
-//  DatabaseManager.m
+//  DatabaseService.m
 //  storage2
 //
 //  Created by LAP14885 on 17/06/2023.
 //
 
-#import "DatabaseManager.h"
+#import "DatabaseService.h"
 #import "FileHelper.h"
 
-static DatabaseManager *sharedInstance = nil;
+static DatabaseService *sharedInstance = nil;
 static sqlite3 *database = nil;
 static sqlite3_stmt *statement = nil;
 
 //TODO: Handle Retry when sql failed, db locked,..., retry 10 times,...
 
-@interface DatabaseManager ()
+@interface DatabaseService ()
 @property (nonatomic) NSString* databasePath;
 @property (nonatomic) id<DBRepositoryInterface> chatMessageDBRepository;
 @end
 
-@implementation DatabaseManager
+@implementation DatabaseService
 
-+(DatabaseManager*)getSharedInstance {
++(DatabaseService*)getSharedInstance {
     if (!sharedInstance) {
         sharedInstance = [[super allocWithZone:NULL]init];
         [sharedInstance _createChatDatabase];
@@ -137,7 +137,7 @@ static sqlite3_stmt *statement = nil;
 
 - (void)saveFileData:(FileData*) fileData completionBlock:(ZOCompletionBlock)completionBlock {
     
-    __weak DatabaseManager* weakself = self;
+    __weak DatabaseService* weakself = self;
     BOOL result = NO;
     const char *dbpath = [weakself.databasePath UTF8String];
     
@@ -167,7 +167,7 @@ static sqlite3_stmt *statement = nil;
 
 - (void) getFileOfMessageId:(NSString*)messageId completionBlock:(ZOFetchCompletionBlock)completionBlock {
     
-    __weak DatabaseManager* weakself = self;
+    __weak DatabaseService* weakself = self;
     const char *dbpath = [weakself.databasePath UTF8String];
     FileData* result = nil;
     
@@ -204,7 +204,7 @@ static sqlite3_stmt *statement = nil;
 
 - (void)deleteFileData:(FileData*) file completionBlock:(ZOCompletionBlock)completionBlock {
     
-    __weak DatabaseManager* weakself = self;
+    __weak DatabaseService* weakself = self;
     BOOL result = NO;
     const char *dbpath = [weakself.databasePath UTF8String];
     
@@ -229,7 +229,7 @@ static sqlite3_stmt *statement = nil;
 
 - (void)deleteChatRoom:(ChatRoomModel*) chatRoom completionBlock:(ZOCompletionBlock)completionBlock {
     
-    __weak DatabaseManager* weakself = self;
+    __weak DatabaseService* weakself = self;
     BOOL result = NO;
     const char *dbpath = [weakself.databasePath UTF8String];
     
@@ -255,7 +255,7 @@ static sqlite3_stmt *statement = nil;
 
 - (void)updateFileData:(FileData*) fileData completionBlock:(ZOCompletionBlock)completionBlock {
     
-    __weak DatabaseManager* weakself = self;
+    __weak DatabaseService* weakself = self;
     BOOL result = NO;
     const char *dbpath = [weakself.databasePath UTF8String];
     
@@ -287,7 +287,7 @@ static sqlite3_stmt *statement = nil;
 
 - (void) saveChatRoomData:(ChatRoomModel*)chatRoom completionBlock:(ZOCompletionBlock)completionBlock {
     
-    __weak DatabaseManager* weakself = self;
+    __weak DatabaseService* weakself = self;
     BOOL result = NO;
     const char *dbpath = [weakself.databasePath UTF8String];
     
@@ -309,7 +309,7 @@ static sqlite3_stmt *statement = nil;
 
 - (void) getChatRoomsByPage:(int)page completionBlock:(ZOFetchCompletionBlock)completionBlock {
     
-    __weak DatabaseManager* weakself = self;
+    __weak DatabaseService* weakself = self;
     const char *dbpath = [weakself.databasePath UTF8String];
     int limit = page * 10;
     NSMutableArray<ChatRoomModel*>* result = [@[] mutableCopy] ;
@@ -346,7 +346,7 @@ static sqlite3_stmt *statement = nil;
 
 - (void) getChatMessageIdsByRoomId:(NSString*)chatRoomId completionBlock:(ZOFetchCompletionBlock)completionBlock {
     
-    __weak DatabaseManager* weakself = self;
+    __weak DatabaseService* weakself = self;
     const char *dbpath = [weakself.databasePath UTF8String];
     NSMutableArray<NSString*>* result = [@[] mutableCopy] ;
     

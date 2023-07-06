@@ -8,7 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		5C4AD0BB23B4E9D58E17305D /* Pods_storage2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E19C3CDB4D176A0EF12B2065 /* Pods_storage2.framework */; };
-		F64BAB692A3DA456002B923F /* DatabaseManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAB682A3DA456002B923F /* DatabaseManager.m */; };
+		F64BAB692A3DA456002B923F /* DatabaseService.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAB682A3DA456002B923F /* DatabaseService.m */; };
 		F64BAB742A3F05CA002B923F /* Coordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAB732A3F05CA002B923F /* Coordinator.m */; };
 		F64BAB7A2A3F08CA002B923F /* AppCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAB792A3F08CA002B923F /* AppCoordinator.m */; };
 		F64BAB7C2A3F0C2F002B923F /* BaseCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAB7B2A3F0C2F002B923F /* BaseCoordinator.m */; };
@@ -71,8 +71,8 @@
 		2428DBFDEBA3038772A072A5 /* Pods-storage2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-storage2.debug.xcconfig"; path = "Target Support Files/Pods-storage2/Pods-storage2.debug.xcconfig"; sourceTree = "<group>"; };
 		41FF497A3D8960B438AD9763 /* Pods-storage2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-storage2.release.xcconfig"; path = "Target Support Files/Pods-storage2/Pods-storage2.release.xcconfig"; sourceTree = "<group>"; };
 		E19C3CDB4D176A0EF12B2065 /* Pods_storage2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_storage2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		F64BAB672A3DA448002B923F /* DatabaseManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DatabaseManager.h; sourceTree = "<group>"; };
-		F64BAB682A3DA456002B923F /* DatabaseManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DatabaseManager.m; sourceTree = "<group>"; };
+		F64BAB672A3DA448002B923F /* DatabaseService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DatabaseService.h; sourceTree = "<group>"; };
+		F64BAB682A3DA456002B923F /* DatabaseService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DatabaseService.m; sourceTree = "<group>"; };
 		F64BAB722A3F0593002B923F /* Coordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Coordinator.h; sourceTree = "<group>"; };
 		F64BAB732A3F05CA002B923F /* Coordinator.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Coordinator.m; sourceTree = "<group>"; };
 		F64BAB752A3F080B002B923F /* BaseCoordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BaseCoordinator.h; sourceTree = "<group>"; };
@@ -220,8 +220,8 @@
 			isa = PBXGroup;
 			children = (
 				F6EFC9552A55529300DDEDF4 /* DBRepository */,
-				F64BAB672A3DA448002B923F /* DatabaseManager.h */,
-				F64BAB682A3DA456002B923F /* DatabaseManager.m */,
+				F64BAB672A3DA448002B923F /* DatabaseService.h */,
+				F64BAB682A3DA456002B923F /* DatabaseService.m */,
 			);
 			path = DatabaseManager;
 			sourceTree = "<group>";
@@ -800,7 +800,7 @@
 				F64BAFE22A4C1A47002B923F /* AppEnvironment.m in Sources */,
 				F64BB0002A518FC6002B923F /* ChatDetailLocalDataSource.m in Sources */,
 				F6C43F412A3B2A53001D8715 /* StorageViewModel.m in Sources */,
-				F64BAB692A3DA456002B923F /* DatabaseManager.m in Sources */,
+				F64BAB692A3DA456002B923F /* DatabaseService.m in Sources */,
 				F6C43F3E2A3B2A39001D8715 /* StorageViewController.m in Sources */,
 				F6C43F252A3AF139001D8715 /* ChatRoomModel.m in Sources */,
 				F6C43F192A3AF0D3001D8715 /* ChatRoomViewModel.m in Sources */,

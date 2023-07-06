@@ -15,6 +15,6 @@
 
 @interface StorageManager : NSObject <StorageManagerType>
 
--(instancetype) initWithCacheService:(id<CacheServiceType>)cacheService andDatabaseManager:(id<DatabaseManagerType>)databaseManager;
+-(instancetype) initWithCacheService:(id<CacheServiceType>)cacheService andDatabaseService:(id<DatabaseServiceType>)databaseService;
 
 @end

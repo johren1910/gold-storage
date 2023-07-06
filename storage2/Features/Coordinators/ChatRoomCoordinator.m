@@ -60,7 +60,7 @@
     NSLog(@"Navigate to setting");
     
     StorageViewModel* viewModel = [[StorageViewModel alloc] init];
-//    viewModel.databaseManager = _databaseManager;
+//    viewModel.databaseService = _databaseService;
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"StorageView" bundle:nil];
     StorageViewController *ivc = [storyboard instantiateViewControllerWithIdentifier:@"StorageViewController"];

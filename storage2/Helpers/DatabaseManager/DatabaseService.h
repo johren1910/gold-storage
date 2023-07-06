@@ -1,5 +1,5 @@
 //
-//  DatabaseManager.h
+//  DatabaseService.h
 //  storage2
 //
 //  Created by LAP14885 on 17/06/2023.
@@ -12,7 +12,7 @@
 #import "ChatMessageDBRepository.h"
 #import "DBRepositoryInterface.h"
 
-@protocol DatabaseManagerType
+@protocol DatabaseServiceType
 
 #pragma mark - ChatMessage
 - (id<DBRepositoryInterface>) getChatMessageDBRepository;
@@ -30,9 +30,9 @@
 
 @end
 
-@interface DatabaseManager : NSObject <DatabaseManagerType>
+@interface DatabaseService : NSObject <DatabaseServiceType>
 
 
-+(DatabaseManager*)getSharedInstance;
++(DatabaseService*)getSharedInstance;
 
 @end

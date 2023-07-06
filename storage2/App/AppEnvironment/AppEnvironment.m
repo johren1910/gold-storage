@@ -19,8 +19,8 @@
         [FileHelper createDirectoriesForPath:[FileHelper pathForApplicationSupportDirectory]];
         _cacheService = [[CacheService alloc] init];
         [CompressorHelper prepareCompressor];
-        _databaseManager = [DatabaseManager getSharedInstance];
-        _storageManager = [[StorageManager alloc] initWithCacheService:_cacheService andDatabaseManager:_databaseManager];
+        _databaseService = [DatabaseService getSharedInstance];
+        _storageManager = [[StorageManager alloc] initWithCacheService:_cacheService andDatabaseService:_databaseService];
         _downloadManager = [ZODownloadManager getSharedInstance];
     }
     return self;
