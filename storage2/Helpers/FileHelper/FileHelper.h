@@ -50,6 +50,7 @@
 +(UIImage *)readFileAtPathAsImage:(NSString *)path;
 
 +(BOOL)removeItemAtPath:(NSString *)path;
++(BOOL)removeItemAtPath:(NSString *)path error:(NSError **)error;
 
 +(ZOMediaInfo *)getMediaInfoOfFilePath:(NSString *)filePath;
 

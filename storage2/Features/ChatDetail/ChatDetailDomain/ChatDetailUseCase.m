@@ -51,9 +51,9 @@
         NSString *fileId = [[NSUUID UUID] UUIDString];
 
         ChatMessageData *newMessageData = [[ChatMessageData alloc] initWithMessage:messageId messageId:messageId chatRoomId:roomModel.chatRoomId];
+        newMessageData.messageState = Downloading;
 
         FileData *newFileData = [[FileData alloc] init];
-        newFileData.type = Download;
         newFileData.fileId = fileId;
         newFileData.messageId = messageId;
 
@@ -98,6 +98,14 @@
     });
 }
 
+- (void)deleteChatEntities:(NSArray<ChatDetailEntity*>*)entities completionBlock:(void (^)(BOOL isSuccess))completionBlock {
+    [_chatDetailRepository deleteChatMessages:entities completionBlock:completionBlock];
+}
+
+- (void)updateRamCache:(UIImage*)image withKey:(NSString*)key {
+    [_chatDetailRepository updateRamCache:image withKey:key];
+}
+
 #pragma mark: - Private methods
 
 - (void)_saveDownloadedMedia:(NSString *)filePath forMessage:(ChatMessageData*)message
@@ -106,15 +114,12 @@
     [_chatDetailRepository saveMedia:filePath forMessage:message completionBlock:^(FileData* fileData, UIImage* thumbnail){
         
         message.file = fileData;
+        message.messageState = Sent;
         ChatDetailEntity* result = [message toChatDetailEntity];
         result.thumbnail = thumbnail;
         completionBlock(result);
         
     }];
-}
-
-- (void)deleteChatEntities:(NSArray<ChatDetailEntity*>*)entities completionBlock:(void (^)(BOOL isSuccess))completionBlock {
-    [_chatDetailRepository deleteChatMessages:entities completionBlock:completionBlock];
 }
 
 - (void)_startDownload:(NSString *)url forMessage:(ChatMessageData*)message
@@ -134,15 +139,12 @@
     [_chatDetailRepository startDownloadWithUnit:unit forMessage:message completionBlock:^(FileData* fileData, UIImage* thumbnail){
         
         message.file = fileData;
+        message.messageState = Sent;
         ChatDetailEntity* result = [message toChatDetailEntity];
         result.thumbnail = thumbnail;
         completionBlock(result);
         
     }];
-}
-
-- (void)updateRamCache:(UIImage*)image withKey:(NSString*)key {
-    [_chatDetailRepository updateRamCache:image withKey:key];
 }
 
 @end

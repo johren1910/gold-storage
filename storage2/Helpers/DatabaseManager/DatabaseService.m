@@ -94,7 +94,7 @@ static sqlite3_stmt *statement = nil;
     if (sqlite3_open_v2(dbpath, &database, SQLITE_OPEN_READWRITE | SQLITE_OPEN_CREATE, NULL) == SQLITE_OK) {
         char *errMsg;
         const char *sql_stmt =
-        "create table if not exists chatMessage (messageId text primary key, message text, chatRoomId text, createdAt real)";
+        "create table if not exists chatMessage (messageId text primary key, message text, chatRoomId text, createdAt real, state int)";
         
         if (sqlite3_exec(database, sql_stmt, NULL, NULL, &errMsg) != SQLITE_OK) {
             isSuccess = NO;

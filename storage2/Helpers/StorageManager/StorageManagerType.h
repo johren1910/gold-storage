@@ -22,6 +22,7 @@
 - (void)deleteChatMessage:(ChatMessageData*) message completionBlock:(ZOCompletionBlock)completionBlock;
 - (void) getChatMessagesByRoomId:(NSString*)chatRoomId completionBlock:(ZOFetchCompletionBlock)completionBlock;
 - (void) getMessageOfId:(NSString*)messageId completionBlock:(ZOFetchCompletionBlock)completionBlock;
+- (void)updateMessageData:(ChatMessageData*) messageData completionBlock:(ZOCompletionBlock)completionBlock;
 
 - (void) createChatRoom:(ChatRoomModel*)chatRoom completionBlock:(ZOCompletionBlock)completionBlock;
 - (void)deleteChatRoom:(ChatRoomModel*) chatRoom completionBlock:(ZOCompletionBlock)completionBlock;

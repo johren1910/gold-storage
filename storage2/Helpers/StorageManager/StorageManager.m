@@ -77,7 +77,15 @@
         
         if (result) {
             [weakself.cacheService deleteImageByKey:message.file.checksum];
-            [FileHelper removeItemAtPath:message.file.filePath];
+            NSError* error;
+            if([FileHelper existsItemAtPath:message.file.filePath]) {
+                BOOL isDeleted = [FileHelper removeItemAtPath:message.file.filePath error:&error];
+                if(error) {
+                    NSLog(@"error log %@", error.localizedDescription);
+                }
+                NSLog(@"File removed %d", isDeleted);
+            }
+            
             [weakself.databaseService deleteFileData:message.file completionBlock:^(BOOL fileDeleted) {
                 
             }];
@@ -112,7 +120,7 @@
         
         ChatMessageDBRepository* messageDBRepository = [weakself.databaseService getChatMessageDBRepository];
         
-        NSString* whereStr = [NSString stringWithFormat:@"messageId=\"%@\"",messageId];
+        NSString* whereStr = [NSString stringWithFormat:@"chatMessage.messageId=\"%@\"",messageId];
         ChatMessageData* object = [messageDBRepository getObjectWhere:whereStr];
         completionBlock(object);
     });
@@ -139,8 +147,7 @@
         [weakself.databaseService deleteChatRoom:chatRoom completionBlock:^(BOOL isSuccess){
             
             if (isSuccess) {
-                NSString*folderPath = [FileHelper pathForApplicationSupportDirectoryWithPath:chatRoom.chatRoomId];
-                [FileHelper removeItemAtPath:folderPath];
+                
             }
         }];
     });
@@ -188,6 +195,14 @@
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
         [weakself.databaseService updateFileData:fileData completionBlock:completionBlock];
+    });
+}
+
+- (void)updateMessageData:(ChatMessageData*) messageData completionBlock:(ZOCompletionBlock)completionBlock {
+    __weak StorageManager* weakself = self;
+    dispatch_async(_databaseQueue, ^{
+        BOOL result = [weakself.databaseService.getChatMessageDBRepository update:messageData];
+        completionBlock(result);
     });
 }
 

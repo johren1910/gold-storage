@@ -70,13 +70,14 @@
 - (void) handleLoadingImageWithUrl:(NSString*) filePath andChecksum:(NSString*)checksum {
     [_loadingIndicator startAnimating];
     __weak ChatMessageCell *weakself = self;
-  
-    UIImage *image = [FileHelper readFileAtPathAsImage:filePath];
-    [self compressThenCache:image withKey:checksum];
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [weakself.thumbnailImageView setImage:image];
-        [weakself.loadingIndicator stopAnimating];
-       
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT,0), ^{
+        UIImage *image = [FileHelper readFileAtPathAsImage:filePath];
+        [weakself compressThenCache:image withKey:checksum];
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [weakself.thumbnailImageView setImage:image];
+            [weakself.loadingIndicator stopAnimating];
+           
+        });
     });
 }
 
@@ -117,7 +118,7 @@
 //        return;
 //    }
     [self.retryBtn setHidden:true];
-    if (_chat.file.type == Download) {
+    if (_chat.state == Downloading) {
         [self createDownloadHolderView];
     } else {
         [self.selectedImage setHidden: false];

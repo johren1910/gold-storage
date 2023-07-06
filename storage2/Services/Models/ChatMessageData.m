@@ -75,6 +75,7 @@
     entity.file = self.file;
     entity.thumbnail = nil;
     entity.selected = false;
+    entity.state = self.messageState;
     return entity;
 }
 

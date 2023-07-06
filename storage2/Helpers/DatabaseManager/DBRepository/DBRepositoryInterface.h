@@ -14,6 +14,7 @@ typedef void(^ZOFetchCompletionBlock)(id object);
 
 - (BOOL)save:(id)object;
 - (BOOL)remove:(id)object;
+- (BOOL)update:(id)object;
 - (id)getObjectWhere:(NSString*)where;
 - (NSArray*)getObjectsWhere:(NSString*)where;
 - (NSArray*)getObjectsWhere:(NSString *)where take:(int) countItem;

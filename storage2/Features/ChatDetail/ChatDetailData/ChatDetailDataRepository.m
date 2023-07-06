@@ -61,7 +61,6 @@
 
 - (void)startDownloadWithUnit:(ZODownloadUnit*)unit
                    forMessage: (ChatMessageData*)message completionBlock:(void(^)(FileData* fileData, UIImage* thumbnail))completionBlock {
-    
     __weak ChatDetailDataRepository* weakself = self;
     __weak ZODownloadUnit* weakunit = unit;
     unit.completionBlock = ^(NSString *filePath) {
@@ -70,7 +69,10 @@
         if (!weakunit.destinationDirectoryPath) {
             currentFilePath = [weakself _moveFileToGeneralFolders:filePath forFileType:fileType andSetName:[message.file.filePath lastPathComponent]];
         }
-        
+        message.messageState = Sent;
+        [weakself updateMessageData:message completionBlock:^(BOOL isFinish){
+            NSLog(@"updated");
+        }];
         [weakself saveMedia:currentFilePath forMessage:message completionBlock:completionBlock];
         NSLog(@"destinationPath download: %@", currentFilePath);
     };
@@ -135,10 +137,9 @@
                     thumbnail = [UIImage imageWithData:fileData];
                     NSData* compressed = UIImageJPEGRepresentation(thumbnail, 0.5);
                     thumbnail = [UIImage imageWithData:compressed];
-                    compressed = nil;
                     [weakself.storageManager compressThenCache:thumbnail withKey:checkSum];
-                    thumbnail = nil;
                 }
+                
                 break;
             case Video:
                 mediaInfo = [FileHelper getMediaInfoOfFilePath:filePath];
@@ -147,6 +148,7 @@
                     thumbnail = mediaInfo.thumbnail;
                     [weakself.storageManager compressThenCache:thumbnail withKey:checkSum];
                 }
+                
                 break;
             default:
                 break;
@@ -187,6 +189,10 @@
 
 - (void)updateFileData:(FileData*) fileData completionBlock:(void(^)(BOOL isFinish))completionBlock {
     [_localDataSource updateFileData:fileData completionBlock:completionBlock];
+}
+
+- (void)updateMessageData:(ChatMessageData*) message completionBlock:(void(^)(BOOL isFinish))completionBlock {
+    [_localDataSource updateMessageData:message completionBlock:completionBlock];
 }
 
 - (void) saveImageWithData:(NSData*)data ofRoomId:(NSString*)roomId completionBlock:(void(^)(ChatDetailEntity* entity)) completionBlock errorBlock:(void (^)(NSError *error))errorBlock {

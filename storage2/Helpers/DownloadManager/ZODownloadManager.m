@@ -52,7 +52,7 @@
     
     dispatch_async(_serialDispatchQueue, ^{
         ZODownloadUnit *existUnit = [weakself.currentDownloadUnits objectForKey:unit.requestUrl];
-        if (existUnit && existUnit.downloadState != ZODownloadStateDownloading && existUnit.downloadState != ZODownloadStateDone) {
+        if (existUnit &&  (existUnit.downloadState == ZODownloadStateDownloading || existUnit.downloadState == ZODownloadStatePending)) {
             [existUnit.otherCompletionBlocks addObject:unit.completionBlock];
             [existUnit.otherErrorBlocks addObject:unit.errorBlock];
             

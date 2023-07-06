@@ -9,6 +9,12 @@
 
 #import "FileType.h"
 
+typedef NS_ENUM(NSInteger, MessageState) {
+    Sent = 0,
+    Downloading = 1,
+    Failed = 2
+};
+
 @interface FileData: NSObject <NSCopying>
 
 @property (nonatomic,readwrite,copy) NSString* fileId;

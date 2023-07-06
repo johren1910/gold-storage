@@ -61,7 +61,7 @@
     [_chatDetailUsecase getChatDetailsOfRoomId:_chatRoom.chatRoomId completionBlock:^(NSArray<ChatDetailEntity*>* entities) {
         
         for (ChatDetailEntity* entity in entities) {
-            if (entity.file.type == Download) {
+            if (entity.state == Downloading) {
                 [weakself _requestDownloadForEntity:entity];
             }
         }
@@ -300,6 +300,11 @@
 }
 
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key {
+    for (ChatDetailEntity* entity in _messageModels) {
+        if ([entity.file.checksum isEqualToString:key]){
+            entity.thumbnail = image;
+        }
+    }
     [_chatDetailUsecase updateRamCache:image withKey:key];
 }
 @end

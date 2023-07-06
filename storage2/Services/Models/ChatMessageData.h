@@ -18,6 +18,7 @@
 @property (nonatomic,readonly,copy) NSString* senderId;
 @property (nonatomic,readonly,copy) NSString* chatRoomId;
 @property (nonatomic,readwrite) double createdAt;
+@property (nonatomic,readwrite) MessageState messageState;
 @property (nonatomic,readwrite) FileData* file;
 
 + (instancetype)new NS_UNAVAILABLE;

@@ -56,7 +56,41 @@ static sqlite3_stmt *statement = nil;
     return [self _saveChatMessageData:data];
 }
 
+- (BOOL)update:(id)object {
+    ChatMessageData* data = (ChatMessageData*)object;
+    return [self _updateChatMessage:data];
+}
+
 #pragma mark - Private methods
+-(BOOL)_updateChatMessage:(ChatMessageData*)message {
+    BOOL result = NO;
+    const char *dbpath = [_databasePath UTF8String];
+    
+    if (sqlite3_open_v2(dbpath, &database, SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
+        
+        NSString *updateSQL = [NSString stringWithFormat:@"update chatMessage set message=\"%@\", state=%ld where messageId =\"%@\"", message.message,
+                               message.messageState,
+                               message.messageId];
+        
+        const char *stmt = [updateSQL UTF8String];
+        int prepare = sqlite3_prepare_v2(database, stmt,-1, &statement, NULL);
+        if (prepare != SQLITE_OK) {
+           NSString* errorMsg = [NSString stringWithUTF8String:sqlite3_errmsg(database)];
+            NSLog(@"%@", errorMsg);
+        }
+        int code = sqlite3_step(statement);
+        if (code == SQLITE_DONE) {
+            result = YES;
+        } else {
+            result = NO;
+        }
+        sqlite3_finalize(statement);
+    }
+    
+    sqlite3_close_v2(database);
+    return result;
+}
+
 - (BOOL)_deleteChatMessage:(ChatMessageData*) message {
     
     BOOL result = NO;
@@ -90,7 +124,8 @@ static sqlite3_stmt *statement = nil;
     const char *dbpath = [_databasePath UTF8String];
     if (sqlite3_open_v2(dbpath, &database, SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
         
-        NSString *insertSQL = [NSString stringWithFormat:@"insert into chatMessage (messageId, message, chatRoomId, createdAt) values (\"%@\",\"%@\",\"%@\",%lf)", chatMessage.messageId, chatMessage.message, chatMessage.chatRoomId, chatMessage.createdAt];
+        NSString *insertSQL = [NSString stringWithFormat:@"insert into chatMessage (messageId, message, chatRoomId, createdAt, state) values (\"%@\",\"%@\",\"%@\",%lf, %ld)", chatMessage.messageId, chatMessage.message, chatMessage.chatRoomId, chatMessage.createdAt,
+            chatMessage.messageState];
         const char *insert_stmt = [insertSQL UTF8String];
         int prepare = sqlite3_prepare_v2(database, insert_stmt,-1, &statement, NULL);
         if (prepare != SQLITE_OK) {
@@ -116,7 +151,7 @@ static sqlite3_stmt *statement = nil;
     
     if (sqlite3_open_v2(dbpath, &database, SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
         NSString *querySQL = [NSString stringWithFormat:
-                              @"select chatMessage.messageId, message, chatRoomId, chatMessage.createdAt, id, filePath, checkSum, size, duration, type from chatMessage left join file on chatMessage.messageId = file.messageId where %@ order by chatMessage.createdAt DESC", where];
+                              @"select chatMessage.messageId, message, chatRoomId, chatMessage.createdAt, state, id, filePath, checkSum, size, duration, type from chatMessage left join file on chatMessage.messageId = file.messageId where %@ order by chatMessage.createdAt DESC", where];
         const char *query_stmt = [querySQL UTF8String];
         
         if (sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK) {
@@ -129,15 +164,16 @@ static sqlite3_stmt *statement = nil;
                 
                 NSString *chatRoomId = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 2)];
                 double createdAt = (double) sqlite3_column_double(statement, 3);
+                int messageState = (double) sqlite3_column_int(statement, 4);
                 
                 // File data
-                NSString *fileId = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 4)];
-                NSString *filePath = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 5)];
+                NSString *fileId = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 5)];
+                NSString *filePath = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 6)];
                 
-                NSString *checkSum = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 6)];
-                double size = (double) sqlite3_column_double(statement, 7);
-                double duration = (double) sqlite3_column_double(statement, 8);
-                int fileType = (int) sqlite3_column_int(statement, 9);
+                NSString *checkSum = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 7)];
+                double size = (double) sqlite3_column_double(statement, 8);
+                double duration = (double) sqlite3_column_double(statement, 9);
+                int fileType = (int) sqlite3_column_int(statement, 10);
                 
                 FileData *fileData = [[FileData alloc] init];
                 fileData.fileId = fileId;
@@ -151,6 +187,7 @@ static sqlite3_stmt *statement = nil;
                 ChatMessageData *chat = [[ChatMessageData alloc] initWithMessage:message messageId:messageId chatRoomId:chatRoomId];
                 chat.createdAt = createdAt;
                 chat.file = fileData;
+                chat.messageState = messageState;
               
                 [result addObject:chat];
                 chat = nil;
@@ -172,7 +209,7 @@ static sqlite3_stmt *statement = nil;
     
     if (sqlite3_open_v2(dbpath, &database, SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
         NSString *querySQL = [NSString stringWithFormat:
-                              @"select chatMessage.messageId, message, chatRoomId, chatMessage.createdAt, id, filePath, checkSum, size, duration, type from chatMessage left join file on chatMessage.messageId = file.messageId where %@ order by chatMessage.createdAt DESC", where];
+                              @"select chatMessage.messageId, message, chatRoomId, chatMessage.createdAt, state, id, filePath, checkSum, size, duration, type from chatMessage left join file on chatMessage.messageId = file.messageId where %@ order by chatMessage.createdAt DESC", where];
         const char *query_stmt = [querySQL UTF8String];
         
         if (sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK) {
@@ -185,15 +222,16 @@ static sqlite3_stmt *statement = nil;
                 
                 NSString *chatRoomId = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 2)];
                 double createdAt = (double) sqlite3_column_double(statement, 3);
+                int messageState = sqlite3_column_int(statement, 4);
                 
                 // File data
-                NSString *fileId = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 4)];
-                NSString *filePath = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 5)];
+                NSString *fileId = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 5)];
+                NSString *filePath = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 6)];
                 
-                NSString *checkSum = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 6)];
-                double size = (double) sqlite3_column_double(statement, 7);
-                double duration = (double) sqlite3_column_double(statement, 8);
-                int fileType = (int) sqlite3_column_int(statement, 9);
+                NSString *checkSum = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 7)];
+                double size = (double) sqlite3_column_double(statement, 8);
+                double duration = (double) sqlite3_column_double(statement, 9);
+                int fileType = (int) sqlite3_column_int(statement, 10);
                 
                 FileData *fileData = [[FileData alloc] init];
                 fileData.fileId = fileId;
@@ -207,6 +245,7 @@ static sqlite3_stmt *statement = nil;
                 ChatMessageData *chat = [[ChatMessageData alloc] initWithMessage:message messageId:messageId chatRoomId:chatRoomId];
                 chat.createdAt = createdAt;
                 chat.file = fileData;
+                chat.messageState = messageState;
               
                 result = chat;
                 chat = nil;

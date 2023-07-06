@@ -15,5 +15,6 @@
 @property (nonatomic) FileData* file;
 @property (nonatomic) UIImage* thumbnail;
 @property (nonatomic) BOOL selected;
+@property (nonatomic) MessageState state;
 @property (nonatomic) BOOL isError;
 @end
