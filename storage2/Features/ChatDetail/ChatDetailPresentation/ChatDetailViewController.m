@@ -30,7 +30,7 @@
 }
 
 - (void)didUpdateData {
-    [_adapter performUpdatesAnimated:true completion:nil];
+    [_adapter performUpdatesAnimated:false completion:nil];
 }
 
 - (void)didReloadData {
