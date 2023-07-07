@@ -152,7 +152,7 @@
                 if (thumbnail) {
                     [_thumbnailImageView setImage:thumbnail];
                 } else {
-                    [self handleLoadingImageWithUrl:chat.file.filePath andChecksum:chat.file.checksum];
+                    [self handleLoadingImageWithUrl:chat.file.getAbsoluteFilePath andChecksum:chat.file.checksum];
                 }
                 break;
             default:

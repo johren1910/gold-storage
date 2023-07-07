@@ -76,16 +76,7 @@
          BOOL result = [[weakself.databaseService getChatMessageDBRepository] remove:message];
         
         if (result) {
-            [weakself.cacheService deleteImageByKey:message.file.checksum];
-            NSError* error;
-            if([FileHelper existsItemAtPath:message.file.filePath]) {
-                BOOL isDeleted = [FileHelper removeItemAtPath:message.file.filePath error:&error];
-                if(error) {
-                    NSLog(@"error log %@", error.localizedDescription);
-                }
-                NSLog(@"File removed %d", isDeleted);
-            }
-            
+            [weakself _deleteFileIfValid:message];
             [[weakself.databaseService getFileDBRepository] remove:message.file];
             if(completionBlock)
                 completionBlock(true);
@@ -93,7 +84,7 @@
     });
 }
 
-- (void) getChatMessagesByRoomId:(NSString*)chatRoomId completionBlock:(ZOFetchCompletionBlock)completionBlock {
+- (void)getChatMessagesByRoomId:(NSString*)chatRoomId completionBlock:(ZOFetchCompletionBlock)completionBlock {
     
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
@@ -159,7 +150,7 @@
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
         if (data) {
-            [weakself writeToFilePath:fileData.filePath withData:data];
+            [weakself writeToFilePath:fileData.getAbsoluteFilePath withData:data];
         }
         BOOL result = [[weakself.databaseService getFileDBRepository] save:fileData];
         completionBlock(result);
@@ -247,15 +238,15 @@
         
         //TODO: -DETECT NSDATA FILE TYPE
         NSString*folderName = [FileHelper getDefaultDirectoryByFileType:Picture];
-        NSString *componentFolderPath = [folderName stringByAppendingPathComponent:fileName];
-        NSString *filePath = [FileHelper pathForApplicationSupportDirectoryWithPath:componentFolderPath];
+        NSString *relativeFilePath = [folderName stringByAppendingPathComponent:fileName];
+//        NSString *filePath = [FileHelper pathForApplicationSupportDirectoryWithPath:componentFolderPath];
         
         newMessageData.createdAt = timeStamp;
         
         FileData *fileData = [[FileData alloc] init];
         fileData.fileId = [[NSUUID UUID] UUIDString];
         fileData.messageId = messageId;
-        fileData.filePath = filePath;
+        fileData.filePath = relativeFilePath;
         fileData.checksum = checkSum;
         fileData.createdAt = timeStamp;
         fileData.size = size;
@@ -293,7 +284,6 @@
     [_cacheService deleteImageByKey:key];
 }
 
-# pragma mark - Helper Operation
 -(FileType)getFileTypeOfFilePath:(NSString*)filePath {
     FileType type = Unknown;
     CFStringRef fileExtension = (__bridge CFStringRef) [filePath pathExtension];
@@ -310,6 +300,27 @@
     }
     CFRelease(fileUTI);
     return type;
+}
+
+# pragma mark - Private methods
+-(void)_deleteFileIfValid:(ChatMessageData*)messageData {
+    
+    __weak StorageManager* weakself = self;
+    dispatch_async(_databaseQueue, ^{
+        NSString *whereStr = [NSString stringWithFormat:@"checksum = \"%@\"", messageData.file.checksum];
+        NSArray* objects = [[weakself.databaseService getFileDBRepository] getObjectsWhere:whereStr];
+        if (objects.count == 0) {
+            [weakself.cacheService deleteImageByKey:messageData.file.checksum];
+            NSError* error;
+            if([FileHelper existsItemAtPath:messageData.file.getAbsoluteFilePath]) {
+                BOOL isDeleted = [FileHelper removeItemAtPath:messageData.file.getAbsoluteFilePath error:&error];
+                if(error) {
+                    NSLog(@"error log %@", error.localizedDescription);
+                }
+                NSLog(@"File removed %d", isDeleted);
+            }
+        }
+    });
 }
 
 @end

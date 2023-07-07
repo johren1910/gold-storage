@@ -101,9 +101,9 @@
     
     NSString* pictureFolder = [FileHelper getDefaultDirectoryByFileType:Picture];
     NSString* videoFolder = [FileHelper getDefaultDirectoryByFileType:Video];
-    pictureFolder = [FileHelper pathForApplicationSupportDirectoryWithPath:pictureFolder];
+    pictureFolder = [FileHelper absolutePath:pictureFolder];
     
-    videoFolder = [FileHelper pathForApplicationSupportDirectoryWithPath:videoFolder];
+    videoFolder = [FileHelper absolutePath:videoFolder];
     
     NSString* filePath = [pictureFolder stringByAppendingPathComponent:fileName];
     if ([FileHelper existsItemAtPath:filePath]) {

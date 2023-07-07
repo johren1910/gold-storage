@@ -6,7 +6,12 @@
 //
 
 #import "FileData.h"
+#import "FileHelper.h"
 @implementation FileData
+
+-(NSString*)getAbsoluteFilePath {
+    return [FileHelper absolutePath:self.filePath];
+}
 
 - (id)copyWithZone:(nullable NSZone *)zone
 {

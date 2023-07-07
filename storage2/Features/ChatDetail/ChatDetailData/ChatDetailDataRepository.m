@@ -29,11 +29,11 @@
             if (!thumbnail && entity.file.filePath != nil) {
 
                 if (entity.file.type == Video) {
-                    ZOMediaInfo *mediaInfo = [FileHelper getMediaInfoOfFilePath:entity.file.filePath];
+                    ZOMediaInfo *mediaInfo = [FileHelper getMediaInfoOfFilePath:entity.file.getAbsoluteFilePath];
                     thumbnail = mediaInfo.thumbnail;
                     [weakself.storageManager compressThenCache:thumbnail withKey:entity.file.checksum];
                 } else {
-                    NSData *imageData = [NSData dataWithContentsOfFile:entity .file.filePath];
+                    NSData *imageData = [NSData dataWithContentsOfFile:entity .file.getAbsoluteFilePath];
                     thumbnail = [UIImage imageWithData:imageData];
                 }
 
@@ -106,10 +106,10 @@
     NSString* folderPath = [FileHelper getDefaultDirectoryByFileType:fileType];
     NSString* fileRelativePath = [folderPath stringByAppendingPathComponent:name];
     
-    NSString* absolutePath = [FileHelper pathForApplicationSupportDirectoryWithPath:fileRelativePath];
+    NSString* absolutePath = [FileHelper absolutePath:fileRelativePath];
     
     if ([FileHelper existsItemAtPath:absolutePath]) {
-        return absolutePath;
+        return fileRelativePath;
     }
     [FileHelper createDirectoriesForFileAtPath:absolutePath];
     
@@ -118,15 +118,15 @@
     NSURL *dstUrl = [FileHelper urlForItemAtPath:absolutePath];
     [FileHelper copyItemAtPath:srcUrl toPath:dstUrl error:&error];
     [FileHelper removeItemAtPath:currentfilePath];
-    return absolutePath;
+    return fileRelativePath;
 }
 
 - (void)saveMedia:(NSString*)filePath forMessage:(ChatMessageData*)message completionBlock:(void(^)(FileData* fileData, UIImage* thumbnail))completionBlock {
     __weak ChatDetailDataRepository* weakself = self;
     dispatch_async(_backgroundQueue, ^{
         
-        FileType fileType = [weakself.storageManager getFileTypeOfFilePath:filePath];
-        NSData *fileData = [FileHelper readFileAtPathAsData:filePath];
+        FileType fileType = [weakself.storageManager getFileTypeOfFilePath:[FileHelper absolutePath:filePath]];
+        NSData *fileData = [FileHelper readFileAtPathAsData:[FileHelper absolutePath:filePath]];
         NSString *checkSum = [HashHelper hashDataMD5:fileData];
         UIImage *thumbnail = [weakself.storageManager getImageByKey:checkSum];
         double duration = 0;
@@ -142,7 +142,7 @@
                 
                 break;
             case Video:
-                mediaInfo = [FileHelper getMediaInfoOfFilePath:filePath];
+                mediaInfo = [FileHelper getMediaInfoOfFilePath:[FileHelper absolutePath:filePath]];
                 duration = mediaInfo.duration;
                 if (!thumbnail) {
                     thumbnail = mediaInfo.thumbnail;

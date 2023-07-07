@@ -77,7 +77,7 @@ static sqlite3_stmt *statement = nil;
 
 -(BOOL)_createChatDatabase {
     
-    _databasePath = [FileHelper pathForApplicationSupportDirectoryWithPath:@"chat.db"];
+    _databasePath = [FileHelper absolutePath:@"chat.db"];
 
     NSLog(@"Database path: %@", _databasePath);
     BOOL isSuccess = YES;

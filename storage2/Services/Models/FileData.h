@@ -28,4 +28,5 @@ typedef NS_ENUM(NSInteger, MessageState) {
 @property (nonatomic,readwrite) double lastModified;
 @property (nonatomic,readwrite) double lastAccessed;
 @property (nonatomic,readwrite) FileType type;
+-(NSString*)getAbsoluteFilePath;
 @end

@@ -31,7 +31,7 @@ static sqlite3_stmt *statement = nil;
 }
 
 - (NSArray *)getObjectsWhere:(NSString *)where {
-    return nil;
+    return [self _getFilesWhere:where];
 }
 
 - (NSArray *)getObjectsWhere:(NSString *)where orderBy:(NSString *)orderByAttribute ascending:(BOOL)ascending {
@@ -178,6 +178,60 @@ static sqlite3_stmt *statement = nil;
     
     sqlite3_close_v2(database);
     return result;
+}
+
+- (NSArray*)_getFilesWhere:(NSString*)where {
+    const char *dbpath = [_databasePath UTF8String];
+    NSMutableArray<FileData*>* result = [@[] mutableCopy] ;
+    
+    if (sqlite3_open_v2(dbpath, &database, SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
+        NSString *querySQL = [NSString stringWithFormat:
+                              @"select * from file where %@ order by createdAt DESC", where];
+        const char *query_stmt = [querySQL UTF8String];
+        
+        if (sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK) {
+            
+            while (sqlite3_step(statement)==SQLITE_ROW)
+            {
+                // Message data
+                NSString *fileId = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 0)];
+                NSString *messageId = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 1)];
+                
+                NSString *fileName = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 2)];
+                NSString *filePath = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 3)];
+                NSString *checksum = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 4)];
+                double createdAt = (double) sqlite3_column_double(statement, 5);
+                double size = (double) sqlite3_column_double(statement, 6);
+                double duration = (double) sqlite3_column_double(statement, 7);
+                double lastModified = (double) sqlite3_column_double(statement, 8);
+                double lastAccessed = (double) sqlite3_column_double(statement, 9);
+                int fileType = (double) sqlite3_column_int(statement, 4);
+
+                
+                FileData *fileData = [[FileData alloc] init];
+                fileData.fileId = fileId;
+                fileData.messageId = messageId;
+                fileData.filePath = filePath;
+                fileData.createdAt = createdAt;
+                fileData.checksum = checksum;
+                fileData.size = size;
+                fileData.duration = duration;
+                fileData.lastModified = lastModified;
+                fileData.lastAccessed = lastAccessed;
+                fileData.type = fileType;
+              
+                [result addObject:fileData];
+                fileData = nil;
+            }
+            
+            sqlite3_finalize(statement);
+            sqlite3_close_v2(database);
+            return result;
+        }
+    }
+    sqlite3_finalize(statement);
+    sqlite3_close_v2(database);
+    return nil;
 }
 
 -(void)setDatabasePath:(NSString*)path {

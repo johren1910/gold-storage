@@ -173,7 +173,7 @@
     if (!_defaultUrlSession) {
         NSURLSessionConfiguration *defaultConfig = [NSURLSessionConfiguration defaultSessionConfiguration];
         defaultConfig.waitsForConnectivity = NO;  // waits for connectitity, don't notify error immediately.
-        defaultConfig.timeoutIntervalForRequest = 5;
+        defaultConfig.timeoutIntervalForRequest = 30;
         _defaultUrlSession = [NSURLSession sessionWithConfiguration:defaultConfig delegate:self delegateQueue:nil];
     }
     return _defaultUrlSession;

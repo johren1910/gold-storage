@@ -34,6 +34,8 @@
 
 +(FileType)getFileExtension:(NSString *)path;
 
++(NSString *)absolutePath:(NSString *)path;
+
 +(BOOL)clearCachesDirectory;
 +(BOOL)clearTemporaryDirectory;
 
