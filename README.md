@@ -44,10 +44,10 @@ TODO:
 - Support File
 - Expand DownloadRepository
 - Optimize Hash for large files
-- Apply CA for ChatRoom
-- Migrate to relatedPath instead of absolutePath
 - Add Flick API for better demo
 - Utilising FBLPromise for better handling & scalable.
++ ✔️ Apply CA for ChatRoom
++ ✔️ Migrate to relatedPath instead of absolutePath
 
 ## Getting Started
 
@@ -66,6 +66,10 @@ TODO:
 Quannm10@vng.com.vn
 
 ## Version History
+* 0.6
+    * Apply Clean Architecture for ChatRoom flow
+    * Migrate to relativePath instead of absolutePath
+    * Smarter delete. Only delete file if the number of referrence reach 0.
 * 0.5
     * Repository & Unit-of-work pattern for database  
     * CA for ZODownloadManager
