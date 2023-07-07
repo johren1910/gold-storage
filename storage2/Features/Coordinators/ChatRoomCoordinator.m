@@ -46,7 +46,7 @@
 
 #pragma mark - HomeViewModelCoordinatorDelegate
 
--(void)didTapChatRoom: (ChatRoomModel*) chatRoom {
+-(void)didTapChatRoom: (ChatRoomEntity*) chatRoom {
     
     ChatDetailViewModel* viewModel = [_appDI chatDetailDependencies:chatRoom];
     ChatDetailViewController *viewController = [[ChatDetailViewController alloc] initWithViewModel:viewModel];

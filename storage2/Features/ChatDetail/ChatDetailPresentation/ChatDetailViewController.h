@@ -10,7 +10,7 @@
 #import "ChatDetailViewModel.h"
 #import "ChatDetailViewController.h"
 @import IGListKit;
-#import "ChatRoomModel.h"
+#import "ChatRoomEntity.h"
 #import "ChatDetailViewModel.h"
 #import "FileType.h"
 #import <MobileCoreServices/MobileCoreServices.h>

@@ -10,6 +10,6 @@
 
 @interface ChatDetailDI : NSObject
 -(instancetype) init:(AppEnvironment*)environment;
--(ChatDetailViewModel*) chatDetailDependencies:(ChatRoomModel*)roomModel;
+-(ChatDetailViewModel*) chatDetailDependencies:(ChatRoomEntity*)roomData;
 
 @end

@@ -10,7 +10,7 @@
 
 @protocol AppDIInterface
 
--(ChatDetailViewModel*) chatDetailDependencies:(ChatRoomModel*)roomModel;
+-(ChatDetailViewModel*) chatDetailDependencies:(ChatRoomEntity*)roomData;
 -(ChatRoomViewModel*) chatRoomDependencies;
 
 @end

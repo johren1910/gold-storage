@@ -11,22 +11,19 @@
 #import "ChatMessageData.h"
 #import "ChatDetailEntity.h"
 #import "FileType.h"
-#import "FileHelper.h"
-#import "HashHelper.h"
-#import "CompressorHelper.h"
 #import <objc/runtime.h>
 
 @interface ChatDetailViewModel ()
 @property (retain,nonatomic) NSMutableArray<ChatDetailEntity *> *messageModels;
 @property (retain,nonatomic) NSMutableArray<ChatDetailEntity *> *selectedModels;
-@property (nonatomic, copy) ChatRoomModel *chatRoom;
+@property (nonatomic, copy) ChatRoomEntity *chatRoom;
 @property (nonatomic) BOOL isCheatOn;
 @property (nonatomic) dispatch_queue_t backgroundQueue;
 @end
 
 @implementation ChatDetailViewModel
 
--(instancetype) initWithChatRoom:(ChatRoomModel*)chatRoom andUsecase:(id<ChatDetailUseCaseInterface>)chatDetailUsecase {
+-(instancetype) initWithChatRoom:(ChatRoomEntity*)chatRoom andUsecase:(id<ChatDetailUseCaseInterface>)chatDetailUsecase {
     self = [super init];
     if (self) {
         self.messageModels = [[NSMutableArray alloc] init];
@@ -58,7 +55,7 @@
 
 - (void)_loadData {
     __weak ChatDetailViewModel *weakself = self;
-    [_chatDetailUsecase getChatDetailsOfRoomId:_chatRoom.chatRoomId completionBlock:^(NSArray<ChatDetailEntity*>* entities) {
+    [_chatDetailUsecase getChatDetailsOfRoomId:_chatRoom.roomId completionBlock:^(NSArray<ChatDetailEntity*>* entities) {
         
         for (ChatDetailEntity* entity in entities) {
             if (entity.state == Downloading) {
@@ -68,10 +65,7 @@
         
         weakself.messageModels = [entities mutableCopy];
         weakself.filteredChats = weakself.messageModels;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            [weakself.delegate didUpdateData];
-            
-        });
+        [weakself.delegate didUpdateData];
     } errorBlock:^(NSError* error) {
         
     }];
@@ -93,9 +87,7 @@
         [weakself.messageModels replaceObjectAtIndex:index withObject:entity];
         weakself.filteredChats = weakself.messageModels;
 
-        dispatch_async( dispatch_get_main_queue(), ^{
-            [weakself.delegate didUpdateData];
-        });
+        [weakself.delegate didUpdateData];
     } errorBlock:^(NSError* error) {
         
     }];
@@ -186,11 +178,7 @@
         if (!isDownloaded && entity) {
             [weakself.messageModels insertObject:entity atIndex:0];
             weakself.filteredChats = weakself.messageModels;
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakself.delegate didUpdateData];
-                return;
-            });
-            
+            [weakself.delegate didUpdateData];
             return;
         }
         
@@ -206,10 +194,7 @@
             
             [weakself.messageModels replaceObjectAtIndex:index withObject:entity];
             weakself.filteredChats = weakself.messageModels;
-
-            dispatch_async( dispatch_get_main_queue(), ^{
-                [weakself.delegate didUpdateData];
-            });
+            [weakself.delegate didUpdateData];
         }
     } errorBlock:^(NSError *error){
         
@@ -251,10 +236,7 @@
             }
             weakself.filteredChats = weakself.messageModels;
             [weakself.selectedModels removeAllObjects];
-            
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakself.delegate didUpdateData];
-            });
+            [weakself.delegate didUpdateData];
         }
     }];
 }
@@ -286,14 +268,11 @@
 - (void)_addImage:(NSData*) data {
     __weak ChatDetailViewModel *weakself = self;
     dispatch_async(_backgroundQueue, ^{
-        [weakself.chatDetailUsecase saveImageWithData:data ofRoomId:weakself.chatRoom.chatRoomId completionBlock:^(ChatDetailEntity* entity){
+        [weakself.chatDetailUsecase saveImageWithData:data ofRoomId:weakself.chatRoom.roomId completionBlock:^(ChatDetailEntity* entity){
 
             [weakself.messageModels insertObject:entity atIndex:0];
             weakself.filteredChats = weakself.messageModels;
-
-            dispatch_async(dispatch_get_main_queue(), ^{
-                [weakself.delegate didUpdateData];
-            });
+            [weakself.delegate didUpdateData];
         } errorBlock:^(NSError* error) {
             
         }];

@@ -7,7 +7,7 @@
 
 #import "ChatRoomViewController.h"
 @import IGListKit;
-#import "ChatRoomModel.h"
+#import "ChatRoomData.h"
 #import "ChatRoomCell.h"
 #import "ChatRoomSectionController.h"
 #import "ChatRoomViewModel.h"
@@ -52,7 +52,7 @@
     UINib *cellNib = [UINib nibWithNibName:@"ChatRoomCell" bundle:nil];
     
     [self.homeCollectionView registerNib:cellNib forCellWithReuseIdentifier:@"ChatRoomCell"];
-    [self getData];
+    [self.viewModel onViewDidLoad];
 }
 
 - (SkeletonView*) loadingStateView {
@@ -67,26 +67,6 @@
     [emptyView setTranslatesAutoresizingMaskIntoConstraints:NO];
     [emptyView removeConstraints:emptyView.constraints];
     return emptyView;
-}
-
-- (void)viewWillAppear:(BOOL)animated {
-    
-}
-
-- (void)getData {
-    __weak ChatRoomViewController *weakself = self;
-    [self.statePresenter startLoading:YES completionHandler:nil];
-    [self.viewModel getData:^(NSMutableArray<ChatRoomModel *> * _Nonnull chats){
-        BOOL hasContent = (chats.count == 0);
-        
-        [weakself.statePresenter endLoading:false hasContent:hasContent completionHandler:nil];
-        
-        [weakself.adapter performUpdatesAnimated:true completion:nil];
-        
-       
-    } errorBlock:^(NSError * _Nonnull error) {
-        
-    }];
 }
 
 #pragma mark - IGListAdapterDataSource
@@ -107,18 +87,30 @@
 
 #pragma mark - ChatSectionControllerDelegate
 
-- (void) didSelect: (ChatRoomModel*) chat {
+- (void) didSelect: (ChatRoomEntity*) chat {
     
     [_viewModel.coordinatorDelegate didTapChatRoom:chat];
 }
 
-- (void) didSelectForDelete: (ChatRoomModel*) chatRoom {
+- (void) didSelectForDelete: (ChatRoomEntity*) chatRoom {
     [_viewModel selectChatRoom:chatRoom];
 }
 
-- (void) didDeselect: (ChatRoomModel*) chatRoom {
+- (void) didDeselect: (ChatRoomEntity*) chatRoom {
     [_viewModel deselectChatRoom:chatRoom];
 }
+
+- (void) startLoading {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.statePresenter startLoading:YES completionHandler:nil];
+    });
+}
+- (void) endLoading {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.statePresenter endLoading:true hasContent:true completionHandler:nil];
+    });
+}
+
 
 
 #pragma mark - Action
@@ -148,7 +140,7 @@
         UITextField * namefield = textfields[0];
         NSString *name = namefield.text;
         if ([name length] != 0) {
-            [weakSelf.viewModel createNewChat:name];
+            [weakSelf.viewModel requestCreateNewChat:name];
             
             [weakSelf.adapter performUpdatesAnimated:true completion:nil];
         }
@@ -164,14 +156,25 @@
 
 #pragma mark - HomeViewModelDelegate
 - (void) didUpdateData {
-    [self.adapter performUpdatesAnimated:true completion:nil];
+    __weak ChatRoomViewController *weakself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakself.adapter performUpdatesAnimated:true completion:nil];
+    });
 }
 
-- (void) didUpdateObject:(ChatRoomModel*)model {
-    [self.adapter reloadObjects:@[model]];
+- (void) didUpdateObject:(ChatRoomEntity*)model {
+    __weak ChatRoomViewController *weakself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakself.adapter reloadObjects:@[model]];
+    });
+    
+   
 }
 - (void) didReloadData {
-    [self.adapter reloadDataWithCompletion:nil];
+    __weak ChatRoomViewController *weakself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakself.adapter reloadDataWithCompletion:nil];
+    });
 }
 
 @end

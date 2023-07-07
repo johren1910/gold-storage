@@ -23,18 +23,28 @@
 
 #pragma mark - View Lifecycle
 
+
 - (void) didUpdateObject:(ChatDetailEntity*)model {
+    __weak ChatDetailViewController *weakself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakself.adapter reloadObjects:@[model]];
+    });
     
-    //TODO: Fix DIFF bug on perform update.
-    [_adapter reloadObjects:@[model]];
 }
 
 - (void)didUpdateData {
-    [_adapter performUpdatesAnimated:false completion:nil];
+    __weak ChatDetailViewController *weakself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakself.adapter performUpdatesAnimated:false completion:nil];
+    });
+    
 }
 
 - (void)didReloadData {
-    [_adapter reloadDataWithCompletion:nil];
+    __weak ChatDetailViewController *weakself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakself.adapter reloadDataWithCompletion:nil];
+    });
 }
 
 - (void)viewDidLoad {
@@ -53,8 +63,6 @@
 - (void) segmentChanged: (UISegmentedControl*) sender {
     NSLog(@"SEGMENT CHANGED %ld", (long)sender.selectedSegmentIndex);
     _selectedIndex = sender.selectedSegmentIndex;
-    
-    __weak ChatDetailViewController *weakself = self;
                 
     [_viewModel changeSegment:_selectedIndex];
     [self.adapter performUpdatesAnimated:true completion:nil];

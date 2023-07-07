@@ -12,7 +12,7 @@
 - (void)getChatDataOfRoomId:(NSString*)roomId completionBlock:(void (^)(NSArray<ChatMessageData *> *chats))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
 - (void) getFileOfMessageId:(NSString*)messageId completionBlock:(void(^)(FileData* fileData))completionBlock;
 
-- (void)deleteChatMessages:(NSArray<ChatDetailEntity*>*)messages completionBlock:(void(^)(BOOL isComplete))completionBlock;
+- (void)deleteChatMessages:(NSArray<ChatMessageData*>*)messages completionBlock:(void(^)(BOOL isComplete))completionBlock;
 
 - (void)updateFileData:(FileData*) fileData completionBlock:(void(^)(BOOL isFinish))completionBlock;
 

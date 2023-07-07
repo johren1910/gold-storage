@@ -14,7 +14,6 @@
 #import "StorageManager.h"
 #import "CacheService.h"
 #import "DatabaseService.h"
-#import "ChatRoomModel.h"
 
 @interface ChatDetailDI ()
 @property (nonatomic) AppEnvironment* environment;
@@ -28,7 +27,7 @@
     }
     return self;
 }
--(ChatDetailViewModel*) chatDetailDependencies:(ChatRoomModel*)roomModel {
+-(ChatDetailViewModel*) chatDetailDependencies:(ChatRoomEntity*)roomData {
     
     // Data layer
     
@@ -43,7 +42,7 @@
     ChatDetailUseCase* chatDetailUseCase = [[ChatDetailUseCase alloc] initWithRepository:repository];
     
     // Presentation layer
-    ChatDetailViewModel *chatDetailViewModel = [[ChatDetailViewModel alloc] initWithChatRoom:roomModel andUsecase:chatDetailUseCase];
+    ChatDetailViewModel *chatDetailViewModel = [[ChatDetailViewModel alloc] initWithChatRoom:roomData andUsecase:chatDetailUseCase];
     
     return chatDetailViewModel;
 }

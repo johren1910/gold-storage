@@ -39,7 +39,7 @@
 
 #pragma mark - DB Operation
 
-- (void) createChatRoom:(ChatRoomModel*)chatRoom  completionBlock:(ZOCompletionBlock)completionBlock {
+- (void) createChatRoom:(ChatRoomData*)chatRoom  completionBlock:(ZOCompletionBlock)completionBlock {
     
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
@@ -114,7 +114,7 @@
 /// 2 - Delete folder room
 /// 3 - `deleteChatMessage` for each message
 /// 4 - stop all download of Room
-- (void)deleteChatRoom:(ChatRoomModel*) chatRoom completionBlock:(ZOCompletionBlock)completionBlock {
+- (void)deleteChatRoom:(ChatRoomData*) chatRoom completionBlock:(ZOCompletionBlock)completionBlock {
     
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{

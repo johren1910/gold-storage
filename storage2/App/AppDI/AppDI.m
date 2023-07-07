@@ -27,11 +27,11 @@
     return _appDI;
 }
 
--(ChatDetailViewModel*) chatDetailDependencies:(ChatRoomModel*)roomModel {
+-(ChatDetailViewModel*) chatDetailDependencies:(ChatRoomEntity*)roomData {
     
     ChatDetailDI* chatDetailDI = [[ChatDetailDI alloc] init:_environment];
     
-    ChatDetailViewModel* viewModel = [chatDetailDI chatDetailDependencies:roomModel];
+    ChatDetailViewModel* viewModel = [chatDetailDI chatDetailDependencies:roomData];
     
     return viewModel;
     

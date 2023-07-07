@@ -26,31 +26,34 @@
 }
 
 - (void)getChatDetailsOfRoomId:(NSString*)roomId completionBlock:(void (^)(NSArray<ChatDetailEntity *> *chats))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
-    
     __weak ChatDetailUseCase* weakself = self;
-    [weakself.chatDetailRepository getChatDataOfRoomId: roomId completionBlock:completionBlock errorBlock:errorBlock];
+    dispatch_async(_backgroundQueue, ^{
+        [weakself.chatDetailRepository getChatDataOfRoomId: roomId completionBlock:completionBlock errorBlock:errorBlock];
+    });
 }
 
 - (void)saveImageWithData:(NSData *)data
                  ofRoomId:(NSString*)roomId completionBlock:(void (^)(ChatDetailEntity *))completionBlock errorBlock:(void (^)(NSError *))errorBlock {
     
     __weak ChatDetailUseCase* weakself = self;
-    [weakself.chatDetailRepository saveImageWithData:data ofRoomId:roomId completionBlock:^(ChatDetailEntity* entity){
-        completionBlock(entity);
-    } errorBlock:^(NSError* error) {
-        
-    }];
+    dispatch_async(_backgroundQueue, ^{
+        [weakself.chatDetailRepository saveImageWithData:data ofRoomId:roomId completionBlock:^(ChatDetailEntity* entity){
+            completionBlock(entity);
+        } errorBlock:^(NSError* error) {
+            
+        }];
+    });
 }
 
 
-- (void)requestDownloadFileWithUrl:(NSString *)url forRoom:(ChatRoomModel*)roomModel completionBlock:(void (^)(ChatDetailEntity *entity, BOOL isDownloaded))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
+- (void)requestDownloadFileWithUrl:(NSString *)url forRoom:(ChatRoomEntity*)roomData completionBlock:(void (^)(ChatDetailEntity *entity, BOOL isDownloaded))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
     
     dispatch_async(_backgroundQueue, ^{
         __weak ChatDetailUseCase* weakself = self;
         NSString *messageId = [[NSUUID UUID] UUIDString];
         NSString *fileId = [[NSUUID UUID] UUIDString];
 
-        ChatMessageData *newMessageData = [[ChatMessageData alloc] initWithMessage:messageId messageId:messageId chatRoomId:roomModel.chatRoomId];
+        ChatMessageData *newMessageData = [[ChatMessageData alloc] initWithMessage:messageId messageId:messageId chatRoomId:roomData.roomId];
         newMessageData.messageState = Downloading;
 
         FileData *newFileData = [[FileData alloc] init];
@@ -75,7 +78,7 @@
                 completionBlock(entity, false);
                 // Start Request Download
                 [weakself _startDownload:url forMessage:newMessageData
-                                  ofRoom:roomModel completionBlock: ^(ChatDetailEntity* entity) {
+                                  ofRoom:roomData completionBlock: ^(ChatDetailEntity* entity) {
                     
                     completionBlock(entity, true);
                 }];
@@ -85,13 +88,13 @@
     
 }
 
-- (void)resumeDownloadForEntity:(ChatDetailEntity *)entity OfRoom:(ChatRoomModel*)roomModel completionBlock:(void (^)(ChatDetailEntity *entity))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
+- (void)resumeDownloadForEntity:(ChatDetailEntity *)entity OfRoom:(ChatRoomEntity*)roomData completionBlock:(void (^)(ChatDetailEntity *entity))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
     
     __weak ChatDetailUseCase* weakself = self;
     dispatch_async(_backgroundQueue, ^{
         [weakself.chatDetailRepository getChatDataForMessageId:entity.messageId completionBlock:^(ChatMessageData* message){
             dispatch_async(weakself.backgroundQueue, ^{
-                [weakself _startDownload:entity.file.filePath forMessage:message ofRoom:roomModel completionBlock:completionBlock];
+                [weakself _startDownload:entity.file.filePath forMessage:message ofRoom:roomData completionBlock:completionBlock];
             });
             
         } errorBlock:errorBlock];
@@ -99,33 +102,27 @@
 }
 
 - (void)deleteChatEntities:(NSArray<ChatDetailEntity*>*)entities completionBlock:(void (^)(BOOL isSuccess))completionBlock {
-    [_chatDetailRepository deleteChatMessages:entities completionBlock:completionBlock];
+    
+    __weak ChatDetailUseCase* weakself = self;
+    dispatch_async(_backgroundQueue, ^{
+        [weakself.chatDetailRepository deleteChatMessages:entities completionBlock:completionBlock];
+    });
+    
 }
 
 - (void)updateRamCache:(UIImage*)image withKey:(NSString*)key {
-    [_chatDetailRepository updateRamCache:image withKey:key];
+    
+    __weak ChatDetailUseCase* weakself = self;
+    dispatch_async(_backgroundQueue, ^{
+        [weakself.chatDetailRepository updateRamCache:image withKey:key];
+    });
+    
 }
 
 #pragma mark: - Private methods
 
-- (void)_saveDownloadedMedia:(NSString *)filePath forMessage:(ChatMessageData*)message
-    completionBlock:(void(^)(ChatDetailEntity* entity))completionBlock {
-    
-    [_chatDetailRepository saveMedia:filePath forMessage:message completionBlock:^(FileData* fileData, UIImage* thumbnail){
-        
-        message.file = fileData;
-        message.messageState = Sent;
-        ChatDetailEntity* result = [message toChatDetailEntity];
-        result.thumbnail = thumbnail;
-        completionBlock(result);
-        
-    }];
-}
-
 - (void)_startDownload:(NSString *)url forMessage:(ChatMessageData*)message
-                ofRoom:(ChatRoomModel*)model completionBlock:(void(^)(ChatDetailEntity* entity))completionBlock {
-
-    __weak ChatDetailUseCase* weakself = self;
+                ofRoom:(ChatRoomEntity*)model completionBlock:(void(^)(ChatDetailEntity* entity))completionBlock {
     
     ZODownloadUnit* unit = [[ZODownloadUnit alloc] init];
     unit.requestUrl = url;

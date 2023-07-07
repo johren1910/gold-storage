@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ChatRoomModel.h"
+#import "ChatRoomData.h"
 #import "ChatRoomViewModel.h"
 #import "ZOStatePresentable.h"
 

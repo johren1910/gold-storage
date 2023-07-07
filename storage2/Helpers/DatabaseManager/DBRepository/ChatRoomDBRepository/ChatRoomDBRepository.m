@@ -7,7 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ChatRoomDBRepository.h"
-#import "ChatRoomModel.h"
+#import "ChatRoomData.h"
 #import <sqlite3.h>
 
 static sqlite3 *database = nil;
@@ -60,7 +60,7 @@ static sqlite3_stmt *statement = nil;
 }
 
 #pragma mark - Private methods
-- (BOOL)_deleteChatRoom:(ChatRoomModel*) chatRoom {
+- (BOOL)_deleteChatRoom:(ChatRoomData*)chatRoom {
     
     BOOL result = NO;
     const char *dbpath = [self.databasePath UTF8String];
@@ -85,7 +85,7 @@ static sqlite3_stmt *statement = nil;
     
 }
 
-- (BOOL) _saveChatRoomData:(ChatRoomModel*)chatRoom {
+- (BOOL)_saveChatRoomData:(ChatRoomData*)chatRoom {
     
     BOOL result = NO;
     const char *dbpath = [self.databasePath UTF8String];
@@ -110,7 +110,7 @@ static sqlite3_stmt *statement = nil;
     
     const char *dbpath = [self.databasePath UTF8String];
     int limit = page * 100;
-    NSMutableArray<ChatRoomModel*>* result = [@[] mutableCopy] ;
+    NSMutableArray<ChatRoomData*>* result = [@[] mutableCopy] ;
     
     if (sqlite3_open_v2(dbpath, &database, SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
         NSString *querySQL = [NSString stringWithFormat:
@@ -120,12 +120,10 @@ static sqlite3_stmt *statement = nil;
             
             while (sqlite3_step(statement)==SQLITE_ROW)
             {
-                ChatRoomModel *chat = [[ChatRoomModel alloc] init];
+                ChatRoomData *chat = [[ChatRoomData alloc] init];
                 chat.chatRoomId = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 0)];
                 chat.name = [NSString stringWithUTF8String:(char *) sqlite3_column_text(statement, 1)];
-                
-                chat.size =  sqlite3_column_double(statement, 2);
-                chat.createdAt =  sqlite3_column_double(statement, 3);
+                chat.createdAt =  sqlite3_column_double(statement, 2);
                 [result addObject:chat];
                 chat = nil;
             }

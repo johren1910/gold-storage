@@ -1,13 +1,13 @@
 //
-//  ChatDetailEntity.m
+//  ChatRoomEntity.m
 //  storage2
 //
-//  Created by LAP14885 on 02/07/2023.
+//  Created by LAP14885 on 07/07/2023.
 //
 
-#import "ChatDetailEntity.h"
+#import "ChatRoomEntity.h"
 
-@implementation ChatDetailEntity
+@implementation ChatRoomEntity
 
 - (id)copyWithZone:(nullable NSZone *)zone
 {
@@ -16,12 +16,12 @@
 
 - (id<NSObject>)diffIdentifier
 {
-    return _messageId;
+    return _roomId;
 }
 
 - (NSUInteger)hash
 {
-    NSUInteger subhashes[] =  {[_messageId hash]};
+    NSUInteger subhashes[] =  {[_roomId hash]};
   NSUInteger result = subhashes[0];
   for (int ii = 1; ii < 3; ++ii) {
     unsigned long long base = (((unsigned long long)result) << 32 | subhashes[ii]);
@@ -36,18 +36,16 @@
   return result;
 }
 
-- (BOOL)isEqual:(ChatDetailEntity *)object
+- (BOOL)isEqual:(ChatRoomEntity *)object
 {
-  if (self == object && self.selected == object.selected && self.thumbnail == object.thumbnail && self.isError == object.isError) {
+  if (self == object && self.selected == object.selected) {
     return YES;
   } else if (self == nil || object == nil || ![object isKindOfClass:[self class]]) {
     return NO;
   }
   return
-    (_messageId == object->_messageId ? YES : [_messageId isEqual:object->_messageId])
-    && (_selected == object->_selected)
-    && (_thumbnail == object->_thumbnail)
-    && (_isError == object->_isError);
+    (_roomId == object->_roomId ? YES : [_roomId isEqual:object->_roomId])
+    && (_selected == object->_selected);
 }
 
 - (BOOL)isEqualToDiffableObject:(nullable id<IGListDiffable>)object
@@ -56,3 +54,4 @@
 }
 
 @end
+

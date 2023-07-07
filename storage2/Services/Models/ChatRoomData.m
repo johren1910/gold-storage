@@ -1,28 +1,22 @@
 //
-//  ChatRoomModel.m
+//  ChatRoomData.m
 //  storage
 //
 //  Created by LAP14885 on 15/06/2023.
 //
 
-#import "ChatRoomModel.h"
+#import "ChatRoomData.h"
 
-@implementation ChatRoomModel
+@implementation ChatRoomData
 
 - (instancetype)initWithName:(NSString *)name chatRoomId:(NSString *)chatRoomId
 {
-    return [self initWithName:name chatRoomId:chatRoomId messages:@[]];
-}
-
-- (instancetype)initWithName:(NSString *)name chatRoomId:(NSString *)chatRoomId messages:(NSArray<ChatMessageData*>*) messages
-{
-  if ((self = [super init])) {
-    _name = [name copy];
-    _chatRoomId = [chatRoomId copy];
-      _messages = [messages copy];
-  }
-
-  return self;
+    if ((self = [super init])) {
+      _name = [name copy];
+      _chatRoomId = [chatRoomId copy];
+    }
+    
+    return self;
 }
 
 - (id)copyWithZone:(nullable NSZone *)zone
@@ -57,7 +51,7 @@
   return result;
 }
 
-- (BOOL)isEqual:(ChatRoomModel *)object
+- (BOOL)isEqual:(ChatRoomData *)object
 {
   if (self == object) {
     return YES;
@@ -72,6 +66,14 @@
 - (BOOL)isEqualToDiffableObject:(nullable id<IGListDiffable>)object
 {
   return [self isEqual:object];
+}
+
+- (ChatRoomEntity*) toChatRoomEntity {
+    ChatRoomEntity* entity = [[ChatRoomEntity alloc] init];
+    entity.roomId = self.chatRoomId;
+    entity.name = self.name;
+    entity.selected = self.selected;
+    return entity;
 }
 
 @end

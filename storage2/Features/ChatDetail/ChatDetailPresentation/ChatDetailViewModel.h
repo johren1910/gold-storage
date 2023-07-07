@@ -6,7 +6,7 @@
 //
 #import <Foundation/Foundation.h>
 #import "ChatDetailSectionController.h"
-#import "ChatRoomModel.h"
+#import "ChatRoomEntity.h"
 #import "ChatDetailUseCase.h"
 
 @protocol ChatDetailViewModelDelegate <NSObject>
@@ -20,16 +20,14 @@
 @interface ChatDetailViewModel : NSObject
 
 @property (nonatomic) id<ChatDetailUseCaseInterface> chatDetailUsecase;
-
-#pragma mark - Delete
 - (ChatDetailEntity *)itemAtIndexPath:(NSIndexPath *)indexPath;
 - (NSUInteger) numberOfSections;
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
 - (void) onViewDidLoad;
 
 #pragma mark - Actions
-- (void) selectChatMessage:(ChatDetailEntity *) chat;
-- (void) deselectChatMessage:(ChatDetailEntity *) chat;
+- (void)selectChatMessage:(ChatDetailEntity *) chat;
+- (void)deselectChatMessage:(ChatDetailEntity *) chat;
 - (void)retryWithModel:(ChatDetailEntity *)model;
 - (void)deleteSelected;
 - (void)setCheat:(BOOL)isOn;
@@ -41,5 +39,5 @@
 @property (nonatomic, weak) id <ChatDetailViewModelDelegate> delegate;
 @property (copy,nonatomic) NSArray<ChatDetailEntity *> *filteredChats;
 
--(instancetype) initWithChatRoom:(ChatRoomModel*)chatRoom andUsecase:(id<ChatDetailUseCaseInterface>)chatDetailUsecase;
+-(instancetype) initWithChatRoom:(ChatRoomEntity*)chatRoom andUsecase:(id<ChatDetailUseCaseInterface>)chatDetailUsecase;
 @end

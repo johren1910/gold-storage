@@ -9,7 +9,7 @@
 #import "ChatDetailReporitoryInterface.h"
 #import "ChatDetailEntity.h"
 #import "ChatMessageData.h"
-#import "ChatRoomModel.h"
+#import "ChatRoomEntity.h"
 
 @protocol ChatDetailUseCaseInterface
 
@@ -18,8 +18,8 @@
 
 - (void)saveImageWithData:(NSData *)data
                  ofRoomId:(NSString*)roomId completionBlock:(void (^)(ChatDetailEntity *))completionBlock errorBlock:(void (^)(NSError *))errorBlock;
-- (void)requestDownloadFileWithUrl:(NSString *)url forRoom:(ChatRoomModel*)roomModel completionBlock:(void (^)(ChatDetailEntity *entity, BOOL isDownloaded))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
-- (void)resumeDownloadForEntity:(ChatDetailEntity *)entity OfRoom:(ChatRoomModel*)roomModel completionBlock:(void (^)(ChatDetailEntity *entity))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
+- (void)requestDownloadFileWithUrl:(NSString *)url forRoom:(ChatRoomEntity*)roomData completionBlock:(void (^)(ChatDetailEntity *entity, BOOL isDownloaded))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
+- (void)resumeDownloadForEntity:(ChatDetailEntity *)entity OfRoom:(ChatRoomEntity*)roomData completionBlock:(void (^)(ChatDetailEntity *entity))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
 - (void)updateRamCache:(UIImage*)image withKey:(NSString*)key;
 
 @end

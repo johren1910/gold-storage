@@ -6,7 +6,7 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "ChatRoomModel.h"
+#import "ChatRoomEntity.h"
 #import "ChatRoomCell.h"
 
 @interface ChatRoomCell ()
@@ -46,7 +46,7 @@
     [super layoutSubviews];
 }
 
-static NSAttributedString *AttributedStringForChat(ChatRoomModel *chat) {
+static NSAttributedString *AttributedStringForChat(ChatRoomEntity *chat) {
     NSMutableAttributedString *string = [NSMutableAttributedString new];
     [string appendAttributedString:[[NSAttributedString alloc] initWithString:chat.name
                                                                    attributes:@{NSFontAttributeName:[UIFont boldSystemFontOfSize:15.0]}]];
@@ -56,7 +56,7 @@ static NSAttributedString *AttributedStringForChat(ChatRoomModel *chat) {
     [_delegate didSelectCircle];
 }
 
-- (void)setChat:(ChatRoomModel *)chat {
+- (void)setChat:(ChatRoomEntity *)chat {
     
     _chat = [chat copy];
     
