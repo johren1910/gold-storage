@@ -210,6 +210,7 @@ static sqlite3_stmt *statement = nil;
                 
                 FileData *fileData = [[FileData alloc] init];
                 fileData.fileId = fileId;
+                fileData.fileName = fileName;
                 fileData.messageId = messageId;
                 fileData.filePath = filePath;
                 fileData.createdAt = createdAt;

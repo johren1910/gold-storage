@@ -119,8 +119,6 @@
     
     NSArray *filteredArray = [_messageModels filteredArrayUsingPredicate:predicate];
     _filteredChats = filteredArray;
-   
-    [_delegate didUpdateData];
 }
 
 - (NSUInteger) numberOfSections {
