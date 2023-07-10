@@ -34,11 +34,13 @@
         if (unit.downloadState == ZODownloadStateDone) {
             return;
         } else {
-            if (unit.downloadState == ZODownloadStateDownloading) {
-                //                weakself.currentDownloadingCount--;
-            }
+            
             [unit.task cancel];
             unit.task = nil;
+            unit.completionBlock = nil;
+            unit.errorBlock = nil;
+            unit.otherCompletionBlocks = nil;
+            unit.otherErrorBlocks = nil;
         }
         [weakself.currentDownloadUnits removeObjectForKey:url];
     }
@@ -48,6 +50,10 @@
     [self.currentDownloadUnits enumerateKeysAndObjectsUsingBlock:^(id key, ZOUrlSessionDownloadUnit* value, BOOL* stop) {
         [value.task cancel];
         value.task = nil;
+        value.completionBlock = nil;
+        value.errorBlock = nil;
+        value.otherCompletionBlocks = nil;
+        value.otherErrorBlocks = nil;
         [FileHelper removeItemAtPath:value.tempFilePath];
     }];
 

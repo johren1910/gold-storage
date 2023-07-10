@@ -121,8 +121,11 @@
 - (void)suspendDownloadOfUrl:(NSString *)url{
     __weak ZODownloadManager* weakself = self;
     dispatch_async(_serialDispatchQueue, ^{
+        ZODownloadUnit* unit = [weakself.currentDownloadUnits objectForKey:url];
+        if (unit.downloadState == ZODownloadStateDownloading) {
+            weakself.currentDownloadingCount--;
+        }
         [weakself.downloadRepository suspendDownloadOfUrl:url];
-        weakself.currentDownloadingCount--;
         [weakself checkDownloadPipeline];
     });
 }
@@ -140,32 +143,38 @@
 - (void)resumeDownloadOfUrl:(NSString *)url{
     __weak ZODownloadManager* weakself = self;
     dispatch_async(_serialDispatchQueue, ^{
-
-        [weakself.downloadRepository resumeDownloadOfUrl:url];
         ZODownloadUnit *unit = [weakself.currentDownloadUnits objectForKey:url];
-        [weakself _addPendingUnit:unit];
-        [weakself checkDownloadPipeline];
+        if (unit.downloadState != ZODownloadStateDone && unit.downloadState != ZODownloadStateDownloading ) {
+            [weakself.downloadRepository resumeDownloadOfUrl:url];
+            [weakself _addPendingUnit:unit];
+            [weakself checkDownloadPipeline];
+        }
     });
-    
 }
 
 - (void)resumeAllDownload{
     __weak ZODownloadManager* weakself = self;
     dispatch_async(_serialDispatchQueue, ^{
-        [weakself.downloadRepository resumeAllDownload];
-        [weakself checkDownloadPipeline];
+        
+        __weak ZODownloadManager* weakself = self;
+        [weakself.currentDownloadUnits enumerateKeysAndObjectsUsingBlock:^(id key, ZODownloadUnit* value, BOOL* stop) {
+            [weakself resumeDownloadOfUrl:value.requestUrl];
+        }];
     });
 }
 
 - (void)cancelDownloadOfUrl:(NSString *)url {
     __weak ZODownloadManager* weakself = self;
     dispatch_async(_serialDispatchQueue, ^{
-        
-        [weakself.downloadRepository cancelDownloadOfUrl:url];
         ZODownloadUnit* unit = [weakself.currentDownloadUnits objectForKey:url];
+        if (unit.downloadState == ZODownloadStateDownloading) {
+            weakself.currentDownloadingCount--;
+        }
+        [weakself.downloadRepository cancelDownloadOfUrl:url];
+        
         [weakself.priorityQueue remove:unit];
         [weakself.currentDownloadUnits removeObjectForKey:url];
-        // TODO: CHECK cancel downloading -> --count
+
         [weakself checkDownloadPipeline];
         
     });
@@ -212,14 +221,13 @@
                 break;
         }
     });
-    
 }
 
-#pragma mark - Private methods
 -(void)setDownloadRepository:(id<ZODownloadRepositoryInterface>)repository {
     _downloadRepository = repository;
 }
 
+#pragma mark - Private methods
 - (void)_removePendingUnit:(ZODownloadUnit *)unit {
     [_priorityQueue remove:unit];
 }
