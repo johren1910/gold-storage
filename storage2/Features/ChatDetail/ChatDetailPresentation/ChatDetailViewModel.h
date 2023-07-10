@@ -8,16 +8,22 @@
 #import "ChatDetailSectionController.h"
 #import "ChatRoomEntity.h"
 #import "ChatDetailUseCase.h"
+#import "DIInterface.h"
 
 @protocol ChatDetailViewModelDelegate <NSObject>
 
 - (void) didUpdateData;
-- (void) didUpdateObject:(ChatDetailEntity*)model;
+- (void) didUpdateObject:(ChatDetailEntity* )model;
 - (void) didReloadData;
 
 @end
 
-@interface ChatDetailViewModel : NSObject
+@protocol ChatDetailViewModelType <ViewModelType>
+@property (nonatomic, weak) id <ChatDetailViewModelDelegate> delegate;
+-(instancetype) initWithChatRoom:(id<ChatRoomEntityType>)chatRoom andUsecase:(id<ChatDetailUseCaseInterface>)chatDetailUsecase;
+@end
+
+@interface ChatDetailViewModel : NSObject<ChatDetailViewModelType>
 
 @property (nonatomic) id<ChatDetailUseCaseInterface> chatDetailUsecase;
 - (ChatDetailEntity *)itemAtIndexPath:(NSIndexPath *)indexPath;
@@ -35,9 +41,5 @@
 
 - (void)requestAddImage:(NSData *)data;
 - (void)requestDownloadFileWithUrl:(NSString *)url;
-
-@property (nonatomic, weak) id <ChatDetailViewModelDelegate> delegate;
 @property (copy,nonatomic) NSArray<ChatDetailEntity *> *filteredChats;
-
--(instancetype) initWithChatRoom:(ChatRoomEntity*)chatRoom andUsecase:(id<ChatDetailUseCaseInterface>)chatDetailUsecase;
 @end

@@ -41,6 +41,10 @@
     return self;
 }
 
+- (id<ViewModelType>)getViewModel {
+    return _viewModel;
+}
+
 - (void)viewDidLoad {
     [super viewDidLoad];
     self.adapter = [[IGListAdapter alloc] initWithUpdater:[[IGListAdapterUpdater alloc] init] viewController:self];

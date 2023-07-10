@@ -16,12 +16,12 @@
 
 - (id<NSObject>)diffIdentifier
 {
-    return _roomId;
+    return self.roomId;
 }
 
 - (NSUInteger)hash
 {
-    NSUInteger subhashes[] =  {[_roomId hash]};
+    NSUInteger subhashes[] =  {[self.roomId hash]};
   NSUInteger result = subhashes[0];
   for (int ii = 1; ii < 3; ++ii) {
     unsigned long long base = (((unsigned long long)result) << 32 | subhashes[ii]);
@@ -44,7 +44,7 @@
     return NO;
   }
   return
-    (_roomId == object->_roomId ? YES : [_roomId isEqual:object->_roomId])
+    (self.roomId == object.roomId ? YES : [self.roomId isEqual:object.roomId])
     && (_selected == object->_selected);
 }
 
@@ -52,6 +52,10 @@
 {
   return [self isEqual:object];
 }
+
+@synthesize name;
+
+@synthesize roomId;
 
 @end
 

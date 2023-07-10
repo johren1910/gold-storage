@@ -60,6 +60,10 @@
     [self.collectionView registerNib:cellNib forCellWithReuseIdentifier:@"ChatMessageCell"];
 }
 
+- (id<ViewModelType>)getViewModel {
+    return _viewModel;
+}
+
 - (void) segmentChanged: (UISegmentedControl*) sender {
     NSLog(@"SEGMENT CHANGED %ld", (long)sender.selectedSegmentIndex);
     _selectedIndex = sender.selectedSegmentIndex;

@@ -9,6 +9,7 @@
 #import "ChatRoomData.h"
 #import "ChatRoomSectionController.h"
 #import "ChatRoomUseCase.h"
+#import "DIInterface.h"
 
 @protocol ChatRoomViewModelDelegate
 
@@ -27,7 +28,13 @@
 
 @end
 
-@interface ChatRoomViewModel : NSObject
+@protocol ChatRoomViewModelType <ViewModelType>
+
+-(instancetype) initWithUseCase:(id<ChatRoomUseCaseInterface>)chatDetailUsecase;
+
+@end
+
+@interface ChatRoomViewModel : NSObject <ChatRoomViewModelType>
 
 #pragma mark - Actions
 - (void)selectChatRoom:(ChatRoomEntity *) chatRoom;
@@ -44,6 +51,4 @@
 @property (nonatomic, weak) id <ChatRoomViewModelDelegate>  delegate;
 @property (nonatomic, strong) id <ChatRoomViewModelCoordinatorDelegate>  coordinatorDelegate;
 @property (nonatomic) id<ChatRoomUseCaseInterface> chatRoomUsecase;
-
--(instancetype) initWithUseCase:(id<ChatRoomUseCaseInterface>)chatDetailUsecase;
 @end

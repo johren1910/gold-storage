@@ -36,10 +36,9 @@
 
 - (void) start {
     
-    ChatRoomViewModel* viewModel = [_appDI chatRoomDependencies];
-    viewModel.coordinatorDelegate = self;
+    ChatRoomViewController *viewController = (ChatRoomViewController*)[_appDI getChatRoomViewControllerWithBuilder:[_appDI defaultRoomBuilder]];
     
-    ChatRoomViewController *viewController = [[ChatRoomViewController alloc] initWithViewModel:viewModel];
+    ((ChatRoomViewModel*)viewController.viewModel).coordinatorDelegate = self;
     
     [_navigationController setViewControllers:@[viewController] animated:TRUE];
 }
@@ -48,8 +47,7 @@
 
 -(void)didTapChatRoom: (ChatRoomEntity*) chatRoom {
     
-    ChatDetailViewModel* viewModel = [_appDI chatDetailDependencies:chatRoom];
-    ChatDetailViewController *viewController = [[ChatDetailViewController alloc] initWithViewModel:viewModel];
+    ChatDetailViewController *viewController = (ChatDetailViewController*)[_appDI getChatDetailViewController:chatRoom withBuilder:[_appDI defaultDetailBuilder]];
     viewController.title = chatRoom.name;
     
     [self.navigationController pushViewController:viewController animated:true];

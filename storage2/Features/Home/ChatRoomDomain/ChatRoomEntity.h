@@ -9,9 +9,12 @@
 #import <UIKit/UIKit.h>
 @import IGListDiffKit;
 
-@interface ChatRoomEntity : NSObject <IGListDiffable, NSCopying>
+@protocol ChatRoomEntityType <IGListDiffable, NSCopying>
 @property (nonatomic) NSString* roomId;
 @property (nonatomic) NSString* name;
+@end
+
+@interface ChatRoomEntity : NSObject <ChatRoomEntityType>
 @property (nonatomic) BOOL selected;
 @property (nonatomic) double createdAt;
 @end

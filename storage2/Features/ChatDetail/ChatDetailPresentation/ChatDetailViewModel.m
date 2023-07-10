@@ -49,6 +49,8 @@
     return self;
 }
 
+@synthesize delegate;
+
 - (void) onViewDidLoad {
     [self _loadData];
 }

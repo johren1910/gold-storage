@@ -18,7 +18,7 @@
 #import <Photos/Photos.h>
 #import <AssetsLibrary/AssetsLibrary.h>
 
-@interface ChatDetailViewController : UIViewController <ChatDetailSectionControllerDelegate>
-- (instancetype)initWithViewModel:(ChatDetailViewModel *)viewModel;
+@interface ChatDetailViewController : UIViewController <ChatDetailSectionControllerDelegate, ViewControllerType>
+
 @end
 

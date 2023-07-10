@@ -9,7 +9,6 @@
 #import <UIKit/UIKit.h>
 #import "ZODownloadUnit.h"
 
-
 @protocol ZODownloadRepositoryInterface
 
 @property (nonatomic, copy) void(^completionBlock)(NSString* filePath, ZODownloadUnit* unit);
@@ -21,6 +20,5 @@
 - (void)resumeAllDownload;
 - (void)cancelDownloadOfUrl:(NSString *)url;
 - (void)cancelAllDownload;
-
 
 @end

@@ -7,16 +7,21 @@
 #import "AppEnvironment.h"
 #import "ChatDetailViewModel.h"
 #import "ChatRoomViewModel.h"
+#import "ChatDetailViewController.h"
+#import "ChatDetailBuilder.h"
+#import "ChatRoomViewController.h"
+#import "ChatRoomBuilder.h"
 
 @protocol AppDIInterface
 
--(ChatDetailViewModel*) chatDetailDependencies:(ChatRoomEntity*)roomData;
--(ChatRoomViewModel*) chatRoomDependencies;
+-(id<ViewControllerType>) getChatDetailViewController:(id<ChatRoomEntityType>)chatRoom withBuilder:(id<ChatDetailBuilderType>)builder;
+-(id<ViewControllerType>) getChatRoomViewControllerWithBuilder:(id<ChatRoomBuilderType>)builder;
 
 @end
 
 @interface AppDI : NSObject <AppDIInterface>
-
+-(id<ChatDetailBuilderType>) defaultDetailBuilder;
+-(id<ChatRoomBuilderType>) defaultRoomBuilder;
 +(AppDI*) shared;
 
 @end

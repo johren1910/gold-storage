@@ -67,8 +67,8 @@
 		F6C43F482A3C07A5001D8715 /* ChatMessageCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F6C43F472A3C07A5001D8715 /* ChatMessageCell.xib */; };
 		F6C43F4C2A3C39EA001D8715 /* FileHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43F4B2A3C39EA001D8715 /* FileHelper.m */; };
 		F6EFC93B2A5272AE00DDEDF4 /* AppDI.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC93A2A5272AE00DDEDF4 /* AppDI.m */; };
-		F6EFC93E2A5272C300DDEDF4 /* ChatDetailDI.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC93D2A5272C300DDEDF4 /* ChatDetailDI.m */; };
-		F6EFC9422A52771800DDEDF4 /* ChatRoomDI.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC9412A52771800DDEDF4 /* ChatRoomDI.m */; };
+		F6EFC93E2A5272C300DDEDF4 /* ChatDetailBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC93D2A5272C300DDEDF4 /* ChatDetailBuilder.m */; };
+		F6EFC9422A52771800DDEDF4 /* ChatRoomBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC9412A52771800DDEDF4 /* ChatRoomBuilder.m */; };
 		F6EFC9502A53D7A600DDEDF4 /* ZOUrlSessionDownloadRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC94F2A53D7A600DDEDF4 /* ZOUrlSessionDownloadRepository.m */; };
 		F6EFC9532A53F9D100DDEDF4 /* ZOUrlSessionDownloadUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC9522A53F9D100DDEDF4 /* ZOUrlSessionDownloadUnit.m */; };
 		F6EFC95B2A5554BB00DDEDF4 /* ChatMessageDBRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC95A2A5554BB00DDEDF4 /* ChatMessageDBRepository.m */; };
@@ -147,6 +147,7 @@
 		F658797D2A57EEDA00293FFD /* ChatRoomRemoteDataSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatRoomRemoteDataSource.m; sourceTree = "<group>"; };
 		F658797F2A57EEE600293FFD /* ChatRoomLocalDataSource.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatRoomLocalDataSource.h; sourceTree = "<group>"; };
 		F65879802A57EEF100293FFD /* ChatRoomLocalDataSource.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatRoomLocalDataSource.m; sourceTree = "<group>"; };
+		F65879832A5BF05300293FFD /* DIInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DIInterface.h; sourceTree = "<group>"; };
 		F6C43EEF2A3AEF0D001D8715 /* storage2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = storage2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6C43EF22A3AEF0D001D8715 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -191,10 +192,10 @@
 		F6C43F4E2A3C425C001D8715 /* FileType.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileType.h; sourceTree = "<group>"; };
 		F6EFC9392A5272A400DDEDF4 /* AppDI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDI.h; sourceTree = "<group>"; };
 		F6EFC93A2A5272AE00DDEDF4 /* AppDI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDI.m; sourceTree = "<group>"; };
-		F6EFC93C2A5272B700DDEDF4 /* ChatDetailDI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDetailDI.h; sourceTree = "<group>"; };
-		F6EFC93D2A5272C300DDEDF4 /* ChatDetailDI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailDI.m; sourceTree = "<group>"; };
-		F6EFC9402A5275AB00DDEDF4 /* ChatRoomDI.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatRoomDI.h; sourceTree = "<group>"; };
-		F6EFC9412A52771800DDEDF4 /* ChatRoomDI.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatRoomDI.m; sourceTree = "<group>"; };
+		F6EFC93C2A5272B700DDEDF4 /* ChatDetailBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatDetailBuilder.h; sourceTree = "<group>"; };
+		F6EFC93D2A5272C300DDEDF4 /* ChatDetailBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatDetailBuilder.m; sourceTree = "<group>"; };
+		F6EFC9402A5275AB00DDEDF4 /* ChatRoomBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatRoomBuilder.h; sourceTree = "<group>"; };
+		F6EFC9412A52771800DDEDF4 /* ChatRoomBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatRoomBuilder.m; sourceTree = "<group>"; };
 		F6EFC94D2A53D78C00DDEDF4 /* ZODownloadRepositoryInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZODownloadRepositoryInterface.h; sourceTree = "<group>"; };
 		F6EFC94E2A53D79A00DDEDF4 /* ZOUrlSessionDownloadRepostiory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZOUrlSessionDownloadRepostiory.h; sourceTree = "<group>"; };
 		F6EFC94F2A53D7A600DDEDF4 /* ZOUrlSessionDownloadRepository.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZOUrlSessionDownloadRepository.m; sourceTree = "<group>"; };
@@ -700,10 +701,11 @@
 			children = (
 				F6EFC9392A5272A400DDEDF4 /* AppDI.h */,
 				F6EFC93A2A5272AE00DDEDF4 /* AppDI.m */,
-				F6EFC93C2A5272B700DDEDF4 /* ChatDetailDI.h */,
-				F6EFC93D2A5272C300DDEDF4 /* ChatDetailDI.m */,
-				F6EFC9402A5275AB00DDEDF4 /* ChatRoomDI.h */,
-				F6EFC9412A52771800DDEDF4 /* ChatRoomDI.m */,
+				F6EFC93C2A5272B700DDEDF4 /* ChatDetailBuilder.h */,
+				F6EFC93D2A5272C300DDEDF4 /* ChatDetailBuilder.m */,
+				F6EFC9402A5275AB00DDEDF4 /* ChatRoomBuilder.h */,
+				F6EFC9412A52771800DDEDF4 /* ChatRoomBuilder.m */,
+				F65879832A5BF05300293FFD /* DIInterface.h */,
 			);
 			path = AppDI;
 			sourceTree = "<group>";
@@ -865,7 +867,7 @@
 				F6C43F2F2A3B0D45001D8715 /* ChatDetailViewModel.m in Sources */,
 				F64BAFD22A4AECBE002B923F /* StorageManager.m in Sources */,
 				F64BAFE82A4E7A2A002B923F /* ZOPrirorityQueue.m in Sources */,
-				F6EFC9422A52771800DDEDF4 /* ChatRoomDI.m in Sources */,
+				F6EFC9422A52771800DDEDF4 /* ChatRoomBuilder.m in Sources */,
 				F6C43EFA2A3AEF0D001D8715 /* ChatRoomViewController.m in Sources */,
 				F64BB0062A51AEC9002B923F /* ChatDetailDataRepository.m in Sources */,
 				F64BAB862A4040F3002B923F /* HashHelper.m in Sources */,
@@ -886,7 +888,7 @@
 				F64BAFFE2A518842002B923F /* ChatDetailUseCase.m in Sources */,
 				F658796B2A56AC0900293FFD /* ChatRoomDBRepository.m in Sources */,
 				F64BABBC2A42DF25002B923F /* CompressorHelper.m in Sources */,
-				F6EFC93E2A5272C300DDEDF4 /* ChatDetailDI.m in Sources */,
+				F6EFC93E2A5272C300DDEDF4 /* ChatDetailBuilder.m in Sources */,
 				F64BAFEC2A4E7FF1002B923F /* ZOHeap.m in Sources */,
 				F6C43F4C2A3C39EA001D8715 /* FileHelper.m in Sources */,
 				F65879732A57EE2600293FFD /* ChatRoomUseCase.m in Sources */,
