@@ -18,12 +18,12 @@
 
 @implementation ChatRoomViewModel
 
--(instancetype) initWithUseCase:(id<ChatRoomUseCaseInterface>)chatRoomUsecase {
+-(instancetype) initWithBusinessModel:(id<ChatRoomBusinessModelInterface>)chatRoomBusinessModel {
     self = [super init];
     if (self) {
         self.chats = [[NSMutableArray alloc] init];
         self.selectedModels = [[NSMutableArray alloc] init];
-        self.chatRoomUsecase = chatRoomUsecase;
+        self.chatRoomBusinessModel = chatRoomBusinessModel;
     }
     
     return self;
@@ -42,7 +42,7 @@
 
 -(void)_loadData {
     __weak ChatRoomViewModel *weakself = self;
-    [_chatRoomUsecase getChatRoomsByPage:1 completionBlock:^(NSArray<ChatRoomEntity*>* rooms){
+    [_chatRoomBusinessModel getChatRoomsByPage:1 completionBlock:^(NSArray<ChatRoomEntity*>* rooms){
         weakself.chats = [rooms mutableCopy];
         [weakself.delegate endLoading];
         [weakself.delegate didUpdateData];
@@ -99,7 +99,7 @@
     
     __weak ChatRoomViewModel* weakself = self;
     for (ChatRoomEntity* model in weakself.selectedModels) {
-        [_chatRoomUsecase deleteChatRoom:model completionBlock:^(BOOL isSuccess){
+        [_chatRoomBusinessModel deleteChatRoom:model completionBlock:^(BOOL isSuccess){
             [weakself.chats removeObject:model];
             [self.delegate didUpdateData];
         } errorBlock:nil];
@@ -118,7 +118,7 @@
     [_chats insertObject:[newChat toChatRoomEntity] atIndex: 0];
     
     __weak ChatRoomViewModel* weakself = self;
-    [_chatRoomUsecase createChatRoom:newChat completionBlock:^(BOOL isSuccess){
+    [_chatRoomBusinessModel createChatRoom:newChat completionBlock:^(BOOL isSuccess){
         [weakself.delegate didUpdateData];
     } errorBlock:nil];
 }

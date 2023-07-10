@@ -41,14 +41,14 @@
 }
 
 #pragma mark - Domain layer
--(id<ChatRoomUseCaseInterface>) getChatRoomUseCase {
-    ChatRoomUseCase* chatRoomUseCase = [[ChatRoomUseCase alloc] initWithRepository:[self getChatRoomDataRepository]];
-    return chatRoomUseCase;
+-(id<ChatRoomBusinessModelInterface>) getChatRoomBusinessModel {
+    ChatRoomBusinessModel* chatRoomBusinessModel = [[ChatRoomBusinessModel alloc] initWithRepository:[self getChatRoomDataRepository]];
+    return chatRoomBusinessModel;
 }
 
 #pragma mark - Presentation layer
 -(id<ChatRoomViewModelType>) getChatRoomViewModel {
-    ChatRoomViewModel *chatRoomViewModel = [[ChatRoomViewModel alloc] initWithUseCase:[self getChatRoomUseCase]];
+    ChatRoomViewModel *chatRoomViewModel = [[ChatRoomViewModel alloc] initWithBusinessModel:[self getChatRoomBusinessModel]];
     return chatRoomViewModel;
 }
 -(id<ViewControllerType>) getChatRoomViewController {

@@ -20,7 +20,7 @@
 -(id<ChatRoomLocalDataSourceType>) getChatRoomLocalDataSource;
 -(id<StorageManagerType>) getStorageManager;
 -(id<ChatRoomRepositoryInterface>) getChatRoomDataRepository;
--(id<ChatRoomUseCaseInterface>) getChatRoomUseCase;
+-(id<ChatRoomBusinessModelInterface>) getChatRoomBusinessModel;
 -(id<ChatRoomViewModelType>) getChatRoomViewModel;
 -(id<ViewControllerType>) getChatRoomViewController;
 

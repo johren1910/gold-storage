@@ -1,32 +1,32 @@
 //
-//  ChatDetailUseCase.m
+//  ChatDetailBusinessModel.m
 //  storage2
 //
 //  Created by LAP14885 on 02/07/2023.
 //
 
 #import <Foundation/Foundation.h>
-#import "ChatDetailUseCase.h"
+#import "ChatDetailBusinessModel.h"
 #import "FileHelper.h"
 #import "CacheService.h"
 
-@interface ChatDetailUseCase ()
+@interface ChatDetailBusinessModel ()
 @property (nonatomic) dispatch_queue_t backgroundQueue;
 
 @end
 
-@implementation ChatDetailUseCase
+@implementation ChatDetailBusinessModel
 
 -(instancetype) initWithRepository:(id<ChatDetailRepositoryInterface>)repository {
     if (self == [super init]) {
         self.chatDetailRepository = repository;
-        self.backgroundQueue = dispatch_queue_create("com.chatdetail.usecase.queue", DISPATCH_QUEUE_SERIAL);
+        self.backgroundQueue = dispatch_queue_create("com.chatdetail.businessModel.queue", DISPATCH_QUEUE_SERIAL);
     }
     return self;
 }
 
 - (void)getChatDetailsOfRoomId:(NSString*)roomId completionBlock:(void (^)(NSArray<ChatDetailEntity *> *chats))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
-    __weak ChatDetailUseCase* weakself = self;
+    __weak ChatDetailBusinessModel* weakself = self;
     dispatch_async(_backgroundQueue, ^{
         [weakself.chatDetailRepository getChatDataOfRoomId: roomId completionBlock:completionBlock errorBlock:errorBlock];
     });
@@ -35,7 +35,7 @@
 - (void)saveImageWithData:(NSData *)data
                  ofRoomId:(NSString*)roomId completionBlock:(void (^)(ChatDetailEntity *))completionBlock errorBlock:(void (^)(NSError *))errorBlock {
     
-    __weak ChatDetailUseCase* weakself = self;
+    __weak ChatDetailBusinessModel* weakself = self;
     dispatch_async(_backgroundQueue, ^{
         [weakself.chatDetailRepository saveImageWithData:data ofRoomId:roomId completionBlock:^(ChatDetailEntity* entity){
             completionBlock(entity);
@@ -49,7 +49,7 @@
 - (void)requestDownloadFileWithUrl:(NSString *)url forRoom:(ChatRoomEntity*)roomData completionBlock:(void (^)(ChatDetailEntity *entity, BOOL isDownloaded))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
     
     dispatch_async(_backgroundQueue, ^{
-        __weak ChatDetailUseCase* weakself = self;
+        __weak ChatDetailBusinessModel* weakself = self;
         NSString *messageId = [[NSUUID UUID] UUIDString];
         NSString *fileId = [[NSUUID UUID] UUIDString];
 
@@ -90,7 +90,7 @@
 
 - (void)resumeDownloadForEntity:(ChatDetailEntity *)entity OfRoom:(ChatRoomEntity*)roomData completionBlock:(void (^)(ChatDetailEntity *entity))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
     
-    __weak ChatDetailUseCase* weakself = self;
+    __weak ChatDetailBusinessModel* weakself = self;
     dispatch_async(_backgroundQueue, ^{
         [weakself.chatDetailRepository getChatDataForMessageId:entity.messageId completionBlock:^(ChatMessageData* message){
             dispatch_async(weakself.backgroundQueue, ^{
@@ -103,7 +103,7 @@
 
 - (void)deleteChatEntities:(NSArray<ChatDetailEntity*>*)entities completionBlock:(void (^)(BOOL isSuccess))completionBlock {
     
-    __weak ChatDetailUseCase* weakself = self;
+    __weak ChatDetailBusinessModel* weakself = self;
     dispatch_async(_backgroundQueue, ^{
         [weakself.chatDetailRepository deleteChatMessages:entities completionBlock:completionBlock];
     });
@@ -112,7 +112,7 @@
 
 - (void)updateRamCache:(UIImage*)image withKey:(NSString*)key {
     
-    __weak ChatDetailUseCase* weakself = self;
+    __weak ChatDetailBusinessModel* weakself = self;
     dispatch_async(_backgroundQueue, ^{
         [weakself.chatDetailRepository updateRamCache:image withKey:key];
     });

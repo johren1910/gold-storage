@@ -8,7 +8,7 @@
 #import <Foundation/Foundation.h>
 #import "ChatRoomData.h"
 #import "ChatRoomSectionController.h"
-#import "ChatRoomUseCase.h"
+#import "ChatRoomBusinessModel.h"
 #import "DIInterface.h"
 
 @protocol ChatRoomViewModelDelegate
@@ -30,7 +30,7 @@
 
 @protocol ChatRoomViewModelType <ViewModelType>
 
--(instancetype) initWithUseCase:(id<ChatRoomUseCaseInterface>)chatDetailUsecase;
+-(instancetype) initWithBusinessModel:(id<ChatRoomBusinessModelInterface>)chatDetailBusinessModel;
 
 @end
 
@@ -50,5 +50,5 @@
 
 @property (nonatomic, weak) id <ChatRoomViewModelDelegate>  delegate;
 @property (nonatomic, strong) id <ChatRoomViewModelCoordinatorDelegate>  coordinatorDelegate;
-@property (nonatomic) id<ChatRoomUseCaseInterface> chatRoomUsecase;
+@property (nonatomic) id<ChatRoomBusinessModelInterface> chatRoomBusinessModel;
 @end

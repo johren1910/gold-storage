@@ -1,5 +1,5 @@
 //
-//  ChatDetailUseCase.h
+//  ChatDetailBusinessModel.h
 //  storage2
 //
 //  Created by LAP14885 on 02/07/2023.
@@ -11,7 +11,7 @@
 #import "ChatMessageData.h"
 #import "ChatRoomEntity.h"
 
-@protocol ChatDetailUseCaseInterface
+@protocol ChatDetailBusinessModelInterface
 
 - (void)getChatDetailsOfRoomId:(NSString*)roomId completionBlock:(void (^)(NSArray<ChatDetailEntity *> *chats))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
 - (void)deleteChatEntities:(NSArray<ChatDetailEntity*>*)entities completionBlock:(void (^)(BOOL isSuccess))completionBlock;
@@ -24,7 +24,7 @@
 
 @end
 
-@interface ChatDetailUseCase : NSObject<ChatDetailUseCaseInterface>
+@interface ChatDetailBusinessModel : NSObject<ChatDetailBusinessModelInterface>
 @property (nonatomic) id<ChatDetailRepositoryInterface> chatDetailRepository;
 -(instancetype) initWithRepository:(id<ChatDetailRepositoryInterface>)repository;
 

@@ -23,14 +23,14 @@
 
 @implementation ChatDetailViewModel
 
--(instancetype) initWithChatRoom:(ChatRoomEntity*)chatRoom andUsecase:(id<ChatDetailUseCaseInterface>)chatDetailUsecase {
+-(instancetype) initWithChatRoom:(ChatRoomEntity*)chatRoom andBusinessModel:(id<ChatDetailBusinessModelInterface>)chatDetailBusinessModel {
     self = [super init];
     if (self) {
         self.messageModels = [[NSMutableArray alloc] init];
         self.selectedModels = [[NSMutableArray alloc] init];
         self.backgroundQueue = dispatch_queue_create("com.chatdetai.viewmodel.backgroundqueue", DISPATCH_QUEUE_SERIAL);
         self.isCheatOn = FALSE;
-        self.chatDetailUsecase = chatDetailUsecase;
+        self.chatDetailBusinessModel = chatDetailBusinessModel;
     }
     _chatRoom = chatRoom;
     
@@ -57,7 +57,7 @@
 
 - (void)_loadData {
     __weak ChatDetailViewModel *weakself = self;
-    [_chatDetailUsecase getChatDetailsOfRoomId:_chatRoom.roomId completionBlock:^(NSArray<ChatDetailEntity*>* entities) {
+    [_chatDetailBusinessModel getChatDetailsOfRoomId:_chatRoom.roomId completionBlock:^(NSArray<ChatDetailEntity*>* entities) {
         
         for (ChatDetailEntity* entity in entities) {
             if (entity.state == Downloading) {
@@ -76,7 +76,7 @@
 -(void)_requestDownloadForEntity:(ChatDetailEntity*) entity {
     
     __weak ChatDetailViewModel* weakself = self;
-    [_chatDetailUsecase resumeDownloadForEntity:entity OfRoom:_chatRoom completionBlock:^(ChatDetailEntity* entity){
+    [_chatDetailBusinessModel resumeDownloadForEntity:entity OfRoom:_chatRoom completionBlock:^(ChatDetailEntity* entity){
         __block NSUInteger index = 0;
         [weakself.messageModels enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
             if ([((ChatDetailEntity *)obj).messageId isEqualToString:entity.messageId]) {
@@ -174,7 +174,7 @@
 - (void)_downloadFileWithUrl:(NSString *)url {
     
     __weak ChatDetailViewModel* weakself = self;
-    [_chatDetailUsecase requestDownloadFileWithUrl:url forRoom:_chatRoom completionBlock:^(ChatDetailEntity* entity, BOOL isDownloaded) {
+    [_chatDetailBusinessModel requestDownloadFileWithUrl:url forRoom:_chatRoom completionBlock:^(ChatDetailEntity* entity, BOOL isDownloaded) {
         if (!isDownloaded && entity) {
             [weakself.messageModels insertObject:entity atIndex:0];
             weakself.filteredChats = weakself.messageModels;
@@ -229,7 +229,7 @@
 
 - (void)deleteSelected {
     __weak ChatDetailViewModel* weakself = self;
-    [_chatDetailUsecase deleteChatEntities:self.selectedModels completionBlock:^(BOOL isSuccess){
+    [_chatDetailBusinessModel deleteChatEntities:self.selectedModels completionBlock:^(BOOL isSuccess){
         if (isSuccess) {
             for (ChatDetailEntity* entity in weakself.selectedModels) {
                 [weakself.messageModels removeObject:entity];
@@ -268,7 +268,7 @@
 - (void)_addImage:(NSData*) data {
     __weak ChatDetailViewModel *weakself = self;
     dispatch_async(_backgroundQueue, ^{
-        [weakself.chatDetailUsecase saveImageWithData:data ofRoomId:weakself.chatRoom.roomId completionBlock:^(ChatDetailEntity* entity){
+        [weakself.chatDetailBusinessModel saveImageWithData:data ofRoomId:weakself.chatRoom.roomId completionBlock:^(ChatDetailEntity* entity){
 
             [weakself.messageModels insertObject:entity atIndex:0];
             weakself.filteredChats = weakself.messageModels;
@@ -286,6 +286,6 @@
             entity.thumbnail = image;
         }
     }
-    [_chatDetailUsecase updateRamCache:image withKey:key];
+    [_chatDetailBusinessModel updateRamCache:image withKey:key];
 }
 @end

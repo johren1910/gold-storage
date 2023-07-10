@@ -1,5 +1,5 @@
 //
-//  ChatRoomUseCase.h
+//  ChatRoomBusinessModel.h
 //  storage2
 //
 //  Created by LAP14885 on 07/07/2023.
@@ -10,7 +10,7 @@
 #import "ChatRoomEntity.h"
 #import "ChatRoomData.h"
 
-@protocol ChatRoomUseCaseInterface
+@protocol ChatRoomBusinessModelInterface
 
 - (void)createChatRoom:(ChatRoomData*)chatRoom completionBlock:(void (^)(BOOL isSuccess))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
 
@@ -20,7 +20,7 @@
 
 @end
 
-@interface ChatRoomUseCase : NSObject<ChatRoomUseCaseInterface>
+@interface ChatRoomBusinessModel : NSObject<ChatRoomBusinessModelInterface>
 @property (nonatomic) id<ChatRoomRepositoryInterface> chatRoomRepository;
 -(instancetype) initWithRepository:(id<ChatRoomRepositoryInterface>)repository;
 

@@ -7,7 +7,7 @@
 #import <Foundation/Foundation.h>
 #import "ChatDetailSectionController.h"
 #import "ChatRoomEntity.h"
-#import "ChatDetailUseCase.h"
+#import "ChatDetailBusinessModel.h"
 #import "DIInterface.h"
 
 @protocol ChatDetailViewModelDelegate <NSObject>
@@ -20,12 +20,12 @@
 
 @protocol ChatDetailViewModelType <ViewModelType>
 @property (nonatomic, weak) id <ChatDetailViewModelDelegate> delegate;
--(instancetype) initWithChatRoom:(id<ChatRoomEntityType>)chatRoom andUsecase:(id<ChatDetailUseCaseInterface>)chatDetailUsecase;
+-(instancetype) initWithChatRoom:(id<ChatRoomEntityType>)chatRoom andBusinessModel:(id<ChatDetailBusinessModelInterface>)chatDetailBusinessModel;
 @end
 
 @interface ChatDetailViewModel : NSObject<ChatDetailViewModelType>
 
-@property (nonatomic) id<ChatDetailUseCaseInterface> chatDetailUsecase;
+@property (nonatomic) id<ChatDetailBusinessModelInterface> chatDetailBusinessModel;
 - (ChatDetailEntity *)itemAtIndexPath:(NSIndexPath *)indexPath;
 - (NSUInteger) numberOfSections;
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;

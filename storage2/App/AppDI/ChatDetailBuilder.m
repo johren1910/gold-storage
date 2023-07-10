@@ -43,13 +43,13 @@
     ChatDetailDataRepository* repository = [[ChatDetailDataRepository alloc] initWithRemote:[self getChatDetailRemoteDataSource] andLocal:[self getChatDetailLocalDataSource] andStorageManager:[self getStorageManager]];
     return repository;
 }
--(id<ChatDetailUseCaseInterface>) getChatDetailUseCase {
-    ChatDetailUseCase* chatDetailUseCase = [[ChatDetailUseCase alloc] initWithRepository:[self getChatDetailDataRepository]];
-    return chatDetailUseCase;
+-(id<ChatDetailBusinessModelInterface>) getChatDetailBusinessModel {
+    ChatDetailBusinessModel* chatDetailBusinessModel = [[ChatDetailBusinessModel alloc] initWithRepository:[self getChatDetailDataRepository]];
+    return chatDetailBusinessModel;
     
 }
 -(id<ChatDetailViewModelType>) getChatDetailViewModel:(id<ChatRoomEntityType>)roomEntity {
-    ChatDetailViewModel *chatDetailViewModel = [[ChatDetailViewModel alloc] initWithChatRoom:roomEntity andUsecase:[self getChatDetailUseCase]];
+    ChatDetailViewModel *chatDetailViewModel = [[ChatDetailViewModel alloc] initWithChatRoom:roomEntity andBusinessModel:[self getChatDetailBusinessModel]];
     return chatDetailViewModel;
 }
 -(id<ViewControllerType>) getChatDetailViewController:(id<ChatRoomEntityType>)roomEntity {

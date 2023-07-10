@@ -17,7 +17,7 @@
 -(id<ChatDetailLocalDataSourceType>) getChatDetailLocalDataSource;
 -(id<StorageManagerType>) getStorageManager;
 -(id<ChatDetailRepositoryInterface>) getChatDetailDataRepository;
--(id<ChatDetailUseCaseInterface>) getChatDetailUseCase;
+-(id<ChatDetailBusinessModelInterface>) getChatDetailBusinessModel;
 -(id<ChatDetailViewModelType>) getChatDetailViewModel:(id<ChatRoomEntityType>)roomEntity;
 -(id<ViewControllerType>) getChatDetailViewController:(id<ChatRoomEntityType>)roomEntity;
 @end
