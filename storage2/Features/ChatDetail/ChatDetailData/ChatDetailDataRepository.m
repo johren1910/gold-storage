@@ -45,10 +45,6 @@
     [_downloadManager startDownloadWithUnit:unit];
 }
 
-- (void) updateRamCache: (UIImage*)image withKey:(NSString*)key {
-    [_storageManager cacheImageByKey:image withKey:key];
-}
-
 -(instancetype) initWithDownloadManager:(id<ZODownloadManagerType>)downloadManager andFileDataProvider:(id<FileDataProviderType>)fileDataProvider
         andChatMessageProvider:(id<ChatMessageProviderType>)messageProvider andStorageManager:(id<StorageManagerType>)storageManager {
     if (self == [super init]) {

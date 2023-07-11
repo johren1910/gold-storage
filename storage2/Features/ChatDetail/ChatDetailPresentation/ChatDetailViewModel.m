@@ -280,14 +280,6 @@
     
 }
 
-- (void) updateRamCache: (UIImage*)image withKey:(NSString*)key {
-    for (ChatDetailEntity* entity in _messageModels) {
-        if ([entity.file.checksum isEqualToString:key]){
-            entity.thumbnail = image;
-        }
-    }
-    [_chatDetailBusinessModel updateRamCache:image withKey:key];
-}
 @synthesize filteredChats;
 
 @end

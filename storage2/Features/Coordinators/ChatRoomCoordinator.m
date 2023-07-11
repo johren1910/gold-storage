@@ -49,6 +49,7 @@
     
     ChatDetailViewController *viewController = (ChatDetailViewController*)[_appDI getChatDetailViewController:chatRoom withBuilder:[_appDI defaultDetailBuilder]];
     viewController.title = chatRoom.name;
+    [viewController setDetailBuilder:[_appDI defaultDetailBuilder]];
     
     [self.navigationController pushViewController:viewController animated:true];
 }

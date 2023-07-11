@@ -114,15 +114,6 @@
     
 }
 
-- (void)updateRamCache:(UIImage*)image withKey:(NSString*)key {
-    
-    __weak ChatDetailBusinessModel* weakself = self;
-    dispatch_async(_backgroundQueue, ^{
-        [weakself.chatDetailRepository updateRamCache:image withKey:key];
-    });
-    
-}
-
 #pragma mark: - Private methods
 
 - (void)_startDownload:(NSString *)url forMessage:(ChatMessageData*)message

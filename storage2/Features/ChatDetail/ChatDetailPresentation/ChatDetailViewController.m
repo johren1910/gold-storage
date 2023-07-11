@@ -15,6 +15,7 @@
 @property (strong, nonatomic) IBOutlet UISwitch *cheatSwitch;
 @property (nonatomic, strong) id<ChatDetailViewModelType> viewModel;
 @property (nonatomic, readonly) NSInteger selectedIndex;
+@property (nonatomic) id<ChatDetailBuilderType> builder;
 
 @end
 
@@ -44,6 +45,10 @@
     dispatch_async(dispatch_get_main_queue(), ^{
         [weakself.adapter reloadDataWithCompletion:nil];
     });
+}
+
+-(void)setDetailBuilder:(id<ChatDetailBuilderType>)builder {
+    self.builder = builder;
 }
 
 - (void)viewDidLoad {
@@ -114,7 +119,7 @@
 
 
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key {
-    [_viewModel updateRamCache:image withKey:key];
+    [[self.builder getCacheService] cacheImageByKey:image withKey:key];
 }
 
 - (void) retryWithModel:(ChatDetailEntity *)model {

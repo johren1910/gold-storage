@@ -17,6 +17,4 @@
 
 - (void)startDownloadWithUnit:(ZODownloadUnit*)unit
                    forMessage: (ChatMessageData*)message completionBlock:(void(^)(FileData* fileData, UIImage* thumbnail))completionBlock;
-
-- (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
 @end

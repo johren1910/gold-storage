@@ -14,6 +14,7 @@
 #import "ZODownloadManagerType.h"
 #import "ChatMessageProvider.h"
 #import "FileDataProvider.h"
+#import "ChatDetailViewController.h"
 
 @interface ChatDetailBuilder ()
 @property (nonatomic) AppEnvironment* environment;
@@ -30,6 +31,10 @@
 
 -(id<StorageManagerType>) getStorageManager {
     return _environment.storageManager;
+}
+
+-(id<CacheServiceType>) getCacheService {
+    return _environment.cacheService;
 }
 
 -(id<ChatMessageProviderType>) getChatMessageProvider {

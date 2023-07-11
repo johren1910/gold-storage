@@ -8,17 +8,17 @@
 #import <UIKit/UIKit.h>
 #import "ChatDetailEntity.h"
 #import "ChatDetailViewModel.h"
-#import "ChatDetailViewController.h"
 @import IGListKit;
 #import "ChatRoomEntity.h"
-#import "ChatDetailViewModel.h"
 #import "FileType.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "FileHelper.h"
 #import <Photos/Photos.h>
 #import <AssetsLibrary/AssetsLibrary.h>
+#import "ChatDetailBuilder.h"
 
 @interface ChatDetailViewController : UIViewController <ChatDetailSectionControllerDelegate, ViewControllerType>
 
+-(void)setDetailBuilder:(id<ChatDetailBuilderType>)builder;
 @end
 

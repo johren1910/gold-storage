@@ -8,16 +8,15 @@
 #import "AppEnvironment.h"
 #import "ChatDetailViewModel.h"
 #import "ChatDetailDataRepository.h"
-#import "ChatDetailViewController.h"
 
 @protocol ChatDetailBuilderType
 -(id<StorageManagerType>) getStorageManager;
+-(id<CacheServiceType>) getCacheService;
 -(id<ChatDetailRepositoryInterface>) getChatDetailDataRepository;
 -(id<ChatDetailBusinessModelInterface>) getChatDetailBusinessModel;
 -(id<ChatDetailViewModelType>) getChatDetailViewModel:(id<ChatRoomEntityType>)roomEntity;
 -(id<ViewControllerType>) getChatDetailViewController:(id<ChatRoomEntityType>)roomEntity;
 @end
-
 
 @interface ChatDetailBuilder : NSObject <ChatDetailBuilderType>
 -(instancetype) init:(AppEnvironment*)environment;

@@ -21,7 +21,6 @@
 @protocol ChatDetailViewModelType <ViewModelType>
 @property (nonatomic, weak) id <ChatDetailViewModelDelegate> delegate;
 -(instancetype) initWithChatRoom:(id<ChatRoomEntityType>)chatRoom andBusinessModel:(id<ChatDetailBusinessModelInterface>)chatDetailBusinessModel;
-- (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
 - (void) onViewDidLoad;
 
 #pragma mark - Actions

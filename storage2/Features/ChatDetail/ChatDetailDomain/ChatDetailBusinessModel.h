@@ -20,7 +20,6 @@
                  ofRoomId:(NSString*)roomId completionBlock:(void (^)(ChatDetailEntity *))completionBlock errorBlock:(void (^)(NSError *))errorBlock;
 - (void)requestDownloadFileWithUrl:(NSString *)url forRoom:(ChatRoomEntity*)roomData completionBlock:(void (^)(ChatDetailEntity *entity, BOOL isDownloaded))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
 - (void)resumeDownloadForEntity:(ChatDetailEntity *)entity OfRoom:(ChatRoomEntity*)roomData completionBlock:(void (^)(ChatDetailEntity *entity))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
-- (void)updateRamCache:(UIImage*)image withKey:(NSString*)key;
 
 @end
 
