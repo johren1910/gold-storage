@@ -12,6 +12,8 @@
 #import "CacheService.h"
 #import "DatabaseService.h"
 #import "ZODownloadManagerType.h"
+#import "ChatMessageProvider.h"
+#import "FileDataProvider.h"
 
 @interface ChatDetailBuilder ()
 @property (nonatomic) AppEnvironment* environment;
@@ -26,21 +28,28 @@
     return self;
 }
 
--(id<ChatDetailRemoteDataSourceType>) getChatDetailRemoteDataSource {
-    ChatDetailRemoteDataSource* remoteDataSource = [[ChatDetailRemoteDataSource alloc] init: _environment.baseUrl];
-    remoteDataSource.downloadManager = _environment.downloadManager;
-    return remoteDataSource;
-}
--(id<ChatDetailLocalDataSourceType>) getChatDetailLocalDataSource {
-    ChatDetailLocalDataSource *localDataSource = [[ChatDetailLocalDataSource alloc] init];
-    localDataSource.storageManager = _environment.storageManager;
-    return localDataSource;
-}
 -(id<StorageManagerType>) getStorageManager {
     return _environment.storageManager;
 }
+
+-(id<ChatMessageProviderType>) getChatMessageProvider {
+    ChatMessageProvider* provider = [[ChatMessageProvider alloc] initWithStorageManager:[self getStorageManager]];
+    return provider;
+}
+
+-(id<FileDataProviderType>) getFileDataProvider {
+    FileDataProvider* provider = [[FileDataProvider alloc] initWithStorageManager:[self getStorageManager]];
+    return provider;
+}
+
+-(id<ZODownloadManagerType>) getDownloadManager {
+    FileDataProvider* provider = [[FileDataProvider alloc] initWithStorageManager:[self getStorageManager]];
+    return _environment.downloadManager;
+}
+
+
 -(id<ChatDetailRepositoryInterface>) getChatDetailDataRepository {
-    ChatDetailDataRepository* repository = [[ChatDetailDataRepository alloc] initWithRemote:[self getChatDetailRemoteDataSource] andLocal:[self getChatDetailLocalDataSource] andStorageManager:[self getStorageManager]];
+    ChatDetailDataRepository* repository = [[ChatDetailDataRepository alloc] initWithDownloadManager:[self getDownloadManager] andFileDataProvider:[self getFileDataProvider] andChatMessageProvider:[self getChatMessageProvider] andStorageManager:[self getStorageManager]];
     return repository;
 }
 -(id<ChatDetailBusinessModelInterface>) getChatDetailBusinessModel {

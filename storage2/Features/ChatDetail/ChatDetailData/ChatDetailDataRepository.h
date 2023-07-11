@@ -6,11 +6,11 @@
 //
 
 #import "ChatDetailReporitoryInterface.h"
-#import "ChatDetailLocalDataSource.h"
-#import "ChatDetailRemoteDataSource.h"
 #import "StorageManager.h"
+#import "ZODownloadManagerType.h"
 
 @interface ChatDetailDataRepository : NSObject <ChatDetailRepositoryInterface>
--(instancetype) initWithRemote:(id<ChatDetailRemoteDataSourceType>)remoteDataSource andLocal:(id<ChatDetailLocalDataSourceType>)localDataSource andStorageManager:(id<StorageManagerType>)storageManager;
+-(instancetype) initWithDownloadManager:(id<ZODownloadManagerType>)downloadManager andFileDataProvider:(id<FileDataProviderType>)fileDataProvider
+        andChatMessageProvider:(id<ChatMessageProviderType>)messageProvider andStorageManager:(id<StorageManagerType>)storageManager;
 
 @end

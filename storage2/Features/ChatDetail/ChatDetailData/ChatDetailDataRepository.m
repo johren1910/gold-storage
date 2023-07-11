@@ -7,125 +7,70 @@
 
 #import "ChatDetailDataRepository.h"
 #import <UIKit/UIKit.h>
+#import "ChatMessageProvider.h"
+#import "FileDataProvider.h"
 
 @interface ChatDetailDataRepository ()
-@property (nonatomic) id<ChatDetailLocalDataSourceType> localDataSource;
-@property (nonatomic) id<ChatDetailRemoteDataSourceType> remoteDataSource;
+@property (nonatomic) id<ZODownloadManagerType> downloadManager;
 @property (nonatomic) id<StorageManagerType> storageManager;
 @property (nonatomic) dispatch_queue_t backgroundQueue;
 @end
 
 @implementation ChatDetailDataRepository
 
-- (void)getChatDataOfRoomId:(NSString*)roomId completionBlock:(void (^)(NSArray<ChatDetailEntity *> *chats))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
-    
-    __weak ChatDetailDataRepository* weakself = self;
-    [_localDataSource getChatDataOfRoomId:roomId completionBlock:^(NSArray<ChatMessageData*>* chats) {
-        NSMutableArray<ChatDetailEntity*>* results = [[NSMutableArray alloc] init];
-        for (ChatMessageData* data in chats) {
-            ChatDetailEntity* entity = [data toChatDetailEntity];
-            
-            UIImage* thumbnail = [weakself.storageManager getImageByKey:entity.file.checksum];
-            if (!thumbnail && entity.file.filePath != nil) {
-
-                if (entity.file.type == Video) {
-                    ZOMediaInfo *mediaInfo = [FileHelper getMediaInfoOfFilePath:entity.file.getAbsoluteFilePath];
-                    thumbnail = mediaInfo.thumbnail;
-                    [weakself.storageManager compressThenCache:thumbnail withKey:entity.file.checksum];
-                } else {
-                    NSData *imageData = [NSData dataWithContentsOfFile:entity .file.getAbsoluteFilePath];
-                    thumbnail = [UIImage imageWithData:imageData];
-                }
-
-            }
-            entity.thumbnail = thumbnail;
-            [results addObject:entity];
-        }
-        
-        completionBlock([results copy]);
-        }
-                                    errorBlock:errorBlock];
-}
-
-- (void)saveChatMessage:(ChatMessageData*) chatMessage  completionBlock:(void(^)(ChatDetailEntity* entity))completionBlock {
-    [_storageManager createChatMessage:chatMessage completionBlock:^(BOOL isSuccess) {
-        completionBlock([chatMessage toChatDetailEntity]);
-    }];
-}
-
-- (void)saveFile:(FileData*) fileData withNSData:(NSData*)data completionBlock:(void(^)(BOOL isSuccess))completionBlock {
-    [_storageManager createFile:fileData withNSData:data completionBlock:^(BOOL isSuccess){
-        completionBlock(isSuccess);
-    }];
-}
-
 - (void)startDownloadWithUnit:(ZODownloadUnit*)unit
                    forMessage: (ChatMessageData*)message completionBlock:(void(^)(FileData* fileData, UIImage* thumbnail))completionBlock {
     __weak ChatDetailDataRepository* weakself = self;
     __weak ZODownloadUnit* weakunit = unit;
     unit.completionBlock = ^(NSString *filePath) {
-        FileType fileType = [weakself.storageManager getFileTypeOfFilePath:filePath];
+        FileDataProvider* fileProvider = (FileDataProvider*)weakself.fileDataProvider;
+        FileType fileType = [fileProvider getFileTypeOfFilePath:filePath];
         NSString *currentFilePath = filePath;
         if (!weakunit.destinationDirectoryPath) {
-            currentFilePath = [weakself _moveFileToGeneralFolders:filePath forFileType:fileType andSetName:[message.file.filePath lastPathComponent]];
+            currentFilePath = [fileProvider moveFileToGeneralFolders:filePath forFileType:fileType andSetName:[message.file.filePath lastPathComponent]];
         }
         message.messageState = Sent;
-        [weakself updateMessageData:message completionBlock:^(BOOL isFinish){
+        [weakself.chatMessageProvider updateMessage:message completionBlock:^(BOOL isFinish){
             NSLog(@"updated");
         }];
-        [weakself saveMedia:currentFilePath forMessage:message completionBlock:completionBlock];
+        [weakself _saveMedia:currentFilePath forMessage:message completionBlock:completionBlock];
         NSLog(@"destinationPath download: %@", currentFilePath);
     };
     
     unit.errorBlock = ^(NSError *error) {
-        //        __block int index = -1;
-        //        [weakself.messageModels enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-        //            ChatDetailEntity *currentModel = (ChatDetailEntity *)obj;
-        //            if ([currentModel.messageData.messageId isEqualToString:messageId]) {
-        //                index = idx;
-        //                *stop = YES;
-        //            }
-        //        }];
-        //        if (index == -1){
-        //            return;
-        //        }
-        //        weakself.messageModels[index].isError = TRUE;
-        //        weakself.filteredChats = weakself.messageModels;
-        //
-        //        dispatch_async( dispatch_get_main_queue(), ^{
-        //            [self.delegate didUpdateObject:weakself.messageModels[index]];
-        //        });
+        
         NSLog(@"error");
     };
     
-    [_remoteDataSource startDownloadWithUnit:unit];
+    [_downloadManager startDownloadWithUnit:unit];
 }
 
-- (NSString*)_moveFileToGeneralFolders:(NSString*) currentfilePath forFileType:(FileType)fileType andSetName:(NSString*)name {
-    
-    NSString* folderPath = [FileHelper getDefaultDirectoryByFileType:fileType];
-    NSString* fileRelativePath = [folderPath stringByAppendingPathComponent:name];
-    
-    NSString* absolutePath = [FileHelper absolutePath:fileRelativePath];
-    
-    if ([FileHelper existsItemAtPath:absolutePath]) {
-        return fileRelativePath;
+- (void) updateRamCache: (UIImage*)image withKey:(NSString*)key {
+    [_storageManager cacheImageByKey:image withKey:key];
+}
+
+-(instancetype) initWithDownloadManager:(id<ZODownloadManagerType>)downloadManager andFileDataProvider:(id<FileDataProviderType>)fileDataProvider
+        andChatMessageProvider:(id<ChatMessageProviderType>)messageProvider andStorageManager:(id<StorageManagerType>)storageManager {
+    if (self == [super init]) {
+        self.downloadManager = downloadManager;
+        self.storageManager = storageManager;
+        self.chatMessageProvider = messageProvider;
+        self.fileDataProvider = fileDataProvider;
+        self.backgroundQueue = dispatch_queue_create("com.chatdetail.datarepository.queue", DISPATCH_QUEUE_SERIAL);
     }
-    [FileHelper createDirectoriesForFileAtPath:absolutePath];
-    
-    NSError *error;
-    NSURL *srcUrl = [FileHelper urlForItemAtPath:currentfilePath];
-    NSURL *dstUrl = [FileHelper urlForItemAtPath:absolutePath];
-    [FileHelper copyItemAtPath:srcUrl toPath:dstUrl error:&error];
-    [FileHelper removeItemAtPath:currentfilePath];
-    return fileRelativePath;
+    return self;
 }
 
-- (void)saveMedia:(NSString*)filePath forMessage:(ChatMessageData*)message completionBlock:(void(^)(FileData* fileData, UIImage* thumbnail))completionBlock {
+@synthesize chatMessageProvider;
+@synthesize fileDataProvider;
+
+#pragma mark - Private
+- (void)_saveMedia:(NSString*)filePath forMessage:(ChatMessageData*)message completionBlock:(void(^)(FileData* fileData, UIImage* thumbnail))completionBlock {
     __weak ChatDetailDataRepository* weakself = self;
     dispatch_async(_backgroundQueue, ^{
         
-        FileType fileType = [weakself.storageManager getFileTypeOfFilePath:[FileHelper absolutePath:filePath]];
+        FileDataProvider* fileProvider = (FileDataProvider*)weakself.fileDataProvider;
+        FileType fileType = [fileProvider getFileTypeOfFilePath:filePath];
         NSData *fileData = [FileHelper readFileAtPathAsData:[FileHelper absolutePath:filePath]];
         NSString *checkSum = [HashHelper hashDataMD5:fileData];
         UIImage *thumbnail = [weakself.storageManager getImageByKey:checkSum];
@@ -169,62 +114,11 @@
         newFileData.createdAt = timeStamp;
         newFileData.duration = duration;
         
-        [weakself updateFileData:newFileData completionBlock:^(BOOL isFinish){
+        [weakself.fileDataProvider updateFile:newFileData completionBlock:^(BOOL isFinish){
             completionBlock(newFileData, thumbnail);
         }];
     });
 }
 
-- (void)deleteChatMessages:(NSArray<ChatDetailEntity*>*)messages completionBlock:(void(^)(BOOL isComplete))completionBlock {
-    NSMutableArray<ChatMessageData*>* datas = [[NSMutableArray alloc] init];
-    for (ChatDetailEntity* entity in messages) {
-        ChatMessageData* messageData = [[ChatMessageData alloc] initWithMessage:entity.messageId messageId:entity.messageId chatRoomId:nil];
-        messageData.file = entity.file;
-        [datas addObject:messageData];
-        [_remoteDataSource cancelDownloadOfUrl:entity.file.filePath];
-    }
-    
-    [_localDataSource deleteChatMessages:[datas copy] completionBlock:completionBlock];
-}
-
-- (void)updateFileData:(FileData*) fileData completionBlock:(void(^)(BOOL isFinish))completionBlock {
-    [_localDataSource updateFileData:fileData completionBlock:completionBlock];
-}
-
-- (void)updateMessageData:(ChatMessageData*) message completionBlock:(void(^)(BOOL isFinish))completionBlock {
-    [_localDataSource updateMessageData:message completionBlock:completionBlock];
-}
-
-- (void) saveImageWithData:(NSData*)data ofRoomId:(NSString*)roomId completionBlock:(void(^)(ChatDetailEntity* entity)) completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
-    
-    __weak ChatDetailDataRepository* weakself = self;
-    [_storageManager uploadImage:data withRoomId:roomId completionBlock:^(id object) {
-        ChatMessageData* data = (ChatMessageData*)object;
-        ChatDetailEntity*entity = [data  toChatDetailEntity];
-        entity.thumbnail = [weakself.storageManager getImageByKey:entity.file.checksum];
-        completionBlock(entity);
-    }];
-}
-
-- (void)getChatDataForMessageId:(NSString*)messageId completionBlock:(void (^)(ChatMessageData* chat))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
-    
-    [_storageManager getMessageOfId:messageId completionBlock:^(id object){
-        completionBlock((ChatMessageData*)object);
-    }];
-}
-
-- (void) updateRamCache: (UIImage*)image withKey:(NSString*)key {
-    [_storageManager cacheImageByKey:image withKey:key];
-}
-
--(instancetype) initWithRemote:(id<ChatDetailRemoteDataSourceType>)remoteDataSource andLocal:(id<ChatDetailLocalDataSourceType>)localDataSource andStorageManager:(id<StorageManagerType>)storageManager {
-    if (self == [super init]) {
-        self.localDataSource = localDataSource;
-        self.remoteDataSource = remoteDataSource;
-        self.storageManager = storageManager;
-        self.backgroundQueue = dispatch_queue_create("com.chatdetail.datarepository.queue", DISPATCH_QUEUE_SERIAL);
-    }
-    return self;
-}
 
 @end

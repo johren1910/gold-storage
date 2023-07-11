@@ -7,8 +7,6 @@
 
 #import "AppEnvironment.h"
 #import "ChatRoomViewModel.h"
-#import "ChatRoomRemoteDataSource.h"
-#import "ChatRoomLocalDataSource.h"
 #import "ChatRoomDataRepository.h"
 #import "StorageManager.h"
 #import "CacheService.h"
@@ -16,8 +14,6 @@
 #import "ChatRoomViewController.h"
 
 @protocol ChatRoomBuilderType
--(id<ChatRoomRemoteDataSourceType>) getChatRoomRemoteDataSource;
--(id<ChatRoomLocalDataSourceType>) getChatRoomLocalDataSource;
 -(id<StorageManagerType>) getStorageManager;
 -(id<ChatRoomRepositoryInterface>) getChatRoomDataRepository;
 -(id<ChatRoomBusinessModelInterface>) getChatRoomBusinessModel;

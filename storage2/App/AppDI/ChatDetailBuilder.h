@@ -7,14 +7,10 @@
 
 #import "AppEnvironment.h"
 #import "ChatDetailViewModel.h"
-#import "ChatDetailRemoteDataSource.h"
-#import "ChatDetailLocalDataSource.h"
 #import "ChatDetailDataRepository.h"
 #import "ChatDetailViewController.h"
 
 @protocol ChatDetailBuilderType
--(id<ChatDetailRemoteDataSourceType>) getChatDetailRemoteDataSource;
--(id<ChatDetailLocalDataSourceType>) getChatDetailLocalDataSource;
 -(id<StorageManagerType>) getStorageManager;
 -(id<ChatDetailRepositoryInterface>) getChatDetailDataRepository;
 -(id<ChatDetailBusinessModelInterface>) getChatDetailBusinessModel;

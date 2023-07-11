@@ -44,7 +44,4 @@
 -(void)deleteImageByKey:(NSString*)key;
 - (void)compressThenCache: (UIImage*)image withKey:(NSString*) key;
 
-#pragma mark - Helper operation
--(FileType)getFileTypeOfFilePath:(NSString*)filePath;
-
 @end

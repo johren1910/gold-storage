@@ -28,7 +28,7 @@
 - (void)createChatRoom:(ChatRoomData*)chatRoom completionBlock:(void (^)(BOOL isSuccess))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
     __weak ChatRoomBusinessModel* weakself = self;
     dispatch_async(_backgroundQueue, ^{
-        [weakself.chatRoomRepository createChatRoom:chatRoom completionBlock:^(BOOL isSuccess){
+        [weakself.chatRoomRepository.chatRoomProvider createChatRoom:chatRoom completionBlock:^(BOOL isSuccess){
             completionBlock(isSuccess);
         } errorBlock:errorBlock];
     });
@@ -38,14 +38,14 @@
 - (void)deleteChatRoom:(ChatRoomEntity*)chatRoom completionBlock:(void (^)(BOOL isSuccess))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
     __weak ChatRoomBusinessModel* weakself = self;
     dispatch_async(_backgroundQueue, ^{
-        [weakself.chatRoomRepository deleteChatRoom:chatRoom completionBlock:completionBlock errorBlock:errorBlock];
+        [weakself.chatRoomRepository.chatRoomProvider deleteChatRoom:chatRoom completionBlock:completionBlock errorBlock:errorBlock];
     });
 }
 
 - (void)getChatRoomsByPage:(int)page completionBlock:(void (^)(NSArray<ChatRoomEntity *> *chats))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
     __weak ChatRoomBusinessModel* weakself = self;
     dispatch_async(_backgroundQueue, ^{
-        [weakself.chatRoomRepository getChatRoomsByPage:page completionBlock:completionBlock errorBlock:errorBlock];
+        [weakself.chatRoomRepository.chatRoomProvider getChatRoomsByPage:page completionBlock:completionBlock errorBlock:errorBlock];
     });
 }
 

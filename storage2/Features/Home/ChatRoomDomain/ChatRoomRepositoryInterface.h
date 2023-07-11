@@ -7,12 +7,9 @@
 
 #import "ChatRoomEntity.h"
 #import "ChatRoomData.h"
+#import "ChatRoomProvider.h"
 
 @protocol ChatRoomRepositoryInterface
 
-- (void)createChatRoom:(ChatRoomData*)chatRoom completionBlock:(void (^)(BOOL isSuccess))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
-
-- (void)deleteChatRoom:(ChatRoomEntity*)chatRoom completionBlock:(void (^)(BOOL isSuccess))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
-
-- (void)getChatRoomsByPage:(int)page completionBlock:(void (^)(NSArray<ChatRoomEntity *> *rooms))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
+@property (nonatomic) id<ChatRoomProviderType> chatRoomProvider;
 @end

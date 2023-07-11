@@ -7,6 +7,7 @@
 
 #import <Foundation/Foundation.h>
 #import "ChatRoomBuilder.h"
+#import "ChatRoomProvider.h"
 
 @interface ChatRoomBuilder ()
 @property (nonatomic) AppEnvironment* environment;
@@ -22,21 +23,16 @@
 }
 
 #pragma mark - Data layer
--(id<ChatRoomRemoteDataSourceType>) getChatRoomRemoteDataSource {
-    NSString *baseUrl = _environment.baseUrl;
-    ChatRoomRemoteDataSource* remoteDataSource = [[ChatRoomRemoteDataSource alloc] init:baseUrl];
-    return remoteDataSource;
-}
--(id<ChatRoomLocalDataSourceType>) getChatRoomLocalDataSource {
-    ChatRoomLocalDataSource *localDataSource = [[ChatRoomLocalDataSource alloc] init];
-    localDataSource.storageManager = _environment.storageManager;
-    return localDataSource;
-}
 -(id<StorageManagerType>) getStorageManager {
     return _environment.storageManager;
 }
+
+-(id<ChatRoomProviderType>) getChatRoomProvider {
+    ChatRoomProvider* provider = [[ChatRoomProvider alloc] initWithStorageManager:[self getStorageManager]];
+    return provider;
+}
 -(id<ChatRoomRepositoryInterface>) getChatRoomDataRepository {
-    ChatRoomDataRepository* repository = [[ChatRoomDataRepository alloc] initWithRemote:[self getChatRoomRemoteDataSource] andLocal:[self getChatRoomLocalDataSource] andStorageManager:[self getStorageManager]];
+    ChatRoomDataRepository* repository = [[ChatRoomDataRepository alloc] initWithStorageManager:[self getStorageManager] andChatRoomProvider:[self getChatRoomProvider]];
     return repository;
 }
 

@@ -9,6 +9,7 @@
 #import "ChatDetailBusinessModel.h"
 #import "FileHelper.h"
 #import "CacheService.h"
+#import "FileData.h"
 
 @interface ChatDetailBusinessModel ()
 @property (nonatomic) dispatch_queue_t backgroundQueue;
@@ -28,7 +29,7 @@
 - (void)getChatDetailsOfRoomId:(NSString*)roomId completionBlock:(void (^)(NSArray<ChatDetailEntity *> *chats))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
     __weak ChatDetailBusinessModel* weakself = self;
     dispatch_async(_backgroundQueue, ^{
-        [weakself.chatDetailRepository getChatDataOfRoomId: roomId completionBlock:completionBlock errorBlock:errorBlock];
+        [weakself.chatDetailRepository.chatMessageProvider getChatMessagesByRoomId:roomId completionBlock:completionBlock errorBlock:errorBlock];
     });
 }
 
@@ -37,7 +38,7 @@
     
     __weak ChatDetailBusinessModel* weakself = self;
     dispatch_async(_backgroundQueue, ^{
-        [weakself.chatDetailRepository saveImageWithData:data ofRoomId:roomId completionBlock:^(ChatDetailEntity* entity){
+        [weakself.chatDetailRepository.fileDataProvider saveImageWithData:data ofRoomId:roomId completionBlock:^(ChatDetailEntity* entity){
             completionBlock(entity);
         } errorBlock:^(NSError* error) {
             
@@ -72,9 +73,12 @@
         newMessageData.createdAt = timeStamp;
         newFileData.createdAt = timeStamp;
         
-        [weakself.chatDetailRepository saveChatMessage:newMessageData completionBlock:^(ChatDetailEntity* entity){
+        [weakself.chatDetailRepository.chatMessageProvider saveMessage:newMessageData completionBlock:^(ChatDetailEntity* entity){
             
-            [weakself.chatDetailRepository saveFile:newFileData withNSData: nil completionBlock:^(BOOL isSuccess) {
+            FileDataWrapper *dataWrapper = [[FileDataWrapper alloc] init];
+            dataWrapper.fileData = newFileData;
+            dataWrapper.nsData = nil;
+            [weakself.chatDetailRepository.fileDataProvider saveFileData:dataWrapper completionBlock:^(id object) {
                 completionBlock(entity, false);
                 // Start Request Download
                 [weakself _startDownload:url forMessage:newMessageData
@@ -92,7 +96,7 @@
     
     __weak ChatDetailBusinessModel* weakself = self;
     dispatch_async(_backgroundQueue, ^{
-        [weakself.chatDetailRepository getChatDataForMessageId:entity.messageId completionBlock:^(ChatMessageData* message){
+        [weakself.chatDetailRepository.chatMessageProvider getChatMessageOfMessageId:entity.messageId completionBlock:^(ChatMessageData* message){
             dispatch_async(weakself.backgroundQueue, ^{
                 [weakself _startDownload:entity.file.filePath forMessage:message ofRoom:roomData completionBlock:completionBlock];
             });
@@ -105,7 +109,7 @@
     
     __weak ChatDetailBusinessModel* weakself = self;
     dispatch_async(_backgroundQueue, ^{
-        [weakself.chatDetailRepository deleteChatMessages:entities completionBlock:completionBlock];
+        [weakself.chatDetailRepository.chatMessageProvider deleteChatMessagesOf:entities completionBlock:completionBlock];
     });
     
 }

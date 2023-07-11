@@ -284,24 +284,6 @@
     [_cacheService deleteImageByKey:key];
 }
 
--(FileType)getFileTypeOfFilePath:(NSString*)filePath {
-    FileType type = Unknown;
-    CFStringRef fileExtension = (__bridge CFStringRef) [filePath pathExtension];
-    CFStringRef fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, NULL);
-    
-    if (UTTypeConformsTo(fileUTI, kUTTypeImage)) {
-        type = Picture;
-    }
-    else if (UTTypeConformsTo(fileUTI, kUTTypeMovie)) {
-        type = Video;
-    }
-    else if (UTTypeConformsTo(fileUTI, kUTTypeText)) {
-        NSLog(@"Text type");
-    }
-    CFRelease(fileUTI);
-    return type;
-}
-
 # pragma mark - Private methods
 -(void)_deleteFileIfValid:(ChatMessageData*)messageData {
     

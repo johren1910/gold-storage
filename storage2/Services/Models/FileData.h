@@ -30,3 +30,8 @@ typedef NS_ENUM(NSInteger, MessageState) {
 @property (nonatomic,readwrite) FileType type;
 -(NSString*)getAbsoluteFilePath;
 @end
+
+@interface FileDataWrapper: NSObject
+@property (nonatomic,readwrite,copy) FileData* fileData;
+@property (nonatomic,readwrite,copy) NSData* nsData;
+@end
