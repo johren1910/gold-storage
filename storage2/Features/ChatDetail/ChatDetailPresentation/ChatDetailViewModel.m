@@ -105,7 +105,7 @@
 
 - (void)changeSegment: (NSInteger) index {
     if (index == 0) {
-        _filteredChats = _messageModels;
+        self.filteredChats = _messageModels;
         [self.delegate didUpdateData];
         return;
     }
@@ -120,7 +120,7 @@
     }
     
     NSArray *filteredArray = [_messageModels filteredArrayUsingPredicate:predicate];
-    _filteredChats = filteredArray;
+    self.filteredChats = filteredArray;
 }
 
 - (NSUInteger) numberOfSections {
@@ -128,7 +128,7 @@
 }
 
 - (NSArray<ChatDetailEntity*>*) items {
-    return _filteredChats;
+    return self.filteredChats;
 }
 
 - (void)requestDownloadFileWithUrl:(NSString *)url {
@@ -288,4 +288,6 @@
     }
     [_chatDetailBusinessModel updateRamCache:image withKey:key];
 }
+@synthesize filteredChats;
+
 @end

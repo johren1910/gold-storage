@@ -30,7 +30,7 @@
 
 #pragma mark - View Lifecycle
 
-- (instancetype)initWithViewModel:(ChatRoomViewModel*)viewModel {
+- (instancetype)initWithViewModel:(id<ChatRoomViewModelType>)viewModel {
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"ChatRoomView" bundle:nil];
     ChatRoomViewController *ivc = [storyboard instantiateViewControllerWithIdentifier:@"ChatRoomViewController"];

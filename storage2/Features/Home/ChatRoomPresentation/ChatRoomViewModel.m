@@ -69,12 +69,12 @@
 }
 
 - (NSMutableArray<ChatRoomEntity*>*) items {
-    return _chats;
+    return self.chats;
 }
 
 - (void) selectChatRoom:(ChatRoomEntity *) chatRoom {
     [_selectedModels addObject:chatRoom];
-    for (ChatRoomEntity *model in _chats) {
+    for (ChatRoomEntity *model in self.chats) {
         if (chatRoom.roomId == model.roomId) {
             
             model.selected = TRUE;
@@ -85,7 +85,7 @@
 }
 - (void) deselectChatRoom:(ChatRoomEntity *) chatRoom {
     [_selectedModels removeObject:chatRoom];
-    for (ChatRoomEntity *model in _chats) {
+    for (ChatRoomEntity *model in self.chats) {
         if (chatRoom.roomId == model.roomId) {
             
             model.selected = FALSE;
@@ -115,11 +115,13 @@
    
     ChatRoomData *newChat = [[ChatRoomData alloc] initWithName:name chatRoomId: chatRoomId];
     newChat.createdAt = timeStamp;
-    [_chats insertObject:[newChat toChatRoomEntity] atIndex: 0];
+    [self.chats insertObject:[newChat toChatRoomEntity] atIndex: 0];
     
     __weak ChatRoomViewModel* weakself = self;
     [_chatRoomBusinessModel createChatRoom:newChat completionBlock:^(BOOL isSuccess){
         [weakself.delegate didUpdateData];
     } errorBlock:nil];
 }
+
+@synthesize chats;
 @end

@@ -21,13 +21,6 @@
 @protocol ChatDetailViewModelType <ViewModelType>
 @property (nonatomic, weak) id <ChatDetailViewModelDelegate> delegate;
 -(instancetype) initWithChatRoom:(id<ChatRoomEntityType>)chatRoom andBusinessModel:(id<ChatDetailBusinessModelInterface>)chatDetailBusinessModel;
-@end
-
-@interface ChatDetailViewModel : NSObject<ChatDetailViewModelType>
-
-@property (nonatomic) id<ChatDetailBusinessModelInterface> chatDetailBusinessModel;
-- (ChatDetailEntity *)itemAtIndexPath:(NSIndexPath *)indexPath;
-- (NSUInteger) numberOfSections;
 - (void) updateRamCache: (UIImage*)image withKey:(NSString*)key;
 - (void) onViewDidLoad;
 
@@ -42,4 +35,12 @@
 - (void)requestAddImage:(NSData *)data;
 - (void)requestDownloadFileWithUrl:(NSString *)url;
 @property (copy,nonatomic) NSArray<ChatDetailEntity *> *filteredChats;
+@end
+
+@interface ChatDetailViewModel : NSObject<ChatDetailViewModelType>
+
+@property (nonatomic) id<ChatDetailBusinessModelInterface> chatDetailBusinessModel;
+- (ChatDetailEntity *)itemAtIndexPath:(NSIndexPath *)indexPath;
+- (NSUInteger) numberOfSections;
+
 @end

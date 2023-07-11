@@ -31,12 +31,6 @@
 @protocol ChatRoomViewModelType <ViewModelType>
 
 -(instancetype) initWithBusinessModel:(id<ChatRoomBusinessModelInterface>)chatDetailBusinessModel;
-
-@end
-
-@interface ChatRoomViewModel : NSObject <ChatRoomViewModelType>
-
-#pragma mark - Actions
 - (void)selectChatRoom:(ChatRoomEntity *) chatRoom;
 - (void)deselectChatRoom:(ChatRoomEntity *) chatRoom;
 - (void)deleteSelected;
@@ -47,6 +41,9 @@
 - (NSUInteger) numberOfSections;
 
 @property (strong,nonatomic) NSMutableArray<ChatRoomEntity *> *chats;
+@end
+
+@interface ChatRoomViewModel : NSObject <ChatRoomViewModelType>
 
 @property (nonatomic, weak) id <ChatRoomViewModelDelegate>  delegate;
 @property (nonatomic, strong) id <ChatRoomViewModelCoordinatorDelegate>  coordinatorDelegate;

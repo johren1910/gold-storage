@@ -43,10 +43,8 @@
 }
 
 -(id<ZODownloadManagerType>) getDownloadManager {
-    FileDataProvider* provider = [[FileDataProvider alloc] initWithStorageManager:[self getStorageManager]];
     return _environment.downloadManager;
 }
-
 
 -(id<ChatDetailRepositoryInterface>) getChatDetailDataRepository {
     ChatDetailDataRepository* repository = [[ChatDetailDataRepository alloc] initWithDownloadManager:[self getDownloadManager] andFileDataProvider:[self getFileDataProvider] andChatMessageProvider:[self getChatMessageProvider] andStorageManager:[self getStorageManager]];

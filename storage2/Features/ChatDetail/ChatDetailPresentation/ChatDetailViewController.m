@@ -13,11 +13,10 @@
 @property (strong, nonatomic) IBOutlet UICollectionView *collectionView;
 @property (strong, nonatomic) IBOutlet UISegmentedControl *segmentBar;
 @property (strong, nonatomic) IBOutlet UISwitch *cheatSwitch;
-@property (nonatomic, strong) ChatDetailViewModel *viewModel;
+@property (nonatomic, strong) id<ChatDetailViewModelType> viewModel;
 @property (nonatomic, readonly) NSInteger selectedIndex;
 
 @end
-
 
 @implementation ChatDetailViewController
 
@@ -72,7 +71,7 @@
     [self.adapter performUpdatesAnimated:true completion:nil];
 }
 
-- (instancetype)initWithViewModel:(ChatDetailViewModel *)viewModel {
+- (instancetype)initWithViewModel:(id<ChatDetailViewModelType>)viewModel {
     
     UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"ChatDetailView" bundle:nil];
     ChatDetailViewController *ivc = [storyboard instantiateViewControllerWithIdentifier:@"ChatDetailViewController"];
