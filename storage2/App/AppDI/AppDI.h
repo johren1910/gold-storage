@@ -11,17 +11,21 @@
 #import "ChatDetailBuilder.h"
 #import "ChatRoomViewController.h"
 #import "ChatRoomBuilder.h"
+#import "StorageBuilder.h"
 
 @protocol AppDIInterface
 
 -(id<ViewControllerType>) getChatDetailViewController:(id<ChatRoomEntityType>)chatRoom withBuilder:(id<ChatDetailBuilderType>)builder;
 -(id<ViewControllerType>) getChatRoomViewControllerWithBuilder:(id<ChatRoomBuilderType>)builder;
 
+-(id<ViewControllerType>) getStorageViewControllerWithBuilder:(id<StorageBuilderType>)builder;
+
 @end
 
 @interface AppDI : NSObject <AppDIInterface>
 -(id<ChatDetailBuilderType>) defaultDetailBuilder;
 -(id<ChatRoomBuilderType>) defaultRoomBuilder;
+-(id<StorageBuilderType>) defaultStorageBuilder;
 +(AppDI*) shared;
 
 @end

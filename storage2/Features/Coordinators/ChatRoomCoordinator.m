@@ -57,15 +57,10 @@
 -(void)didTapSetting {
     //Navigate to setting
     NSLog(@"Navigate to setting");
+    StorageViewController *viewController = (StorageViewController*)[_appDI getStorageViewControllerWithBuilder:[_appDI defaultStorageBuilder]];
+    viewController.title = @"Storage";
     
-    StorageViewModel* viewModel = [[StorageViewModel alloc] init];
-//    viewModel.databaseService = _databaseService;
-    
-    UIStoryboard *storyboard = [UIStoryboard storyboardWithName:@"StorageView" bundle:nil];
-    StorageViewController *ivc = [storyboard instantiateViewControllerWithIdentifier:@"StorageViewController"];
-    ivc.title = @"Storage";
-    
-    [self.navigationController pushViewController:ivc animated:true];
+    [self.navigationController pushViewController:viewController animated:true];
 }
 
 @end

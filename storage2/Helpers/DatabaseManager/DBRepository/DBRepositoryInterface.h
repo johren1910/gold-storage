@@ -4,7 +4,7 @@
 //
 //  Created by LAP14885 on 05/07/2023.
 //
-
+#import <Foundation/Foundation.h>
 #import <sqlite3.h>
 
 typedef void(^ZOCompletionBlock)(BOOL isSuccess);

@@ -20,7 +20,7 @@
 @interface ChatRoomViewController () <IGListAdapterDataSource, ChatRoomViewModelDelegate>
 
 @property (nonatomic, strong) IGListAdapter *adapter;
-@property (nonatomic, strong) ChatRoomViewModel *viewModel;
+@property (nonatomic, strong) id<ChatRoomViewModelType> viewModel;
 @property (strong, nonatomic) IBOutlet UIView *collectionViewHolder;
 @property (nonatomic, strong) id<ZOStatePresentable> statePresenter;
 

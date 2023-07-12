@@ -16,6 +16,9 @@
 - (void)saveFileData:(FileDataWrapper*)data completionBlock:(void(^)(id entity))completionBlock;
 - (void) saveImageWithData:(NSData*)data ofRoomId:(NSString*)roomId completionBlock:(void(^)(ChatDetailEntity* entity)) completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
 
+- (void)getPhoneSize:(void (^)(long long size))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
+- (void)getAppSize:(void (^)(long long size))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
+
 @end
 
 @interface FileDataProvider : NSObject <FileDataProviderType>

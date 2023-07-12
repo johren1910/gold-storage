@@ -52,7 +52,7 @@
 }
 
 - (void) onViewDidLoad {
-    [_delegate startLoading];
+    [self.delegate startLoading];
     [self _loadData];
 }
 
@@ -123,5 +123,7 @@
     } errorBlock:nil];
 }
 
+@synthesize delegate;
 @synthesize chats;
+@synthesize coordinatorDelegate;
 @end

@@ -6,8 +6,10 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "StorageEntity.h"
 #import "StorageViewModel.h"
+#import "FileType.h"
+#import "FileHelper.h"
 
-@interface StorageViewController : UIViewController
-
+@interface StorageViewController : UIViewController <ViewControllerType>
 @end

@@ -79,5 +79,17 @@
 +(BOOL *)moveItemAtPath:(NSString *)path toPath:(NSString*)dstPath error:(NSError **)error;
 
 +(NSString *)pathForApplicationSupportDirectoryWithPath:(NSString *)path;
+
+#pragma mark - Storage Space
+
++(unsigned long long)getApplicationSize;
+
++(UInt64)usedDiskSpaceInBytes;
+
++(UInt64)freeDiskSpaceInBytes;
+
++(UInt64)totalDiskSpaceInBytes;
+
++(NSString*)sizeStringFormatterFromBytes:(UInt64)bytes;
 @end
 

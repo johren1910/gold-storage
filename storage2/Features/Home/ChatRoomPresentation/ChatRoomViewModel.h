@@ -39,13 +39,13 @@
 
 - (ChatRoomEntity *)itemAtIndexPath:(NSIndexPath *)indexPath;
 - (NSUInteger) numberOfSections;
+@property (nonatomic, weak) id <ChatRoomViewModelDelegate>  delegate;
+@property (nonatomic, strong) id <ChatRoomViewModelCoordinatorDelegate>  coordinatorDelegate;
 
 @property (strong,nonatomic) NSMutableArray<ChatRoomEntity *> *chats;
 @end
 
 @interface ChatRoomViewModel : NSObject <ChatRoomViewModelType>
 
-@property (nonatomic, weak) id <ChatRoomViewModelDelegate>  delegate;
-@property (nonatomic, strong) id <ChatRoomViewModelCoordinatorDelegate>  coordinatorDelegate;
 @property (nonatomic) id<ChatRoomBusinessModelInterface> chatRoomBusinessModel;
 @end

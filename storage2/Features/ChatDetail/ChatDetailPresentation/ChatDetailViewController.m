@@ -23,30 +23,6 @@
 
 #pragma mark - View Lifecycle
 
-
-- (void) didUpdateObject:(ChatDetailEntity*)model {
-    __weak ChatDetailViewController *weakself = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [weakself.adapter reloadObjects:@[model]];
-    });
-    
-}
-
-- (void)didUpdateData {
-    __weak ChatDetailViewController *weakself = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [weakself.adapter performUpdatesAnimated:false completion:nil];
-    });
-    
-}
-
-- (void)didReloadData {
-    __weak ChatDetailViewController *weakself = self;
-    dispatch_async(dispatch_get_main_queue(), ^{
-        [weakself.adapter reloadDataWithCompletion:nil];
-    });
-}
-
 -(void)setDetailBuilder:(id<ChatDetailBuilderType>)builder {
     self.builder = builder;
 }
@@ -125,6 +101,32 @@
 - (void) retryWithModel:(ChatDetailEntity *)model {
     [_viewModel retryWithModel:model];
 }
+
+#pragma mark - ChatDetailViewModelDelegate
+
+- (void) didUpdateObject:(ChatDetailEntity*)model {
+    __weak ChatDetailViewController *weakself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakself.adapter reloadObjects:@[model]];
+    });
+    
+}
+
+- (void)didUpdateData {
+    __weak ChatDetailViewController *weakself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakself.adapter performUpdatesAnimated:false completion:nil];
+    });
+    
+}
+
+- (void)didReloadData {
+    __weak ChatDetailViewController *weakself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakself.adapter reloadDataWithCompletion:nil];
+    });
+}
+
 
 #pragma mark - Action
 

@@ -21,5 +21,3 @@
 @interface ChatMessageProvider : NSObject <ChatMessageProviderType>
 
 @end
-
-

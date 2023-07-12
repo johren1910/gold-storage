@@ -757,6 +757,87 @@
     return nil;
 }
 
++(unsigned long long)getApplicationSize {
+    NSMutableArray* directories = [self absoluteDirectories];
+    unsigned long long fileSize = 0;
+    for (int i=0; i<directories.count; i++) {
+        NSString *directoryPath = directories[i];
+        NSURL* directoryUrl = [self urlForItemAtPath:directoryPath];
+        unsigned long long directorySize = [self _getAllocatedSize:directoryUrl];
+        NSLog(@"Directory name: %@ - size: %lld", directoryPath, directorySize);
+        NSLog(@"Formatted size: %@", [self sizeStringFormatterFromBytes:directorySize]);
+        fileSize += directorySize;
+    }
+
+    NSLog(@" App Name and App size: %lld",fileSize);
+    NSLog(@"Formatted app size: %@", [self sizeStringFormatterFromBytes:fileSize]);
+    return fileSize;
+}
+
++ (unsigned long long)_getAllocatedSize:(NSURL *)directoryURL
+{
+    NSParameterAssert(directoryURL != nil);
+
+    unsigned long long accumulatedSize = 0;
+
+    NSArray *prefetchedProperties = @[
+        NSURLIsRegularFileKey,
+        NSURLFileAllocatedSizeKey,
+        NSURLTotalFileAllocatedSizeKey,
+    ];
+
+    NSDirectoryEnumerator *enumerator = [[NSFileManager defaultManager] enumeratorAtURL:directoryURL
+                                                             includingPropertiesForKeys:prefetchedProperties
+                                                                                options:(NSDirectoryEnumerationOptions)0
+                                                                           errorHandler:nil];
+  
+    for (NSURL *contentItemURL in enumerator) {
+
+        NSNumber *isRegularFile;
+        if (! [contentItemURL getResourceValue:&isRegularFile forKey:NSURLIsRegularFileKey error:nil])
+            return 0;
+        if (! [isRegularFile boolValue])
+            continue;
+
+        NSNumber *fileSize;
+        if (! [contentItemURL getResourceValue:&fileSize forKey:NSURLTotalFileAllocatedSizeKey error:nil])
+            return 0;
+
+        if (fileSize == nil) {
+            if (! [contentItemURL getResourceValue:&fileSize forKey:NSURLFileAllocatedSizeKey error:nil])
+                return 0;
+
+            NSAssert(fileSize != nil, @"NSURLFileAllocatedSizeKey should always return a value");
+        }
+
+        accumulatedSize += [fileSize unsignedLongLongValue];
+    }
+
+    return accumulatedSize;
+}
+
++(NSString*)sizeStringFormatterFromBytes:(UInt64)bytes {
+    return [NSByteCountFormatter stringFromByteCount:bytes countStyle:NSByteCountFormatterCountStyleFile];
+}
+
++(UInt64)totalDiskSpaceInBytes {
+    NSDictionary* attributes = [[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:nil];
+    UInt64 space = [((NSNumber*) [attributes valueForKey: NSFileSystemSize]) intValue];
+    if (!space)
+        return 0;
+    return space;
+}
++(UInt64)freeDiskSpaceInBytes {
+    NSDictionary* attributes = [[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:nil];
+    UInt64 space = [((NSNumber*) [attributes valueForKey: NSFileSystemFreeSize]) intValue];
+    if (!space)
+        return 0;
+    return space;
+}
++(UInt64)usedDiskSpaceInBytes {
+    return self.totalDiskSpaceInBytes - self.freeDiskSpaceInBytes;
+}
+
 @end
 
 @implementation ZOMediaInfo

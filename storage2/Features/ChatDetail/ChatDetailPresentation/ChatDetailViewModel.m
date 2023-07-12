@@ -49,8 +49,6 @@
     return self;
 }
 
-@synthesize delegate;
-
 - (void) onViewDidLoad {
     [self _loadData];
 }
@@ -280,6 +278,7 @@
     
 }
 
+@synthesize delegate;
 @synthesize filteredChats;
 
 @end

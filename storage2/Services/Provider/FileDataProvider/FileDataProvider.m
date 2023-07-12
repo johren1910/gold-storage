@@ -9,6 +9,7 @@
 #import "ChatDetailEntity.h"
 #import "CompressorHelper.h"
 #import <MobileCoreServices/MobileCoreServices.h>
+#import "FileHelper.h"
 
 @interface FileDataProvider ()
 @property (nonatomic) id<StorageManagerType> storageManager;
@@ -81,6 +82,15 @@
         entity.thumbnail = [weakself.storageManager getImageByKey:entity.file.checksum];
         completionBlock(entity);
     }];
+}
+
+- (void)getPhoneSize:(void (^)(long long size))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
+    long long phoneSize = [FileHelper totalDiskSpaceInBytes];
+    completionBlock(phoneSize);
+}
+- (void)getAppSize:(void (^)(long long size))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
+    long long appSize = [FileHelper getApplicationSize];
+    completionBlock(appSize);
 }
 
 @end

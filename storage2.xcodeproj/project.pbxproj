@@ -7,7 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		5C4AD0BB23B4E9D58E17305D /* Pods_storage2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E19C3CDB4D176A0EF12B2065 /* Pods_storage2.framework */; };
+		F60BD33C2A5EA49D006DCF69 /* Pods_storage2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E19C3CDB4D176A0EF12B2065 /* Pods_storage2.framework */; };
 		F64BAB692A3DA456002B923F /* DatabaseService.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAB682A3DA456002B923F /* DatabaseService.m */; };
 		F64BAB742A3F05CA002B923F /* Coordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAB732A3F05CA002B923F /* Coordinator.m */; };
 		F64BAB7A2A3F08CA002B923F /* AppCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAB792A3F08CA002B923F /* AppCoordinator.m */; };
@@ -71,12 +71,20 @@
 		F6EFC9502A53D7A600DDEDF4 /* ZOUrlSessionDownloadRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC94F2A53D7A600DDEDF4 /* ZOUrlSessionDownloadRepository.m */; };
 		F6EFC9532A53F9D100DDEDF4 /* ZOUrlSessionDownloadUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC9522A53F9D100DDEDF4 /* ZOUrlSessionDownloadUnit.m */; };
 		F6EFC95B2A5554BB00DDEDF4 /* ChatMessageDBRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC95A2A5554BB00DDEDF4 /* ChatMessageDBRepository.m */; };
+		F6FF767D2A5D5EA1003A1EF4 /* StorageBusinessModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F6FF767C2A5D5EA1003A1EF4 /* StorageBusinessModel.m */; };
+		F6FF76802A5D5EB6003A1EF4 /* StorageEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = F6FF767F2A5D5EB6003A1EF4 /* StorageEntity.m */; };
+		F6FF76842A5D5EDE003A1EF4 /* StorageDataRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = F6FF76832A5D5EDE003A1EF4 /* StorageDataRepository.m */; };
+		F6FF76872A5D5F02003A1EF4 /* StorageBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = F6FF76862A5D5F02003A1EF4 /* StorageBuilder.m */; };
+		F6FF768F2A5E8EB7003A1EF4 /* StorageTableCell.m in Sources */ = {isa = PBXBuildFile; fileRef = F6FF768E2A5E8EB7003A1EF4 /* StorageTableCell.m */; };
+		F6FF76912A5E8F74003A1EF4 /* StorageTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F6FF76902A5E8F74003A1EF4 /* StorageTableCell.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		2428DBFDEBA3038772A072A5 /* Pods-storage2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-storage2.debug.xcconfig"; path = "Target Support Files/Pods-storage2/Pods-storage2.debug.xcconfig"; sourceTree = "<group>"; };
 		41FF497A3D8960B438AD9763 /* Pods-storage2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-storage2.release.xcconfig"; path = "Target Support Files/Pods-storage2/Pods-storage2.release.xcconfig"; sourceTree = "<group>"; };
 		E19C3CDB4D176A0EF12B2065 /* Pods_storage2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_storage2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		F60BD33A2A5EA48D006DCF69 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		F60BD33B2A5EA492006DCF69 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		F64BAB672A3DA448002B923F /* DatabaseService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DatabaseService.h; sourceTree = "<group>"; };
 		F64BAB682A3DA456002B923F /* DatabaseService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DatabaseService.m; sourceTree = "<group>"; };
 		F64BAB722A3F0593002B923F /* Coordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Coordinator.h; sourceTree = "<group>"; };
@@ -203,6 +211,18 @@
 		F6EFC9582A5552C400DDEDF4 /* FileDBRepository.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileDBRepository.h; sourceTree = "<group>"; };
 		F6EFC9592A5552D900DDEDF4 /* DBRepositoryInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DBRepositoryInterface.h; sourceTree = "<group>"; };
 		F6EFC95A2A5554BB00DDEDF4 /* ChatMessageDBRepository.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatMessageDBRepository.m; sourceTree = "<group>"; };
+		F6FF767B2A5D5E94003A1EF4 /* StorageBusinessModel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StorageBusinessModel.h; sourceTree = "<group>"; };
+		F6FF767C2A5D5EA1003A1EF4 /* StorageBusinessModel.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StorageBusinessModel.m; sourceTree = "<group>"; };
+		F6FF767E2A5D5EAD003A1EF4 /* StorageEntity.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StorageEntity.h; sourceTree = "<group>"; };
+		F6FF767F2A5D5EB6003A1EF4 /* StorageEntity.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StorageEntity.m; sourceTree = "<group>"; };
+		F6FF76812A5D5EC1003A1EF4 /* StorageRepositoryInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StorageRepositoryInterface.h; sourceTree = "<group>"; };
+		F6FF76822A5D5ED2003A1EF4 /* StorageDataRepository.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StorageDataRepository.h; sourceTree = "<group>"; };
+		F6FF76832A5D5EDE003A1EF4 /* StorageDataRepository.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StorageDataRepository.m; sourceTree = "<group>"; };
+		F6FF76852A5D5EF8003A1EF4 /* StorageBuilder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StorageBuilder.h; sourceTree = "<group>"; };
+		F6FF76862A5D5F02003A1EF4 /* StorageBuilder.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StorageBuilder.m; sourceTree = "<group>"; };
+		F6FF768D2A5E8EAC003A1EF4 /* StorageTableCell.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = StorageTableCell.h; sourceTree = "<group>"; };
+		F6FF768E2A5E8EB7003A1EF4 /* StorageTableCell.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = StorageTableCell.m; sourceTree = "<group>"; };
+		F6FF76902A5E8F74003A1EF4 /* StorageTableCell.xib */ = {isa = PBXFileReference; lastKnownFileType = file.xib; path = StorageTableCell.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -210,7 +230,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				5C4AD0BB23B4E9D58E17305D /* Pods_storage2.framework in Frameworks */,
+				F60BD33C2A5EA49D006DCF69 /* Pods_storage2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -220,6 +240,8 @@
 		0E2E78DD5F7BA2BF4239FF6F /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				F60BD33B2A5EA492006DCF69 /* libsqlite3.0.tbd */,
+				F60BD33A2A5EA48D006DCF69 /* libsqlite3.tbd */,
 				E19C3CDB4D176A0EF12B2065 /* Pods_storage2.framework */,
 			);
 			name = Frameworks;
@@ -641,6 +663,7 @@
 		F6C43F212A3AF139001D8715 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F6FF768C2A5E8E95003A1EF4 /* TableCell */,
 				F6C43F1E2A3AF139001D8715 /* SectionControllers */,
 				F64BABC32A4404E0002B923F /* ZOStatePresentable */,
 				F64BABC22A4404CA002B923F /* StorageInfoCell */,
@@ -664,11 +687,9 @@
 		F6C43F3B2A3B2A12001D8715 /* StorageOverview */ = {
 			isa = PBXGroup;
 			children = (
-				F6C43F3C2A3B2A29001D8715 /* StorageViewController.h */,
-				F6C43F3D2A3B2A39001D8715 /* StorageViewController.m */,
-				F6C43F3F2A3B2A48001D8715 /* StorageViewModel.h */,
-				F6C43F402A3B2A53001D8715 /* StorageViewModel.m */,
-				F6C43F422A3B2A5F001D8715 /* StorageView.storyboard */,
+				F6FF767A2A5D5E7D003A1EF4 /* StorageData */,
+				F6FF76792A5D5E77003A1EF4 /* StorageDomain */,
+				F6FF76782A5D5E6D003A1EF4 /* StoragePresentation */,
 			);
 			path = StorageOverview;
 			sourceTree = "<group>";
@@ -717,6 +738,8 @@
 				F6EFC9402A5275AB00DDEDF4 /* ChatRoomBuilder.h */,
 				F6EFC9412A52771800DDEDF4 /* ChatRoomBuilder.m */,
 				F65879832A5BF05300293FFD /* DIInterface.h */,
+				F6FF76852A5D5EF8003A1EF4 /* StorageBuilder.h */,
+				F6FF76862A5D5F02003A1EF4 /* StorageBuilder.m */,
 			);
 			path = AppDI;
 			sourceTree = "<group>";
@@ -750,6 +773,49 @@
 				F6EFC9592A5552D900DDEDF4 /* DBRepositoryInterface.h */,
 			);
 			path = DBRepository;
+			sourceTree = "<group>";
+		};
+		F6FF76782A5D5E6D003A1EF4 /* StoragePresentation */ = {
+			isa = PBXGroup;
+			children = (
+				F6C43F3C2A3B2A29001D8715 /* StorageViewController.h */,
+				F6C43F3D2A3B2A39001D8715 /* StorageViewController.m */,
+				F6C43F3F2A3B2A48001D8715 /* StorageViewModel.h */,
+				F6C43F402A3B2A53001D8715 /* StorageViewModel.m */,
+				F6C43F422A3B2A5F001D8715 /* StorageView.storyboard */,
+			);
+			path = StoragePresentation;
+			sourceTree = "<group>";
+		};
+		F6FF76792A5D5E77003A1EF4 /* StorageDomain */ = {
+			isa = PBXGroup;
+			children = (
+				F6FF767B2A5D5E94003A1EF4 /* StorageBusinessModel.h */,
+				F6FF767C2A5D5EA1003A1EF4 /* StorageBusinessModel.m */,
+				F6FF767E2A5D5EAD003A1EF4 /* StorageEntity.h */,
+				F6FF767F2A5D5EB6003A1EF4 /* StorageEntity.m */,
+				F6FF76812A5D5EC1003A1EF4 /* StorageRepositoryInterface.h */,
+			);
+			path = StorageDomain;
+			sourceTree = "<group>";
+		};
+		F6FF767A2A5D5E7D003A1EF4 /* StorageData */ = {
+			isa = PBXGroup;
+			children = (
+				F6FF76822A5D5ED2003A1EF4 /* StorageDataRepository.h */,
+				F6FF76832A5D5EDE003A1EF4 /* StorageDataRepository.m */,
+			);
+			path = StorageData;
+			sourceTree = "<group>";
+		};
+		F6FF768C2A5E8E95003A1EF4 /* TableCell */ = {
+			isa = PBXGroup;
+			children = (
+				F6FF768D2A5E8EAC003A1EF4 /* StorageTableCell.h */,
+				F6FF768E2A5E8EB7003A1EF4 /* StorageTableCell.m */,
+				F6FF76902A5E8F74003A1EF4 /* StorageTableCell.xib */,
+			);
+			path = TableCell;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -815,6 +881,7 @@
 				F6C43F022A3AEF0D001D8715 /* LaunchScreen.storyboard in Resources */,
 				F6C43F432A3B2A5F001D8715 /* StorageView.storyboard in Resources */,
 				F6C43F162A3AF0A1001D8715 /* ChatRoomView.storyboard in Resources */,
+				F6FF76912A5E8F74003A1EF4 /* StorageTableCell.xib in Resources */,
 				F6C43F282A3AF139001D8715 /* ChatRoomCell.xib in Resources */,
 				F6C43EFF2A3AEF0D001D8715 /* Assets.xcassets in Resources */,
 				F6C43F482A3C07A5001D8715 /* ChatMessageCell.xib in Resources */,
@@ -874,11 +941,13 @@
 			files = (
 				F65879872A5D052F00293FFD /* ChatMessageProvider.m in Sources */,
 				F6EFC93B2A5272AE00DDEDF4 /* AppDI.m in Sources */,
+				F6FF76842A5D5EDE003A1EF4 /* StorageDataRepository.m in Sources */,
 				F6C43F2C2A3B0D15001D8715 /* ChatDetailViewController.m in Sources */,
 				F6EFC9502A53D7A600DDEDF4 /* ZOUrlSessionDownloadRepository.m in Sources */,
 				F6C43F2F2A3B0D45001D8715 /* ChatDetailViewModel.m in Sources */,
 				F64BAFD22A4AECBE002B923F /* StorageManager.m in Sources */,
 				F64BAFE82A4E7A2A002B923F /* ZOPrirorityQueue.m in Sources */,
+				F6FF767D2A5D5EA1003A1EF4 /* StorageBusinessModel.m in Sources */,
 				F6EFC9422A52771800DDEDF4 /* ChatRoomBuilder.m in Sources */,
 				F6C43EFA2A3AEF0D001D8715 /* ChatRoomViewController.m in Sources */,
 				F64BB0062A51AEC9002B923F /* ChatDetailDataRepository.m in Sources */,
@@ -907,6 +976,7 @@
 				F64BAFE22A4C1A47002B923F /* AppEnvironment.m in Sources */,
 				F6C43F412A3B2A53001D8715 /* StorageViewModel.m in Sources */,
 				F64BAB692A3DA456002B923F /* DatabaseService.m in Sources */,
+				F6FF76802A5D5EB6003A1EF4 /* StorageEntity.m in Sources */,
 				F658798D2A5D0E7B00293FFD /* FileDataProvider.m in Sources */,
 				F6C43F3E2A3B2A39001D8715 /* StorageViewController.m in Sources */,
 				F6C43F252A3AF139001D8715 /* ChatRoomData.m in Sources */,
@@ -926,6 +996,8 @@
 				F64BABCE2A4839FA002B923F /* ZODownloadManager.m in Sources */,
 				F65879772A57EE4300293FFD /* ChatRoomEntity.m in Sources */,
 				F6EFC95B2A5554BB00DDEDF4 /* ChatMessageDBRepository.m in Sources */,
+				F6FF76872A5D5F02003A1EF4 /* StorageBuilder.m in Sources */,
+				F6FF768F2A5E8EB7003A1EF4 /* StorageTableCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

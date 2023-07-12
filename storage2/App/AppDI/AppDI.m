@@ -11,11 +11,13 @@
 #import "ChatDetailBuilder.h"
 #import "ChatRoomBuilder.h"
 #import "ChatDetailViewController.h"
+#import "StorageBuilder.h"
 
 @interface AppDI ()
 @property (nonatomic) AppEnvironment* environment;
 @property (nonatomic) id<ChatDetailBuilderType> chatDetailBuilder;
 @property (nonatomic) id<ChatRoomBuilderType> chatRoomBuilder;
+@property (nonatomic) id<StorageBuilderType> storageBuilder;
 @end
 
 @implementation AppDI
@@ -29,6 +31,7 @@
     _appDI.environment = [[AppEnvironment alloc] init];
     _appDI.chatDetailBuilder = [[ChatDetailBuilder alloc] init:_appDI.environment];
     _appDI.chatRoomBuilder = [[ChatRoomBuilder alloc] init:_appDI.environment];
+    _appDI.storageBuilder = [[StorageBuilder alloc] init:_appDI.environment];
     return _appDI;
 }
 
@@ -54,6 +57,18 @@
     return viewController;
 }
 
+
+-(id<ViewControllerType>) getStorageViewControllerWithBuilder:(id<StorageBuilderType>)builder {
+    StorageViewController* viewController = nil;
+    if (builder) {
+        viewController = (StorageViewController*)[builder getStorageViewController];
+    } else {
+        viewController = (StorageViewController*)[[self defaultStorageBuilder] getStorageViewController];
+    }
+    
+    return viewController;
+}
+
 -(id<ChatDetailBuilderType>) defaultDetailBuilder {
     return _chatDetailBuilder;
 }
@@ -61,4 +76,9 @@
 -(id<ChatRoomBuilderType>) defaultRoomBuilder {
     return _chatRoomBuilder;
 }
+
+-(id<StorageBuilderType>) defaultStorageBuilder {
+    return _storageBuilder;
+}
+
 @end
