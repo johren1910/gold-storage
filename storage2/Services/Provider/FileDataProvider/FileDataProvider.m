@@ -103,14 +103,21 @@
     pictureItem.fileType = Picture;
     pictureItem.color = UIColor.magentaColor;
     pictureItem.size = pictureSize;
-    [array addObject:pictureItem];
+    //TODO: Research better way. 8192 = size of an empty folder
+    if(pictureSize>8192) {
+        [array addObject:pictureItem];
+    }
     
     long long videoSize = [FileHelper getVideoFolderSize];
     StorageSpaceItem* videoItem = [[StorageSpaceItem alloc] init];
     videoItem.fileType = Video;
     videoItem.color = UIColor.redColor;
     videoItem.size = videoSize;
-    [array addObject:videoItem];
+    
+    //TODO: Research better way. 8192 = size of an empty folder
+    if(videoSize>8192) {
+        [array addObject:videoItem];
+    }
     
     long long miscSize = [FileHelper getOtherExceptSupportSize];
     StorageSpaceItem* miscItem = [[StorageSpaceItem alloc] init];

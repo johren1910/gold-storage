@@ -845,6 +845,10 @@
     pictureFolder = [FileHelper absolutePath:pictureFolder];
     NSURL* pictureUrl = [self urlForItemAtPath:pictureFolder];
     
+//    NSUInteger itemCount = [[FileHelper listItemsInDirectoryAtPath:pictureFolder deep:TRUE] count];
+//    if(itemCount==0)
+//        return 0;
+    
     return [self _getAllocatedSize:pictureUrl];
 }
 

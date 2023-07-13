@@ -76,8 +76,9 @@
          BOOL result = [[weakself.databaseService getChatMessageDBRepository] remove:message];
         
         if (result) {
-            [weakself _deleteFileIfValid:message];
             [[weakself.databaseService getFileDBRepository] remove:message.file];
+            [weakself _deleteFileIfValid:message];
+           
             if(completionBlock)
                 completionBlock(true);
         }
@@ -289,21 +290,19 @@
 -(void)_deleteFileIfValid:(ChatMessageData*)messageData {
     
     __weak StorageManager* weakself = self;
-    dispatch_async(_databaseQueue, ^{
-        NSString *whereStr = [NSString stringWithFormat:@"checksum = \"%@\"", messageData.file.checksum];
-        NSArray* objects = [[weakself.databaseService getFileDBRepository] getObjectsWhere:whereStr isDistinct:false];
-        if (objects.count == 0) {
-            [weakself.cacheService deleteImageByKey:messageData.file.checksum];
-            NSError* error;
-            if([FileHelper existsItemAtPath:messageData.file.getAbsoluteFilePath]) {
-                BOOL isDeleted = [FileHelper removeItemAtPath:messageData.file.getAbsoluteFilePath error:&error];
-                if(error) {
-                    NSLog(@"error log %@", error.localizedDescription);
-                }
-                NSLog(@"File removed %d", isDeleted);
+    NSString *whereStr = [NSString stringWithFormat:@"checksum = \"%@\"", messageData.file.checksum];
+    NSArray* objects = [[weakself.databaseService getFileDBRepository] getObjectsWhere:whereStr isDistinct:false];
+    if (objects.count == 0) {
+        [weakself.cacheService deleteImageByKey:messageData.file.checksum];
+        NSError* error;
+        if([FileHelper existsItemAtPath:messageData.file.getAbsoluteFilePath]) {
+            BOOL isDeleted = [FileHelper removeItemAtPath:messageData.file.getAbsoluteFilePath error:&error];
+            if(error) {
+                NSLog(@"error log %@", error.localizedDescription);
             }
+            NSLog(@"File removed %d", isDeleted);
         }
-    });
+    }
 }
 
 @end

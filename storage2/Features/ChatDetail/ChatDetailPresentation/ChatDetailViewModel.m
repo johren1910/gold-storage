@@ -19,11 +19,12 @@
 @property (nonatomic, copy) ChatRoomEntity *chatRoom;
 @property (nonatomic) BOOL isCheatOn;
 @property (nonatomic) dispatch_queue_t backgroundQueue;
+@property (nonatomic) NSInteger currentSegmentIndex;
 @end
 
 @implementation ChatDetailViewModel
 
--(instancetype) initWithChatRoom:(ChatRoomEntity*)chatRoom andBusinessModel:(id<ChatDetailBusinessModelInterface>)chatDetailBusinessModel {
+-(instancetype) initWithChatRoom:(id<ChatRoomEntityType>)chatRoom andBusinessModel:(id<ChatDetailBusinessModelInterface>)chatDetailBusinessModel {
     self = [super init];
     if (self) {
         self.messageModels = [[NSMutableArray alloc] init];
@@ -32,9 +33,14 @@
         self.isCheatOn = FALSE;
         self.chatDetailBusinessModel = chatDetailBusinessModel;
     }
-    _chatRoom = chatRoom;
+    _chatRoom = (ChatRoomEntity*)chatRoom;
     
     return self;
+}
+
+-(void)setChatRoom:(id<ChatRoomEntityType>)chatRoom {
+    _chatRoom = (ChatRoomEntity*)chatRoom;
+    _isCheatOn = false;
 }
 
 - (instancetype)init {
@@ -102,6 +108,7 @@
 }
 
 - (void)changeSegment: (NSInteger) index {
+    self.currentSegmentIndex = index;
     if (index == 0) {
         self.filteredChats = _messageModels;
         [self.delegate didUpdateData];

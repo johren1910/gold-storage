@@ -21,6 +21,7 @@
 @protocol ChatDetailViewModelType <ViewModelType>
 @property (nonatomic, weak) id <ChatDetailViewModelDelegate> delegate;
 -(instancetype) initWithChatRoom:(id<ChatRoomEntityType>)chatRoom andBusinessModel:(id<ChatDetailBusinessModelInterface>)chatDetailBusinessModel;
+-(void)setChatRoom:(id<ChatRoomEntityType>)chatRoom;
 - (void) onViewDidLoad;
 
 #pragma mark - Actions

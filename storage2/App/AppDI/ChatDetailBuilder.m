@@ -18,6 +18,12 @@
 
 @interface ChatDetailBuilder ()
 @property (nonatomic) id<AppEnvironmentType> environment;
+
+@property (nonatomic) id<ChatMessageProviderType> chatMessageProvider;
+@property (nonatomic) id<FileDataProviderType> fileDataProvider;
+@property (nonatomic) id<ChatDetailRepositoryInterface> chatDetailRepository;
+@property (nonatomic) id<ChatDetailBusinessModelInterface> chatDetailBusinessModel;
+@property (nonatomic) id<ChatDetailViewModelType> chatDetailViewModel;
 @end
 
 @implementation ChatDetailBuilder
@@ -38,13 +44,21 @@
 }
 
 -(id<ChatMessageProviderType>) getChatMessageProvider {
+    if(_chatMessageProvider) {
+        return _chatMessageProvider;
+    }
     ChatMessageProvider* provider = [[ChatMessageProvider alloc] initWithStorageManager:[self getStorageManager]];
-    return provider;
+    _chatMessageProvider = provider;
+    return _chatMessageProvider;
 }
 
 -(id<FileDataProviderType>) getFileDataProvider {
+    if(_fileDataProvider) {
+        return _fileDataProvider;
+    }
     FileDataProvider* provider = [[FileDataProvider alloc] initWithStorageManager:[self getStorageManager]];
-    return provider;
+    _fileDataProvider = provider;
+    return _fileDataProvider;
 }
 
 -(id<ZODownloadManagerType>) getDownloadManager {
@@ -52,17 +66,34 @@
 }
 
 -(id<ChatDetailRepositoryInterface>) getChatDetailDataRepository {
+    
+    if(_chatDetailRepository) {
+        return _chatDetailRepository;
+    }
     ChatDetailDataRepository* repository = [[ChatDetailDataRepository alloc] initWithDownloadManager:[self getDownloadManager] andFileDataProvider:[self getFileDataProvider] andChatMessageProvider:[self getChatMessageProvider] andStorageManager:[self getStorageManager]];
-    return repository;
+    
+    _chatDetailRepository = repository;
+    return _chatDetailRepository;
 }
 -(id<ChatDetailBusinessModelInterface>) getChatDetailBusinessModel {
+    if(_chatDetailBusinessModel){
+        return _chatDetailBusinessModel;
+    }
+    
     ChatDetailBusinessModel* chatDetailBusinessModel = [[ChatDetailBusinessModel alloc] initWithRepository:[self getChatDetailDataRepository]];
-    return chatDetailBusinessModel;
+    _chatDetailBusinessModel = chatDetailBusinessModel;
+    return _chatDetailBusinessModel;
     
 }
 -(id<ChatDetailViewModelType>) getChatDetailViewModel:(id<ChatRoomEntityType>)roomEntity {
+    if(_chatDetailViewModel) {
+        [_chatDetailViewModel setChatRoom:roomEntity];
+        _chatDetailViewModel.filteredChats = @[];
+        return _chatDetailViewModel;
+    }
     ChatDetailViewModel *chatDetailViewModel = [[ChatDetailViewModel alloc] initWithChatRoom:roomEntity andBusinessModel:[self getChatDetailBusinessModel]];
-    return chatDetailViewModel;
+    _chatDetailViewModel = chatDetailViewModel;
+    return _chatDetailViewModel;
 }
 -(id<ViewControllerType>) getChatDetailViewController:(id<ChatRoomEntityType>)roomEntity {
     ChatDetailViewController *viewController = [[ChatDetailViewController alloc] initWithViewModel:[self getChatDetailViewModel:roomEntity]];

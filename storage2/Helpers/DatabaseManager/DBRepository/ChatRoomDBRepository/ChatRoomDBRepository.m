@@ -91,7 +91,7 @@ static sqlite3_stmt *statement = nil;
     const char *dbpath = [self.databasePath UTF8String];
     
     if (sqlite3_open_v2(dbpath, &database, SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
-        NSString *insertSQL = [NSString stringWithFormat:@"insert into chatRoom (chatRoomId,name, createdAt, size) values (\"%@\",\"%@\", %f, %d)",chatRoom.chatRoomId, chatRoom.name, chatRoom.createdAt, 0];
+        NSString *insertSQL = [NSString stringWithFormat:@"insert into chatRoom (chatRoomId,name, createdAt) values (\"%@\",\"%@\", %f)",chatRoom.chatRoomId, chatRoom.name, chatRoom.createdAt];
         const char *insert_stmt = [insertSQL UTF8String];
         sqlite3_prepare_v2(database, insert_stmt,-1, &statement, NULL);
         
