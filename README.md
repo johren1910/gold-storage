@@ -3,8 +3,7 @@
 Simple Storage Management.
 
 Overview Diagram:
-![image](https://github.com/johren1910/gold-storage/assets/132887874/b87e7096-b686-47ad-ab7b-8357afa45b12)
-
+![image](https://github.com/johren1910/gold-storage/assets/132887874/796c9d16-15f4-4bc3-872c-3e103f36953e)
 
 ## Description
 
@@ -66,6 +65,10 @@ TODO:
 Quannm10@vng.com.vn
 
 ## Version History
+* 0.65
+    * Revamp DI Flow
+    * Finish conceptualize Storage flow
+    * Migrate from Datasource to Provider
 * 0.6
     * Apply Clean Architecture for ChatRoom flow
     * Migrate to relativePath instead of absolutePath
