@@ -11,6 +11,10 @@
 
 @interface ChatRoomBuilder ()
 @property (nonatomic) id<AppEnvironmentType> environment;
+@property (nonatomic) id<ChatRoomProviderType> chatRoomProvider;
+@property (nonatomic) id<ChatRoomRepositoryInterface> chatRoomDataRepository;
+@property (nonatomic) id<ChatRoomBusinessModelInterface> chatRoomBusinessModel;
+@property (nonatomic) id<ChatRoomViewModelType> chatRoomViewModel;
 @end
 
 @implementation ChatRoomBuilder
@@ -28,24 +32,37 @@
 }
 
 -(id<ChatRoomProviderType>) getChatRoomProvider {
+    if(_chatRoomProvider){
+        return _chatRoomProvider;
+    }
     ChatRoomProvider* provider = [[ChatRoomProvider alloc] initWithStorageManager:[self getStorageManager]];
-    return provider;
+    _chatRoomProvider = provider;
+    return _chatRoomProvider;
 }
 -(id<ChatRoomRepositoryInterface>) getChatRoomDataRepository {
+    if(_chatRoomDataRepository)
+        return _chatRoomDataRepository;
     ChatRoomDataRepository* repository = [[ChatRoomDataRepository alloc] initWithStorageManager:[self getStorageManager] andChatRoomProvider:[self getChatRoomProvider]];
-    return repository;
+    _chatRoomDataRepository = repository;
+    return _chatRoomDataRepository;
 }
 
 #pragma mark - Domain layer
 -(id<ChatRoomBusinessModelInterface>) getChatRoomBusinessModel {
+    if(_chatRoomBusinessModel)
+        return _chatRoomBusinessModel;
     ChatRoomBusinessModel* chatRoomBusinessModel = [[ChatRoomBusinessModel alloc] initWithRepository:[self getChatRoomDataRepository]];
-    return chatRoomBusinessModel;
+    _chatRoomBusinessModel = chatRoomBusinessModel;
+    return _chatRoomBusinessModel;
 }
 
 #pragma mark - Presentation layer
 -(id<ChatRoomViewModelType>) getChatRoomViewModel {
+    if(_chatRoomViewModel)
+        return _chatRoomViewModel;
     ChatRoomViewModel *chatRoomViewModel = [[ChatRoomViewModel alloc] initWithBusinessModel:[self getChatRoomBusinessModel]];
-    return chatRoomViewModel;
+    _chatRoomViewModel = chatRoomViewModel;
+    return _chatRoomViewModel;
 }
 -(id<ViewControllerType>) getChatRoomViewController {
     ChatRoomViewController *viewController = [[ChatRoomViewController alloc] initWithViewModel:[self getChatRoomViewModel]];
