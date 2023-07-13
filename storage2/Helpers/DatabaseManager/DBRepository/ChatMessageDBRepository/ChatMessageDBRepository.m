@@ -30,7 +30,7 @@ static sqlite3_stmt *statement = nil;
     return [self _getMessageWhere:where];
 }
 
-- (NSArray *)getObjectsWhere:(NSString *)where {
+- (NSArray *)getObjectsWhere:(NSString *)where isDistinct:(BOOL)isDistinct {
     return [self _getChatMessagesWhere:where];
 }
 
@@ -49,6 +49,10 @@ static sqlite3_stmt *statement = nil;
 - (BOOL)remove:(id)object {
     ChatMessageData* data = (ChatMessageData*)object;
     return [self _deleteChatMessage:data];
+}
+
+- (BOOL)removeObjectWhere:(NSString*)where {
+    return false;
 }
 
 - (BOOL)save:(id)object {
@@ -91,7 +95,7 @@ static sqlite3_stmt *statement = nil;
     return result;
 }
 
-- (BOOL)_deleteChatMessage:(ChatMessageData*) message {
+- (BOOL)_deleteChatMessage:(ChatMessageData*)message {
     
     BOOL result = NO;
     const char *dbpath = [_databasePath UTF8String];

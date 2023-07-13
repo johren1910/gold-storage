@@ -41,6 +41,7 @@
 		F65879872A5D052F00293FFD /* ChatMessageProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = F65879862A5D052F00293FFD /* ChatMessageProvider.m */; };
 		F658798D2A5D0E7B00293FFD /* FileDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = F658798C2A5D0E7B00293FFD /* FileDataProvider.m */; };
 		F65879912A5D32F800293FFD /* ChatRoomProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = F65879902A5D32F800293FFD /* ChatRoomProvider.m */; };
+		F6A336622A5FAB3000DF8C38 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F60BD33A2A5EA48D006DCF69 /* libsqlite3.tbd */; };
 		F6C43EF42A3AEF0D001D8715 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */; };
 		F6C43EF72A3AEF0D001D8715 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF62A3AEF0D001D8715 /* SceneDelegate.m */; };
 		F6C43EFA2A3AEF0D001D8715 /* ChatRoomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF92A3AEF0D001D8715 /* ChatRoomViewController.m */; };
@@ -230,6 +231,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F6A336622A5FAB3000DF8C38 /* libsqlite3.tbd in Frameworks */,
 				F60BD33C2A5EA49D006DCF69 /* Pods_storage2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

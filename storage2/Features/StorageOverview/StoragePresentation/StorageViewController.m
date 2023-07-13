@@ -18,6 +18,7 @@
 @property (strong, nonatomic) IBOutlet UITableView *storageTable;
 @property (strong, nonatomic) IBOutlet UIProgressView *percentageBar;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *tableViewHeightConstraint;
+@property (strong, nonatomic) IBOutlet UIButton *clearBtn;
 
 @end
 
@@ -54,17 +55,53 @@
 #pragma mark - StorageViewModelDelegate
 
 - (void)didUpdateData:(StorageEntity *)entity {
-    float percentage = (float)entity.appSize/(float)entity.phoneSize;
+    __weak StorageViewController* weakself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        if (entity.appSize && entity.phoneSize) {
+            float percentage = (float)entity.appSize/(float)entity.phoneSize;
+            
+            NSString* informText = [NSString stringWithFormat:@"Zalo uses %.1f%% of your disk space", (percentage*100)];
+            [weakself.percentageUsedLabel setText:informText];
+            weakself.percentageBar.progress = percentage;
+            weakself.percentageBar.progressTintColor = UIColor.systemBlueColor;
+            weakself.percentageBar.trackTintColor = [UIColor.systemBlueColor colorWithAlphaComponent:0.1];
+        }
+        
+        if (entity.storageSpaceItems) {
+            weakself.tableViewHeightConstraint.constant = 64 * entity.storageSpaceItems.count;
+            [weakself _updateCircle:entity];
+            
+            long long totalSelectedSize = 0;
+            NSInteger selectedCount = 0;
+            for (StorageSpaceItem* item in entity.storageSpaceItems) {
+                if(item.selected) {
+                    totalSelectedSize += item.size;
+                    selectedCount+=1;
+                }
+            }
+            
+            if (selectedCount == entity.storageSpaceItems.count) {
+                [weakself.clearBtn setTitle:[NSString stringWithFormat:@"Clear Entire Data %@", [FileHelper sizeStringFormatterFromBytes:totalSelectedSize]] forState:normal];
+            } else {
+                [weakself.clearBtn setTitle:[NSString stringWithFormat:@"Clear Selected %@", [FileHelper sizeStringFormatterFromBytes:totalSelectedSize]] forState:normal];
+            }
+            
+            if (totalSelectedSize == 0) {
+                [weakself.clearBtn setEnabled:false];
+                [weakself.clearBtn setTitle:@"Clear Selected" forState:normal];
+            } else {
+                [weakself.clearBtn setEnabled:true];
+            }
+        }
+    });
+}
+
+- (void) reloadTable {
     
-    NSString* informText = [NSString stringWithFormat:@"Zalo uses %.1f%% of your disk space", (percentage*100)];
-    [_percentageUsedLabel setText:informText];
-    _percentageBar.progress = percentage;
-    _percentageBar.progressTintColor = UIColor.systemBlueColor;
-    _percentageBar.trackTintColor = [UIColor.systemBlueColor colorWithAlphaComponent:0.1];
-    
-    [_storageTable reloadData];
-    _tableViewHeightConstraint.constant = 64 * entity.storageSpaceItems.count;
-    [self _updateCircle:entity];
+    __weak StorageViewController* weakself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakself.storageTable reloadData];
+    });
     
 }
 
@@ -82,7 +119,9 @@
     for (StorageSpaceItem* item in entity.storageSpaceItems) {
         
         float nextDegree = currentDegree + item.percent * 360;
-        
+        if (item == [entity.storageSpaceItems lastObject]) {
+            nextDegree = 360;
+        }
         
         CircleGraphComponent *component = [[CircleGraphComponent alloc] initWithOpenDegree:currentDegree closeDegree:nextDegree radius:100 color:item.color];
         
@@ -137,6 +176,17 @@
 
 - (CGFloat)tableView:(UITableView *)tableView estimatedHeightForRowAtIndexPath:(NSIndexPath *)indexPath {
     return 64;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath {
+    StorageTableCell *cell = [tableView cellForRowAtIndexPath:indexPath];
+    [cell didTouch];
+    NSInteger row = [indexPath row];
+    [_viewModel didTouchCell:row];
+}
+
+- (IBAction)onDeleteBtnTouched:(id)sender {
+    [_viewModel didTouchDeleteBtn];
 }
 
 @end

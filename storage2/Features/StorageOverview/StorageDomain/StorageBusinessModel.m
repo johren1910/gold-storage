@@ -27,15 +27,54 @@
 }
 
 - (void)getAppSize:(void (^)(long long size))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
-    [[_storageRepository fileDataProvider] getAppSize:completionBlock errorBlock:errorBlock];
+    __weak StorageBusinessModel* weakself = self;
+    dispatch_async(_backgroundQueue, ^{
+        [[weakself.storageRepository fileDataProvider] getAppSize:completionBlock errorBlock:errorBlock];
+    });
     
 }
 - (void)getPhoneSize:(void (^)(long long size))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
-    [[_storageRepository fileDataProvider] getPhoneSize:completionBlock errorBlock:errorBlock];
+    __weak StorageBusinessModel* weakself = self;
+    dispatch_async(_backgroundQueue, ^{
+        [[weakself.storageRepository fileDataProvider] getPhoneSize:completionBlock errorBlock:errorBlock];
+    });
+    
 }
 
-- (void)getAllMediaSize:(void (^)(BOOL isFinish))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
+- (void)getAllMediaSize:(void (^)(NSArray* items))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
+    
+    __weak StorageBusinessModel* weakself = self;
+    dispatch_async(_backgroundQueue, ^{
+        [[weakself.storageRepository fileDataProvider] getAllStorageItem:^(NSArray* items) {
+            completionBlock(items);
+        } errorBlock:nil];
+    });
+    
+}
 
+- (void)deleteAllMediaTypes:(NSArray<StorageSpaceItem*>*)items completionBlock:(void (^)(BOOL isFinish))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
+    __weak StorageBusinessModel* weakself = self;
+    dispatch_async(_backgroundQueue, ^{
+        for (StorageSpaceItem* item in items) {
+            
+            switch (item.fileType) {
+                case Picture:
+                    
+                    // Get all unique file with fileType
+                    // Delete all chatMessage associate with messageId
+                    // Delete all fileData with fileType
+                    // Clear folder
+                    break;
+                case Video:
+                    
+                    break;
+                case Misc:
+                    
+                    break;
+            }
+        }
+    });
+    
 }
 @end
 

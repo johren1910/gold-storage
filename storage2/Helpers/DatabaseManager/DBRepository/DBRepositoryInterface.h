@@ -14,9 +14,10 @@ typedef void(^ZOFetchCompletionBlock)(id object);
 
 - (BOOL)save:(id)object;
 - (BOOL)remove:(id)object;
+- (BOOL)removeObjectWhere:(NSString*)where;
 - (BOOL)update:(id)object;
 - (id)getObjectWhere:(NSString*)where;
-- (NSArray*)getObjectsWhere:(NSString*)where;
+- (NSArray*)getObjectsWhere:(NSString*)where isDistinct:(BOOL)isDistinct;
 - (NSArray*)getObjectsWhere:(NSString *)where take:(int) countItem;
 - (NSArray*)getObjectsWhere:(NSString*)where orderBy:(NSString*)orderByAttribute ascending:(BOOL)ascending;
 - (NSArray*)getObjectsWhere:(NSString*)where orderBy:(NSString*)orderByAttribute ascending:(BOOL)ascending take:(int)countItem;

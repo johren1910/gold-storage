@@ -38,8 +38,13 @@
     return fileDataProvider;
 }
 
+-(id<ChatMessageProviderType>)getChatMessageProvider {
+    ChatMessageProvider* chatMessageProvider = [[ChatMessageProvider alloc] initWithStorageManager:[self getStorageManager]];
+    return chatMessageProvider;
+}
+
 -(id<StorageRepositoryInterface>) getStorageDataRepository {
-    StorageDataRepository* dataRepository = [[StorageDataRepository alloc] initWithFileDataProvider:[self getFileProvider] andStorageManager:[self getStorageManager]];
+    StorageDataRepository* dataRepository = [[StorageDataRepository alloc] initWithFileDataProvider:[self getFileProvider] andChatMessageProvider:[self getChatMessageProvider] andStorageManager:[self getStorageManager]];
     return dataRepository;
 }
 -(id<StorageBusinessModelInterface>) getStorageBusinessModel {

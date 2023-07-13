@@ -54,16 +54,15 @@
     }];
 }
 - (void)deleteChatMessagesOf:(NSArray*)messages completionBlock:(void(^)(BOOL isFinish))completionBlock {
-    NSMutableArray<ChatMessageData*>* datas = [[NSMutableArray alloc] init];
     
     for (ChatDetailEntity* entity in messages) {
         ChatMessageData* messageData = [[ChatMessageData alloc] initWithMessage:entity.messageId messageId:entity.messageId chatRoomId:nil];
         messageData.file = entity.file;
-        [datas addObject:messageData];
-//        [_remoteDataSource cancelDownloadOfUrl:entity.file.filePath];
+        
+        [_storageManager deleteChatMessage:messageData completionBlock:nil];
     }
     
-    [_storageManager deleteChatMessage:[datas copy] completionBlock:completionBlock];
+    completionBlock(true);
 }
 - (void)updateMessage:(ChatMessageData*)message completionBlock:(void(^)(BOOL isFinish))completionBlock {
     [_storageManager updateMessageData:message completionBlock:completionBlock];
@@ -72,6 +71,10 @@
     [_storageManager createChatMessage:message completionBlock:^(BOOL isSuccess) {
         completionBlock([message toChatDetailEntity]);
     }];
+}
+
+- (void)deleteAllChatMessageOfType:(FileType)fileType completionBlock:(void(^)(BOOL isFinish))completionBlock {
+    
 }
 
 @end

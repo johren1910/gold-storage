@@ -12,6 +12,7 @@
 @protocol StorageViewModelDelegate <NSObject>
 
 - (void) didUpdateData:(StorageEntity*)entity;
+- (void) reloadTable;
 
 @end
 
@@ -20,6 +21,8 @@
 @property (nonatomic, weak) id <StorageViewModelDelegate> delegate;
 -(instancetype)initWithBusinessModel:(id<StorageBusinessModelInterface>)storageBusinessModel;
 @property (nonatomic) StorageEntity* currentStorageEntity;
+-(void)didTouchCell:(NSInteger)row;
+-(void)didTouchDeleteBtn;
 @end
 
 @interface StorageViewModel : NSObject <StorageViewModelType>

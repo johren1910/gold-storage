@@ -59,7 +59,7 @@
 - (void) getChatRoomsByPage:(int)page completionBlock:(ZOFetchCompletionBlock)completionBlock {
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
-        NSArray* result = [[weakself.databaseService getChatRoomDBRepository] getObjectsWhere:nil];
+        NSArray* result = [[weakself.databaseService getChatRoomDBRepository] getObjectsWhere:nil isDistinct:false];
         completionBlock(result);
     });
 }
@@ -84,13 +84,14 @@
     });
 }
 
+
 - (void)getChatMessagesByRoomId:(NSString*)chatRoomId completionBlock:(ZOFetchCompletionBlock)completionBlock {
     
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
 
         NSString* whereStr = [NSString stringWithFormat:@"chatRoomId=\"%@\"",chatRoomId];
-        NSArray* objects = [[weakself.databaseService getChatMessageDBRepository] getObjectsWhere:whereStr];
+        NSArray* objects = [[weakself.databaseService getChatMessageDBRepository] getObjectsWhere:whereStr isDistinct:false];
         NSMutableArray* result = [[NSMutableArray alloc] init];
         for (int i=0; i<objects.count; i++) {
             
@@ -290,7 +291,7 @@
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
         NSString *whereStr = [NSString stringWithFormat:@"checksum = \"%@\"", messageData.file.checksum];
-        NSArray* objects = [[weakself.databaseService getFileDBRepository] getObjectsWhere:whereStr];
+        NSArray* objects = [[weakself.databaseService getFileDBRepository] getObjectsWhere:whereStr isDistinct:false];
         if (objects.count == 0) {
             [weakself.cacheService deleteImageByKey:messageData.file.checksum];
             NSError* error;

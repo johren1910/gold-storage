@@ -10,4 +10,5 @@
 
 @interface StorageTableCell : UITableViewCell
 -(void)setItem:(StorageSpaceItem*)item;
+-(void)didTouch;
 @end

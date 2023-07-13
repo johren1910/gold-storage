@@ -10,6 +10,7 @@
 #import "CompressorHelper.h"
 #import <MobileCoreServices/MobileCoreServices.h>
 #import "FileHelper.h"
+#import "StorageEntity.h"
 
 @interface FileDataProvider ()
 @property (nonatomic) id<StorageManagerType> storageManager;
@@ -24,7 +25,6 @@
     return self;
 }
 
-
 - (void)updateFile:(FileData*)fileData completionBlock:(void(^)(BOOL isFinish))completionBlock {
     [_storageManager updateFileData:fileData completionBlock:completionBlock];
 }
@@ -36,7 +36,7 @@
 }
 
 -(FileType)getFileTypeOfFilePath:(NSString*)filePath {
-    FileType type = Unknown;
+    FileType type = Misc;
     CFStringRef fileExtension = (__bridge CFStringRef) [filePath pathExtension];
     CFStringRef fileUTI = UTTypeCreatePreferredIdentifierForTag(kUTTagClassFilenameExtension, fileExtension, NULL);
     
@@ -91,6 +91,32 @@
 - (void)getAppSize:(void (^)(long long size))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
     long long appSize = [FileHelper getApplicationSize];
     completionBlock(appSize);
+}
+- (void)getAllStorageItem:(void (^)(NSArray* items))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
+    NSMutableArray* array = [[NSMutableArray alloc] init];
+    
+    long long pictureSize = [FileHelper getPictureFolderSize];
+    StorageSpaceItem* pictureItem = [[StorageSpaceItem alloc] init];
+    pictureItem.fileType = Picture;
+    pictureItem.color = UIColor.magentaColor;
+    pictureItem.size = pictureSize;
+    [array addObject:pictureItem];
+    
+    long long videoSize = [FileHelper getVideoFolderSize];
+    StorageSpaceItem* videoItem = [[StorageSpaceItem alloc] init];
+    videoItem.fileType = Video;
+    videoItem.color = UIColor.redColor;
+    videoItem.size = videoSize;
+    [array addObject:videoItem];
+    
+    long long miscSize = [FileHelper getOtherExceptSupportSize];
+    StorageSpaceItem* miscItem = [[StorageSpaceItem alloc] init];
+    miscItem.fileType = Misc;
+    miscItem.color = UIColor.brownColor;
+    miscItem.size = miscSize;
+    [array addObject:miscItem];
+    
+    completionBlock(array);
 }
 
 @end

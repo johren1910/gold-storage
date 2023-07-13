@@ -11,7 +11,7 @@
 typedef NS_ENUM(NSInteger, FileType) {
     Video = 1,
     Picture,
-    Unknown
+    Misc
 };
 
 #endif /* MediaType_h */

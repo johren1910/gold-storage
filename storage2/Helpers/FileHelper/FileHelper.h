@@ -84,6 +84,14 @@
 
 +(unsigned long long)getApplicationSize;
 
++(unsigned long long)getPictureFolderSize;
+
++(unsigned long long)getVideoFolderSize;
+
++(unsigned long long)getDatabaseSize;
+
++(unsigned long long)getOtherExceptSupportSize;
+
 +(UInt64)usedDiskSpaceInBytes;
 
 +(UInt64)freeDiskSpaceInBytes;
@@ -91,5 +99,6 @@
 +(UInt64)totalDiskSpaceInBytes;
 
 +(NSString*)sizeStringFormatterFromBytes:(UInt64)bytes;
+
 @end
 

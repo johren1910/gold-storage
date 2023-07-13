@@ -115,7 +115,7 @@
 - (void)didUpdateData {
     __weak ChatDetailViewController *weakself = self;
     dispatch_async(dispatch_get_main_queue(), ^{
-        [weakself.adapter performUpdatesAnimated:false completion:nil];
+        [weakself.adapter performUpdatesAnimated:true completion:nil];
     });
     
 }

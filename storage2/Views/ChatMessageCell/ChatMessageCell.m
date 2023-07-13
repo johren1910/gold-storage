@@ -56,7 +56,6 @@
 }
 
 - (void)prepareForReuse {
-    [super prepareForReuse];
     [self.thumbnailImageView setBackgroundColor:[UIColor clearColor]];
     [self.loadingIndicator stopAnimating];
     self.sizeLabel.text = nil;
@@ -65,6 +64,7 @@
     [self.typeIconView setHidden:true];
     [self.sizeLabel setHidden:true];
     [self.selectedImage setHidden: true];
+    [super prepareForReuse];
 }
 
 - (void) handleLoadingImageWithUrl:(NSString*) filePath andChecksum:(NSString*)checksum {
@@ -109,18 +109,13 @@
 }
 
 - (void)setChat:(ChatDetailEntity *)chat {
-    [self prepareForReuse];
+//    [self prepareForReuse];
     _chat = [chat copy];
-    _cachedMessageModel = chat;
-    
-//    if (chat.isError) {
-//        [self createErrorView];
-//        return;
-//    }
     [self.retryBtn setHidden:true];
     if (_chat.state == Downloading) {
         [self createDownloadHolderView];
     } else {
+        [self.loadingIndicator stopAnimating];
         [self.selectedImage setHidden: false];
         if (_chat.file.size == 0){
             [self.sizeLabel setHidden: TRUE];
@@ -149,6 +144,7 @@
                 }
                 break;
             case Picture:
+                [self.timeLabel setHidden:true];
                 if (thumbnail) {
                     [_thumbnailImageView setImage:thumbnail];
                 } else {
@@ -164,7 +160,7 @@
     }
 }
 - (IBAction)onRetryBtn:(id)sender {
-    [_delegate retryWithModel:_cachedMessageModel];
+    
 }
 
 - (NSString *)timeFormat:(int)duration

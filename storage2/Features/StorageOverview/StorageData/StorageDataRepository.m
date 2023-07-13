@@ -17,15 +17,18 @@
 
 @implementation StorageDataRepository
 
--(instancetype) initWithFileDataProvider:(id<FileDataProviderType>)fileDataProvider andStorageManager:(id<StorageManagerType>)storageManager {
+-(instancetype) initWithFileDataProvider:(id<FileDataProviderType>)fileDataProvider
+                       andChatMessageProvider:(id<ChatMessageProviderType>)chatMessageProvider  andStorageManager:(id<StorageManagerType>)storageManager; {
     if (self == [super init]) {
         self.storageManager = storageManager;
+        self.chatMessageProvider = chatMessageProvider;
         self.fileDataProvider = fileDataProvider;
         self.backgroundQueue = dispatch_queue_create("com.storage.datarepository.queue", DISPATCH_QUEUE_SERIAL);
     }
     return self;
 }
 @synthesize fileDataProvider;
+@synthesize chatMessageProvider;
 
 @end
 

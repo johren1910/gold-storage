@@ -7,12 +7,14 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
+#import "FileType.h"
 
 @interface StorageSpaceItem : NSObject
 @property (nonatomic) UIColor* color;
-@property (nonatomic) NSString* name;
+@property (nonatomic) FileType fileType;
 @property (nonatomic) float percent;
-@property (nonatomic) NSString* space;
+@property (nonatomic) long long size;
+@property (nonatomic) BOOL selected;
 @end
 
 @interface StorageEntity : NSObject <NSCopying>

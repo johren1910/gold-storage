@@ -28,11 +28,10 @@
 }
 
 - (void)drawRect:(CGRect)rect {
-    
-    [self drawCircle];
+    [self _drawCircle];
 }
 
--(void)drawCircleComponent:(CircleGraphComponent*)component context:(CGContextRef)context  label:(CATextLayer*)label {
+-(void)_drawCircleComponent:(CircleGraphComponent*)component context:(CGContextRef)context  label:(CATextLayer*)label {
     
     CGContextMoveToPoint(context, _centerPoint.x, _centerPoint.y);
     CGContextAddArc(context, _centerPoint.x , _centerPoint.y, component.radius, [self radians:component.openDegree], [self radians:component.closeDegree], 0);
@@ -61,6 +60,13 @@
         [self.layer addSublayer:label];
     }
     
+    CGFloat angle = [self radians:component.closeDegree];
+    CGFloat x2 = _centerPoint.x + cos(angle) * component.radius;
+    CGFloat y2 = _centerPoint.y + sin(angle) * component.radius;
+    CGPoint endPoint = CGPointMake(x2, y2);
+    //Add line
+    [self _drawLine:_centerPoint endPoint:endPoint];
+    
     // ANIMATION SCALE
 //    CABasicAnimation *animation = [[CABasicAnimation alloc] init];
 //    animation.keyPath = @"transform.scale";
@@ -75,7 +81,19 @@
     
 }
 
--(void)updateCircleComponents:(NSArray*)circleComponents {
+- (void)_drawLine: (CGPoint)currentPoint endPoint:(CGPoint)lastPoint{
+    UIBezierPath* path = [UIBezierPath bezierPath];
+    [path moveToPoint:currentPoint];
+    [path addLineToPoint:lastPoint];
+
+    CAShapeLayer *shapeLayer = [CAShapeLayer layer];
+    shapeLayer.path = [path CGPath];
+    shapeLayer.strokeColor = [[UIColor whiteColor] CGColor];
+    shapeLayer.lineWidth = 3.0;
+    [self.layer addSublayer:shapeLayer];
+}
+
+-(void)_updateCircleComponents:(NSArray*)circleComponents {
     [_paths removeAllObjects];
     _circleComponents = [circleComponents mutableCopy];
     self.layer.sublayers = nil;
@@ -85,7 +103,7 @@
     [self setNeedsDisplay];
 }
 
--(void)updateCircleComponentAtIndex:(int)index withComponent:(CircleGraphComponent*)component {
+-(void)_updateCircleComponentAtIndex:(int)index withComponent:(CircleGraphComponent*)component {
     [_paths removeAllObjects];
     _circleComponents[index] = component;
     self.layer.sublayers = nil;
@@ -95,7 +113,7 @@
     [self setNeedsDisplay];
 }
 
-- (void)drawCircle {
+- (void)_drawCircle {
     
     self.clearsContextBeforeDrawing = TRUE;
     CGContextRef context = UIGraphicsGetCurrentContext();
@@ -107,11 +125,17 @@
         NSString *text = [NSString stringWithFormat:@"%.f%%", percentage];
         CATextLayer *label = [[CATextLayer alloc] init];
         [label setFont:@"Helvetica-Bold"];
-        [label setFontSize:16];
+        
+        if(percentage<4) {
+            [label setFontSize:10];
+        } else {
+            [label setFontSize:16];
+        }
+       
         [label setString:text];
         
         // Draw circle Arc
-        [self drawCircleComponent:circleComponent context:context label:label];
+        [self _drawCircleComponent:circleComponent context:context label:label];
     }
 }
 
@@ -132,9 +156,9 @@
             NSLog(@"CONTAIN at index %lu", (unsigned long)index);
             
             CircleGraphComponent *selectedComponent = [_circleComponents[index] copy];
-            selectedComponent.radius = 110;
+//            selectedComponent.radius = 110;
             
-            [self updateCircleComponentAtIndex:index withComponent:selectedComponent];
+            [self _updateCircleComponentAtIndex:index withComponent:selectedComponent];
             
             break;
         }

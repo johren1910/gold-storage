@@ -31,7 +31,7 @@ static sqlite3_stmt *statement = nil;
 //    return [self _getMessageWhere:where];
 }
 
-- (NSArray *)getObjectsWhere:(NSString *)where {
+- (NSArray*)getObjectsWhere:(NSString*)where isDistinct:(BOOL)isDistinct {
     return [self _getChatRoomsByPage:1];
 }
 

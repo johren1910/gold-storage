@@ -30,8 +30,8 @@ static sqlite3_stmt *statement = nil;
     return [self _getFileWhere:where];
 }
 
-- (NSArray *)getObjectsWhere:(NSString *)where {
-    return [self _getFilesWhere:where];
+- (NSArray*)getObjectsWhere:(NSString*)where isDistinct:(BOOL)isDistinct {
+    return [self _getFilesWhere:where isDistinct:isDistinct];
 }
 
 - (NSArray *)getObjectsWhere:(NSString *)where orderBy:(NSString *)orderByAttribute ascending:(BOOL)ascending {
@@ -180,13 +180,16 @@ static sqlite3_stmt *statement = nil;
     return result;
 }
 
-- (NSArray*)_getFilesWhere:(NSString*)where {
+- (NSArray*)_getFilesWhere:(NSString*)where isDistinct:(BOOL)isDistinct {
     const char *dbpath = [_databasePath UTF8String];
-    NSMutableArray<FileData*>* result = [@[] mutableCopy] ;
-    
+    NSMutableArray<FileData*>* result = [@[] mutableCopy];
+    NSString* selectStr = @"select";
+    if(isDistinct) {
+        [selectStr stringByAppendingString:@" distinct"];
+    }
     if (sqlite3_open_v2(dbpath, &database, SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
         NSString *querySQL = [NSString stringWithFormat:
-                              @"select * from file where %@ order by createdAt DESC", where];
+                              @"%@ * from file where %@ order by createdAt DESC",selectStr, where];
         const char *query_stmt = [querySQL UTF8String];
         
         if (sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK) {
@@ -240,4 +243,3 @@ static sqlite3_stmt *statement = nil;
 }
 
 @end
-

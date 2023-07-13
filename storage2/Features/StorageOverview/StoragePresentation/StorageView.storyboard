@@ -48,8 +48,8 @@
                                     <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="I7y-FY-V1v">
                                         <rect key="frame" x="0.0" y="370" width="393" height="347"/>
                                         <subviews>
-                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" allowsSelection="NO" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="hwZ-0j-ifp">
-                                                <rect key="frame" x="0.0" y="0.0" width="393" height="251"/>
+                                            <tableView clipsSubviews="YES" contentMode="scaleToFill" bounces="NO" scrollEnabled="NO" showsHorizontalScrollIndicator="NO" showsVerticalScrollIndicator="NO" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="none" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="-1" estimatedSectionHeaderHeight="-1" sectionFooterHeight="-1" estimatedSectionFooterHeight="-1" translatesAutoresizingMaskIntoConstraints="NO" id="hwZ-0j-ifp">
+                                                <rect key="frame" x="16" y="0.0" width="361" height="251"/>
                                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                                 <constraints>
                                                     <constraint firstAttribute="height" constant="251" id="jBS-IG-kCq"/>
@@ -62,14 +62,17 @@
                                                 </constraints>
                                                 <state key="normal" title="Button"/>
                                                 <buttonConfiguration key="configuration" style="filled" title="Clear Entire Cache 881 MB"/>
+                                                <connections>
+                                                    <action selector="onDeleteBtnTouched:" destination="Y6W-OH-hqX" eventType="touchUpInside" id="xPu-lZ-hHs"/>
+                                                </connections>
                                             </button>
                                         </subviews>
                                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                                         <constraints>
                                             <constraint firstAttribute="trailing" secondItem="eG5-5U-uwL" secondAttribute="trailing" constant="16" id="1vu-Jl-yAL"/>
-                                            <constraint firstAttribute="trailing" secondItem="hwZ-0j-ifp" secondAttribute="trailing" id="5nS-nd-ioC"/>
+                                            <constraint firstAttribute="trailing" secondItem="hwZ-0j-ifp" secondAttribute="trailing" constant="16" id="5nS-nd-ioC"/>
                                             <constraint firstAttribute="bottom" secondItem="eG5-5U-uwL" secondAttribute="bottom" constant="16" id="6Y4-fT-6UN"/>
-                                            <constraint firstItem="hwZ-0j-ifp" firstAttribute="leading" secondItem="I7y-FY-V1v" secondAttribute="leading" id="BvB-xC-03h"/>
+                                            <constraint firstItem="hwZ-0j-ifp" firstAttribute="leading" secondItem="I7y-FY-V1v" secondAttribute="leading" constant="16" id="BvB-xC-03h"/>
                                             <constraint firstItem="eG5-5U-uwL" firstAttribute="leading" secondItem="I7y-FY-V1v" secondAttribute="leading" constant="16" id="OKv-fa-uMR"/>
                                             <constraint firstItem="eG5-5U-uwL" firstAttribute="top" secondItem="hwZ-0j-ifp" secondAttribute="bottom" constant="16" id="iwy-uo-BlF"/>
                                             <constraint firstItem="hwZ-0j-ifp" firstAttribute="top" secondItem="I7y-FY-V1v" secondAttribute="top" id="jxz-sV-Jcz"/>
@@ -111,6 +114,7 @@
                     </view>
                     <connections>
                         <outlet property="circleGraphHolder" destination="Uxw-xo-8aX" id="rhP-3C-o0w"/>
+                        <outlet property="clearBtn" destination="eG5-5U-uwL" id="RYi-V6-5ty"/>
                         <outlet property="percentageBar" destination="DOC-TH-55N" id="XRD-VE-DR9"/>
                         <outlet property="percentageUsedLabel" destination="6Bm-LI-9Wl" id="myq-cL-01P"/>
                         <outlet property="storageTable" destination="hwZ-0j-ifp" id="tEn-g4-a0i"/>

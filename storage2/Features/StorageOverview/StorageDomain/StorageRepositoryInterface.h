@@ -6,9 +6,11 @@
 //
 
 #import "FileDataProvider.h"
+#import "ChatMessageProvider.h"
 
 @protocol StorageRepositoryInterface
 
 @property (nonatomic) id<FileDataProviderType> fileDataProvider;
+@property (nonatomic) id<ChatMessageProviderType> chatMessageProvider;
 @end
 

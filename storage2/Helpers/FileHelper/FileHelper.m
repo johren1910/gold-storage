@@ -668,7 +668,7 @@
     } else if ([extension isEqualToString:@"mp4"] || [extension isEqualToString:@"mov"]) {
         return Video;
     } else {
-        return Unknown;
+        return Misc;
     }
 }
 
@@ -817,6 +817,8 @@
 }
 
 +(NSString*)sizeStringFormatterFromBytes:(UInt64)bytes {
+    if (bytes == 0)
+        return nil;
     return [NSByteCountFormatter stringFromByteCount:bytes countStyle:NSByteCountFormatterCountStyleFile];
 }
 
@@ -836,6 +838,40 @@
 }
 +(UInt64)usedDiskSpaceInBytes {
     return self.totalDiskSpaceInBytes - self.freeDiskSpaceInBytes;
+}
+
++(unsigned long long)getPictureFolderSize {
+    NSString* pictureFolder = [FileHelper getDefaultDirectoryByFileType:Picture];
+    pictureFolder = [FileHelper absolutePath:pictureFolder];
+    NSURL* pictureUrl = [self urlForItemAtPath:pictureFolder];
+    
+    return [self _getAllocatedSize:pictureUrl];
+}
+
++(unsigned long long)getVideoFolderSize {
+    NSString* videoFolder = [FileHelper getDefaultDirectoryByFileType:Video];
+    videoFolder = [FileHelper absolutePath:videoFolder];
+    
+    NSURL* videoUrl = [self urlForItemAtPath:videoFolder];
+    return [self _getAllocatedSize:videoUrl];
+}
+
++(unsigned long long)getDatabaseSize {
+    NSString* databaseName = @"chat.db";
+    NSString *databasePath = [self pathForApplicationSupportDirectoryWithPath:databaseName];
+    return [[self sizeOfFileAtPath:databasePath] longLongValue];
+}
+
++(unsigned long long)getOtherExceptSupportSize {
+    long long size = 0;
+    for (NSString* path in [self absoluteDirectories]) {
+        if (path == [self pathForApplicationSupportDirectory]) {
+            continue;
+        }
+        NSURL *pathUrl = [self urlForItemAtPath:path];
+        size += [self _getAllocatedSize:pathUrl];
+    }
+    return size;
 }
 
 @end

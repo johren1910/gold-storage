@@ -35,36 +35,46 @@
 -(void)_loadData {
     __weak StorageViewModel* weakself = self;
     [weakself.storageBusinessModel getPhoneSize:^(long long phoneSize) {
-        [weakself.storageBusinessModel getAppSize:^(long long appSize) {
-            weakself.currentStorageEntity.phoneSize = phoneSize;
-            weakself.currentStorageEntity.appSize = appSize;
+        
+        weakself.currentStorageEntity.phoneSize = phoneSize;
+        [weakself.delegate didUpdateData:weakself.currentStorageEntity];
+        [weakself.delegate reloadTable];
+    } errorBlock:nil];
+    
+    [weakself.storageBusinessModel getAppSize:^(long long appSize) {
+        weakself.currentStorageEntity.appSize = appSize;
+        
+        [weakself.storageBusinessModel getAllMediaSize:^(NSArray* items){
+            for (StorageSpaceItem* item in items) {
+                item.percent = (float)item.size/(float)appSize;
+                item.selected = TRUE;
+            }
             
-            // TEST
-            StorageSpaceItem *item1 = [[StorageSpaceItem alloc] init];
-            item1.color = UIColor.yellowColor;
-            item1.name = @"Misc";
-            item1.percent = 0.2;
-            item1.space = @"204 MB";
-            
-            StorageSpaceItem *item2 = [[StorageSpaceItem alloc] init];
-            item2.color = UIColor.blueColor;
-            item2.name = @"Videos";
-            item2.percent = 0.6;
-            item2.space = @"600 MB";
-            
-            StorageSpaceItem *item3 = [[StorageSpaceItem alloc] init];
-            item3.color = UIColor.greenColor;
-            item3.name = @"Pictures";
-            item3.percent = 0.2;
-            item3.space = @"204 MB";
-            weakself.currentStorageEntity.storageSpaceItems = @[item1, item2, item3];
-            // TEST
+            weakself.currentStorageEntity.storageSpaceItems = items;
             
             [weakself.delegate didUpdateData:weakself.currentStorageEntity];
+            [weakself.delegate reloadTable];
         } errorBlock:nil];
     } errorBlock:nil];
 }
 
+-(void)didTouchCell:(NSInteger) row {
+    StorageSpaceItem* item = currentStorageEntity.storageSpaceItems[row];
+    item.selected = !item.selected;
+    [delegate didUpdateData:currentStorageEntity];
+}
+
+-(void)didTouchDeleteBtn {
+    NSMutableArray<StorageSpaceItem*>* items = [[NSMutableArray alloc] init];
+    for (StorageSpaceItem* item in currentStorageEntity.storageSpaceItems) {
+        if (item.selected) {
+            [items addObject:item];
+        }
+    }
+    [_storageBusinessModel deleteAllMediaTypes:items completionBlock:^(BOOL isFinish) {
+        
+    } errorBlock:nil];
+}
 
 @synthesize delegate;
 @synthesize currentStorageEntity;

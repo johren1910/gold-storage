@@ -18,6 +18,7 @@
 
 - (void)getPhoneSize:(void (^)(long long size))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
 - (void)getAppSize:(void (^)(long long size))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
+- (void)getAllStorageItem:(void (^)(NSArray* items))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
 
 @end
 

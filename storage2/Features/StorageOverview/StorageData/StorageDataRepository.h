@@ -7,8 +7,10 @@
 
 #import "StorageRepositoryInterface.h"
 #import "StorageManager.h"
+#import "ChatMessageProvider.h"
 
 @interface StorageDataRepository : NSObject <StorageRepositoryInterface>
--(instancetype) initWithFileDataProvider:(id<FileDataProviderType>)fileDataProvider andStorageManager:(id<StorageManagerType>)storageManager;
+-(instancetype) initWithFileDataProvider:(id<FileDataProviderType>)fileDataProvider
+                       andChatMessageProvider:(id<ChatMessageProviderType>)chatMessageProvider  andStorageManager:(id<StorageManagerType>)storageManager;
 
 @end
