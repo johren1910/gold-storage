@@ -49,7 +49,10 @@
     else if (UTTypeConformsTo(fileUTI, kUTTypeText)) {
         NSLog(@"Text type");
     }
-    CFRelease(fileUTI);
+    if(fileUTI) {
+        CFRelease(fileUTI);
+    }
+    
     return type;
 }
 
