@@ -12,10 +12,14 @@
 #import "ZODownloadManager.h"
 #import "CompressorHelper.h"
 
-@interface AppEnvironment : NSObject
+@protocol AppEnvironmentType
 @property (nonatomic) NSString* baseUrl;
 @property (nonatomic) id<CacheServiceType> cacheService;
 @property (nonatomic) id<DatabaseServiceType> databaseService;
 @property (nonatomic) id<StorageManagerType> storageManager;
 @property (nonatomic) id<ZODownloadManagerType> downloadManager;
+
+@end
+
+@interface AppEnvironment : NSObject <AppEnvironmentType>
 @end

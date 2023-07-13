@@ -19,5 +19,5 @@
 @end
 
 @interface ChatDetailBuilder : NSObject <ChatDetailBuilderType>
--(instancetype) init:(AppEnvironment*)environment;
+-(instancetype) init:(id<AppEnvironmentType>)environment;
 @end

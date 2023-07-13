@@ -17,13 +17,23 @@
     if (self == [super init]) {
         self.baseUrl = @"";
         [FileHelper createDirectoriesForPath:[FileHelper pathForApplicationSupportDirectory]];
-        _cacheService = [[CacheService alloc] init];
+        self.cacheService = [[CacheService alloc] init];
         [CompressorHelper prepareCompressor];
-        _databaseService = [DatabaseService getSharedInstance];
-        _storageManager = [[StorageManager alloc] initWithCacheService:_cacheService andDatabaseService:_databaseService];
-        _downloadManager = [ZODownloadManager getSharedInstance];
+        self.databaseService = [DatabaseService getSharedInstance];
+        self.storageManager = [[StorageManager alloc] initWithCacheService:self.cacheService andDatabaseService:self.databaseService];
+        self.downloadManager = [ZODownloadManager getSharedInstance];
     }
     return self;
 }
+
+@synthesize baseUrl;
+
+@synthesize cacheService;
+
+@synthesize databaseService;
+
+@synthesize downloadManager;
+
+@synthesize storageManager;
 
 @end

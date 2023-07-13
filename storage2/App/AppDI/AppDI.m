@@ -14,7 +14,7 @@
 #import "StorageBuilder.h"
 
 @interface AppDI ()
-@property (nonatomic) AppEnvironment* environment;
+@property (nonatomic) id<AppEnvironmentType> environment;
 @property (nonatomic) id<ChatDetailBuilderType> chatDetailBuilder;
 @property (nonatomic) id<ChatRoomBuilderType> chatRoomBuilder;
 @property (nonatomic) id<StorageBuilderType> storageBuilder;

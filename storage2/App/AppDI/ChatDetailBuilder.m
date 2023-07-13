@@ -17,12 +17,12 @@
 #import "ChatDetailViewController.h"
 
 @interface ChatDetailBuilder ()
-@property (nonatomic) AppEnvironment* environment;
+@property (nonatomic) id<AppEnvironmentType> environment;
 @end
 
 @implementation ChatDetailBuilder
 
--(instancetype) init:(AppEnvironment*)environment {
+-(instancetype) init:(id<AppEnvironmentType>)environment {
     if (self == [super init]) {
         self.environment = environment;
     }

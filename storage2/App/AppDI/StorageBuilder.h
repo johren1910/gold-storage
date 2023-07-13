@@ -23,5 +23,5 @@
 @end
 
 @interface StorageBuilder : NSObject <StorageBuilderType>
--(instancetype) init:(AppEnvironment*)environment;
+-(instancetype) init:(id<AppEnvironmentType>)environment;
 @end

@@ -23,7 +23,7 @@
 @end
 
 @interface ChatRoomBuilder : NSObject <ChatRoomBuilderType>
--(instancetype) init:(AppEnvironment*)environment;
+-(instancetype) init:(id<AppEnvironmentType>)environment;
 
 @end
 

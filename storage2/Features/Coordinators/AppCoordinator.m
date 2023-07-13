@@ -12,7 +12,7 @@
 
 @interface AppCoordinator () <ChatRoomCoordinatorDelegate>
 @property (strong, nonatomic) UIWindow * window;
-@property (strong, nonatomic) AppEnvironment* appEnvironment;
+@property (strong, nonatomic) id<AppEnvironmentType> appEnvironment;
 @property (strong, nonatomic) AppDI* appDI;
 
 @end
