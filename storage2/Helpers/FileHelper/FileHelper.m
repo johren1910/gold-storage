@@ -824,14 +824,14 @@
 
 +(UInt64)totalDiskSpaceInBytes {
     NSDictionary* attributes = [[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:nil];
-    UInt64 space = [((NSNumber*) [attributes valueForKey: NSFileSystemSize]) intValue];
+    UInt64 space = [((NSNumber*) [attributes valueForKey: NSFileSystemSize]) longLongValue];
     if (!space)
         return 0;
     return space;
 }
 +(UInt64)freeDiskSpaceInBytes {
     NSDictionary* attributes = [[NSFileManager defaultManager] attributesOfFileSystemForPath:NSHomeDirectory() error:nil];
-    UInt64 space = [((NSNumber*) [attributes valueForKey: NSFileSystemFreeSize]) intValue];
+    UInt64 space = [((NSNumber*) [attributes valueForKey: NSFileSystemFreeSize]) longLongValue];
     if (!space)
         return 0;
     return space;

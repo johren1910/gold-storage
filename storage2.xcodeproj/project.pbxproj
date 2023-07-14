@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		F60BD33C2A5EA49D006DCF69 /* Pods_storage2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E19C3CDB4D176A0EF12B2065 /* Pods_storage2.framework */; };
+		F61F70C52A6136FD006D6892 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F60BD33B2A5EA492006DCF69 /* libsqlite3.0.tbd */; };
+		F61F70C62A613A4F006D6892 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F60BD33A2A5EA48D006DCF69 /* libsqlite3.tbd */; };
 		F64BAB692A3DA456002B923F /* DatabaseService.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAB682A3DA456002B923F /* DatabaseService.m */; };
 		F64BAB742A3F05CA002B923F /* Coordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAB732A3F05CA002B923F /* Coordinator.m */; };
 		F64BAB7A2A3F08CA002B923F /* AppCoordinator.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAB792A3F08CA002B923F /* AppCoordinator.m */; };
@@ -41,7 +43,6 @@
 		F65879872A5D052F00293FFD /* ChatMessageProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = F65879862A5D052F00293FFD /* ChatMessageProvider.m */; };
 		F658798D2A5D0E7B00293FFD /* FileDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = F658798C2A5D0E7B00293FFD /* FileDataProvider.m */; };
 		F65879912A5D32F800293FFD /* ChatRoomProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = F65879902A5D32F800293FFD /* ChatRoomProvider.m */; };
-		F6A336622A5FAB3000DF8C38 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F60BD33A2A5EA48D006DCF69 /* libsqlite3.tbd */; };
 		F6C43EF42A3AEF0D001D8715 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */; };
 		F6C43EF72A3AEF0D001D8715 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF62A3AEF0D001D8715 /* SceneDelegate.m */; };
 		F6C43EFA2A3AEF0D001D8715 /* ChatRoomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF92A3AEF0D001D8715 /* ChatRoomViewController.m */; };
@@ -86,6 +87,8 @@
 		E19C3CDB4D176A0EF12B2065 /* Pods_storage2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_storage2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F60BD33A2A5EA48D006DCF69 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		F60BD33B2A5EA492006DCF69 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
+		F61F70C82A613C92006D6892 /* sqlite3ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3ext.h; sourceTree = "<group>"; };
+		F61F70C92A613C92006D6892 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
 		F64BAB672A3DA448002B923F /* DatabaseService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DatabaseService.h; sourceTree = "<group>"; };
 		F64BAB682A3DA456002B923F /* DatabaseService.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = DatabaseService.m; sourceTree = "<group>"; };
 		F64BAB722A3F0593002B923F /* Coordinator.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Coordinator.h; sourceTree = "<group>"; };
@@ -231,7 +234,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F6A336622A5FAB3000DF8C38 /* libsqlite3.tbd in Frameworks */,
+				F61F70C62A613A4F006D6892 /* libsqlite3.tbd in Frameworks */,
+				F61F70C52A6136FD006D6892 /* libsqlite3.0.tbd in Frameworks */,
 				F60BD33C2A5EA49D006DCF69 /* Pods_storage2.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -256,6 +260,15 @@
 				41FF497A3D8960B438AD9763 /* Pods-storage2.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		F61F70C72A613C80006D6892 /* SQLite */ = {
+			isa = PBXGroup;
+			children = (
+				F61F70C92A613C92006D6892 /* sqlite3.h */,
+				F61F70C82A613C92006D6892 /* sqlite3ext.h */,
+			);
+			path = SQLite;
 			sourceTree = "<group>";
 		};
 		F64BAB662A3DA439002B923F /* DatabaseManager */ = {
@@ -699,6 +712,7 @@
 		F6C43F492A3C39C9001D8715 /* Helpers */ = {
 			isa = PBXGroup;
 			children = (
+				F61F70C72A613C80006D6892 /* SQLite */,
 				F64BAFCF2A4AECAA002B923F /* StorageManager */,
 				F64BABD72A493BB5002B923F /* ReachabilityHelper */,
 				F64BABCB2A4839DC002B923F /* DownloadManager */,
@@ -1061,6 +1075,7 @@
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				ENABLE_TESTABILITY = YES;
+				EXCLUDED_ARCHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_NO_COMMON_BLOCKS = YES;
@@ -1075,10 +1090,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
@@ -1119,6 +1135,7 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				EXCLUDED_ARCHS = "";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_NO_COMMON_BLOCKS = YES;
 				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
@@ -1127,9 +1144,11 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				OTHER_LDFLAGS = "";
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1156,7 +1175,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = probation.zalo.storage2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
@@ -1185,7 +1205,8 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0;
+				MARKETING_VERSION = 2.0;
+				ONLY_ACTIVE_ARCH = YES;
 				PRODUCT_BUNDLE_IDENTIFIER = probation.zalo.storage2;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_EMIT_LOC_STRINGS = YES;
