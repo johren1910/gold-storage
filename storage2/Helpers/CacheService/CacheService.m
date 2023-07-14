@@ -61,7 +61,7 @@
         NSArray* allKeys = [weakself.ramImageCaches allKeys];
         
         for (int i = 0; i < allKeys.count; i++) {
-            [weakself.ramImageCaches removeObjectForKey:allKeys[i]];
+            [weakself deleteImageByKey:allKeys[i]];
         };
     });
 }
@@ -72,7 +72,7 @@
         NSArray* allKeys = [weakself.ramImageCaches allKeys];
         
         for (int i = 0; i < allKeys.count/2; i++) {
-            [weakself.ramImageCaches removeObjectForKey:allKeys[i]];
+            [weakself deleteImageByKey:allKeys[i]];
         };
     });
 }
@@ -115,9 +115,10 @@
 -(void)deleteImageByKey:(NSString*)key {
     if (!key)
         return;
-    [_ramImageCaches removeObjectForKey: key];
+    
     __weak CacheService *weakself = self;
     dispatch_async(_cacheQueue, ^{
+        [weakself.ramImageCaches removeObjectForKey: key];
         NSString* cacheDirectory = [FileHelper pathForCachesDirectory];
         
          NSString *filePath = [cacheDirectory stringByAppendingPathComponent:key];
