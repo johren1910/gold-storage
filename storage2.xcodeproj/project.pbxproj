@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		F60BD33C2A5EA49D006DCF69 /* Pods_storage2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E19C3CDB4D176A0EF12B2065 /* Pods_storage2.framework */; };
+		F61179222A64EC7F00D69175 /* ZODownloadUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = F61179212A64EC7F00D69175 /* ZODownloadUnit.m */; };
 		F61F70C52A6136FD006D6892 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F60BD33B2A5EA492006DCF69 /* libsqlite3.0.tbd */; };
 		F61F70C62A613A4F006D6892 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F60BD33A2A5EA48D006DCF69 /* libsqlite3.tbd */; };
 		F64BAB692A3DA456002B923F /* DatabaseService.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAB682A3DA456002B923F /* DatabaseService.m */; };
@@ -25,7 +26,7 @@
 		F64BABC62A44057A002B923F /* ZOStatePresentable.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABC52A44057A002B923F /* ZOStatePresentable.m */; };
 		F64BABCA2A4536EB002B923F /* Skeletonable.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABC92A4536EB002B923F /* Skeletonable.m */; };
 		F64BABCE2A4839FA002B923F /* ZODownloadManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABCD2A4839FA002B923F /* ZODownloadManager.m */; };
-		F64BABD22A483A3F002B923F /* ZODownloadUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABD12A483A3F002B923F /* ZODownloadUnit.m */; };
+		F64BABD22A483A3F002B923F /* ZODownloadItem.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABD12A483A3F002B923F /* ZODownloadItem.m */; };
 		F64BABDA2A493BC8002B923F /* ReachabilityHelper.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABD92A493BC8002B923F /* ReachabilityHelper.m */; };
 		F64BABDD2A4A81B9002B923F /* FileData.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BABDC2A4A81B9002B923F /* FileData.m */; };
 		F64BAFD22A4AECBE002B923F /* StorageManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAFD12A4AECBE002B923F /* StorageManager.m */; };
@@ -71,7 +72,6 @@
 		F6EFC93E2A5272C300DDEDF4 /* ChatDetailBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC93D2A5272C300DDEDF4 /* ChatDetailBuilder.m */; };
 		F6EFC9422A52771800DDEDF4 /* ChatRoomBuilder.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC9412A52771800DDEDF4 /* ChatRoomBuilder.m */; };
 		F6EFC9502A53D7A600DDEDF4 /* ZOUrlSessionDownloadRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC94F2A53D7A600DDEDF4 /* ZOUrlSessionDownloadRepository.m */; };
-		F6EFC9532A53F9D100DDEDF4 /* ZOUrlSessionDownloadUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC9522A53F9D100DDEDF4 /* ZOUrlSessionDownloadUnit.m */; };
 		F6EFC95B2A5554BB00DDEDF4 /* ChatMessageDBRepository.m in Sources */ = {isa = PBXBuildFile; fileRef = F6EFC95A2A5554BB00DDEDF4 /* ChatMessageDBRepository.m */; };
 		F6FF767D2A5D5EA1003A1EF4 /* StorageBusinessModel.m in Sources */ = {isa = PBXBuildFile; fileRef = F6FF767C2A5D5EA1003A1EF4 /* StorageBusinessModel.m */; };
 		F6FF76802A5D5EB6003A1EF4 /* StorageEntity.m in Sources */ = {isa = PBXBuildFile; fileRef = F6FF767F2A5D5EB6003A1EF4 /* StorageEntity.m */; };
@@ -87,6 +87,8 @@
 		E19C3CDB4D176A0EF12B2065 /* Pods_storage2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_storage2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F60BD33A2A5EA48D006DCF69 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		F60BD33B2A5EA492006DCF69 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
+		F61179202A64EC7600D69175 /* ZODownloadUnit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZODownloadUnit.h; sourceTree = "<group>"; };
+		F61179212A64EC7F00D69175 /* ZODownloadUnit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZODownloadUnit.m; sourceTree = "<group>"; };
 		F61F70C82A613C92006D6892 /* sqlite3ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3ext.h; sourceTree = "<group>"; };
 		F61F70C92A613C92006D6892 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
 		F64BAB672A3DA448002B923F /* DatabaseService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DatabaseService.h; sourceTree = "<group>"; };
@@ -118,8 +120,8 @@
 		F64BABC92A4536EB002B923F /* Skeletonable.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Skeletonable.m; sourceTree = "<group>"; };
 		F64BABCC2A4839EF002B923F /* ZODownloadManager.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZODownloadManager.h; sourceTree = "<group>"; };
 		F64BABCD2A4839FA002B923F /* ZODownloadManager.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZODownloadManager.m; sourceTree = "<group>"; };
-		F64BABD02A483A36002B923F /* ZODownloadUnit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZODownloadUnit.h; sourceTree = "<group>"; };
-		F64BABD12A483A3F002B923F /* ZODownloadUnit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZODownloadUnit.m; sourceTree = "<group>"; };
+		F64BABD02A483A36002B923F /* ZODownloadItem.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZODownloadItem.h; sourceTree = "<group>"; };
+		F64BABD12A483A3F002B923F /* ZODownloadItem.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZODownloadItem.m; sourceTree = "<group>"; };
 		F64BABD82A493BBF002B923F /* ReachabilityHelper.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ReachabilityHelper.h; sourceTree = "<group>"; };
 		F64BABD92A493BC8002B923F /* ReachabilityHelper.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ReachabilityHelper.m; sourceTree = "<group>"; };
 		F64BABDB2A4A81B0002B923F /* FileData.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileData.h; sourceTree = "<group>"; };
@@ -208,8 +210,6 @@
 		F6EFC94D2A53D78C00DDEDF4 /* ZODownloadRepositoryInterface.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZODownloadRepositoryInterface.h; sourceTree = "<group>"; };
 		F6EFC94E2A53D79A00DDEDF4 /* ZOUrlSessionDownloadRepostiory.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZOUrlSessionDownloadRepostiory.h; sourceTree = "<group>"; };
 		F6EFC94F2A53D7A600DDEDF4 /* ZOUrlSessionDownloadRepository.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZOUrlSessionDownloadRepository.m; sourceTree = "<group>"; };
-		F6EFC9512A53F9C400DDEDF4 /* ZOUrlSessionDownloadUnit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZOUrlSessionDownloadUnit.h; sourceTree = "<group>"; };
-		F6EFC9522A53F9D100DDEDF4 /* ZOUrlSessionDownloadUnit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZOUrlSessionDownloadUnit.m; sourceTree = "<group>"; };
 		F6EFC9562A5552AD00DDEDF4 /* ChatMessageDBRepository.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatMessageDBRepository.h; sourceTree = "<group>"; };
 		F6EFC9572A5552B700DDEDF4 /* ChatRoomDBRepository.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatRoomDBRepository.h; sourceTree = "<group>"; };
 		F6EFC9582A5552C400DDEDF4 /* FileDBRepository.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileDBRepository.h; sourceTree = "<group>"; };
@@ -398,8 +398,10 @@
 		F64BABCF2A483A07002B923F /* DownloadUnit */ = {
 			isa = PBXGroup;
 			children = (
-				F64BABD02A483A36002B923F /* ZODownloadUnit.h */,
-				F64BABD12A483A3F002B923F /* ZODownloadUnit.m */,
+				F64BABD02A483A36002B923F /* ZODownloadItem.h */,
+				F64BABD12A483A3F002B923F /* ZODownloadItem.m */,
+				F61179202A64EC7600D69175 /* ZODownloadUnit.h */,
+				F61179212A64EC7F00D69175 /* ZODownloadUnit.m */,
 			);
 			path = DownloadUnit;
 			sourceTree = "<group>";
@@ -774,8 +776,6 @@
 			children = (
 				F6EFC94E2A53D79A00DDEDF4 /* ZOUrlSessionDownloadRepostiory.h */,
 				F6EFC94F2A53D7A600DDEDF4 /* ZOUrlSessionDownloadRepository.m */,
-				F6EFC9512A53F9C400DDEDF4 /* ZOUrlSessionDownloadUnit.h */,
-				F6EFC9522A53F9D100DDEDF4 /* ZOUrlSessionDownloadUnit.m */,
 			);
 			path = ZOUrlSessionDownload;
 			sourceTree = "<group>";
@@ -977,12 +977,13 @@
 				F64BAB742A3F05CA002B923F /* Coordinator.m in Sources */,
 				F64BABC62A44057A002B923F /* ZOStatePresentable.m in Sources */,
 				F6C43F392A3B1159001D8715 /* ChatMessageCell.m in Sources */,
-				F64BABD22A483A3F002B923F /* ZODownloadUnit.m in Sources */,
+				F64BABD22A483A3F002B923F /* ZODownloadItem.m in Sources */,
 				F64BABB82A42DB46002B923F /* CacheService.m in Sources */,
 				F658796D2A56B58100293FFD /* FileDBRepository.m in Sources */,
 				F658797A2A57EE8500293FFD /* ChatRoomDataRepository.m in Sources */,
 				F64BAFFE2A518842002B923F /* ChatDetailBusinessModel.m in Sources */,
 				F658796B2A56AC0900293FFD /* ChatRoomDBRepository.m in Sources */,
+				F61179222A64EC7F00D69175 /* ZODownloadUnit.m in Sources */,
 				F64BABBC2A42DF25002B923F /* CompressorHelper.m in Sources */,
 				F6EFC93E2A5272C300DDEDF4 /* ChatDetailBuilder.m in Sources */,
 				F64BAFEC2A4E7FF1002B923F /* ZOHeap.m in Sources */,
@@ -1005,7 +1006,6 @@
 				F6C43F272A3AF139001D8715 /* ChatRoomCell.m in Sources */,
 				F64BAB822A3F0F06002B923F /* ChatRoomCoordinator.m in Sources */,
 				F6C43EF72A3AEF0D001D8715 /* SceneDelegate.m in Sources */,
-				F6EFC9532A53F9D100DDEDF4 /* ZOUrlSessionDownloadUnit.m in Sources */,
 				F64BABDA2A493BC8002B923F /* ReachabilityHelper.m in Sources */,
 				F65879912A5D32F800293FFD /* ChatRoomProvider.m in Sources */,
 				F6C43F262A3AF139001D8715 /* ChatRoomSectionController.m in Sources */,

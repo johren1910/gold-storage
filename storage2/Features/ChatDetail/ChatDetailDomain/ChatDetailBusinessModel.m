@@ -54,7 +54,7 @@
         NSString *messageId = [[NSUUID UUID] UUIDString];
         NSString *fileId = [[NSUUID UUID] UUIDString];
 
-        ChatMessageData *newMessageData = [[ChatMessageData alloc] initWithMessage:messageId messageId:messageId chatRoomId:roomData.roomId];
+        __block ChatMessageData *newMessageData = [[ChatMessageData alloc] initWithMessage:messageId messageId:messageId chatRoomId:roomData.roomId];
         newMessageData.messageState = Downloading;
 
         FileData *newFileData = [[FileData alloc] init];
@@ -83,7 +83,7 @@
                 // Start Request Download
                 [weakself _startDownload:url forMessage:newMessageData
                                   ofRoom:roomData completionBlock: ^(ChatDetailEntity* entity) {
-                    
+                    newMessageData = nil;
                     completionBlock(entity, true);
                 }];
             }];
@@ -119,23 +119,23 @@
 - (void)_startDownload:(NSString *)url forMessage:(ChatMessageData*)message
                 ofRoom:(ChatRoomEntity*)model completionBlock:(void(^)(ChatDetailEntity* entity))completionBlock {
     
-    ZODownloadUnit* unit = [[ZODownloadUnit alloc] init];
-    unit.requestUrl = url;
-    unit.destinationDirectoryPath = nil;
-    unit.isBackgroundSession = false;
-    unit.priority = ZODownloadPriorityHigh;
-    unit.progressBlock = ^(CGFloat progress, NSUInteger speed, NSUInteger remainingSeconds) {
+    ZODownloadItem* item = [[ZODownloadItem alloc] init];
+    item.requestUrl = url;
+    item.destinationDirectoryPath = nil;
+    item.isBackgroundSession = false;
+    item.priority = ZODownloadPriorityHigh;
+    item.progressBlock = ^(CGFloat progress, NSUInteger speed, NSUInteger remainingSeconds) {
         NSLog(@"progress: %f\nspeed: %ld\nremainSeconds:%ld", progress,speed,remainingSeconds);
     };
     
-    [_chatDetailRepository startDownloadWithUnit:unit forMessage:message completionBlock:^(FileData* fileData, UIImage* thumbnail){
+    [_chatDetailRepository startDownloadWithItem:item forMessage:message completionBlock:^(FileData* fileData, UIImage* thumbnail){
         
         message.file = fileData;
         message.messageState = Sent;
         ChatDetailEntity* result = [message toChatDetailEntity];
         result.thumbnail = thumbnail;
         completionBlock(result);
-        
+        message.file = nil;
     }];
 }
 

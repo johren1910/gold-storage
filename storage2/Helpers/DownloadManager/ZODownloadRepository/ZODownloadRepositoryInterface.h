@@ -7,18 +7,16 @@
 
 #import <Foundation/Foundation.h>
 #import <UIKit/UIKit.h>
-#import "ZODownloadUnit.h"
+#import "ZODownloadItem.h"
 
 @protocol ZODownloadRepositoryInterface
 
-@property (nonatomic, copy) void(^completionBlock)(NSString* filePath, ZODownloadUnit* unit);
-@property (nonatomic, copy) void(^errorBlock)(NSError* error, ZODownloadUnit* unit);
-- (void)startDownloadWithUnit:(ZODownloadUnit*)unit completionBlock:(void(^)(BOOL isDownloadStarted))completionBlock;
-- (void)suspendDownloadOfUrl:(NSString *)url;
-- (void)suspendAllDownload;
-- (void)resumeDownloadOfUrl:(NSString *)url;
-- (void)resumeAllDownload;
-- (void)cancelDownloadOfUrl:(NSString *)url;
-- (void)cancelAllDownload;
+@property (nonatomic, copy) void(^completionBlock)(NSString* filePath);
+@property (nonatomic, copy) void(^errorBlock)(NSError* error);
+@property (nonatomic, copy) void(^progressBlock)(CGFloat progress, NSUInteger speed, NSUInteger remainingSeconds);
+- (void)startDownloadWithItem:(id<ZODownloadItemType>)item;
+- (void)pause;
+- (void)resume;
+- (void)cancle;
 
 @end

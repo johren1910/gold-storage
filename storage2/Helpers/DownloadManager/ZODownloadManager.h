@@ -6,6 +6,7 @@
 //
 
 #import "ZODownloadManagerType.h"
+#import "ZODownloadUnit.h"
 
 @interface ZODownloadManager : NSObject <ZODownloadManagerType>
 /// [This property is] define the maximum concurrent download that can happen at the same times. When reached max, the queue will handle download according to FIFO priorityQueue

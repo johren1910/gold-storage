@@ -6,7 +6,7 @@
 //
 #import "ChatDetailEntity.h"
 #import "ChatMessageData.h"
-#import "ZODownloadUnit.h"
+#import "ZODownloadItem.h"
 #import "ChatMessageProvider.h"
 #import "FileDataProvider.h"
 
@@ -15,6 +15,6 @@
 @property (nonatomic) id<ChatMessageProviderType> chatMessageProvider;
 @property (nonatomic) id<FileDataProviderType> fileDataProvider;
 
-- (void)startDownloadWithUnit:(ZODownloadUnit*)unit
+- (void)startDownloadWithItem:(ZODownloadItem*)item
                    forMessage: (ChatMessageData*)message completionBlock:(void(^)(FileData* fileData, UIImage* thumbnail))completionBlock;
 @end

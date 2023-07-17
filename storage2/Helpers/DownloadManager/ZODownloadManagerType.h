@@ -6,8 +6,9 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "ZODownloadUnit.h"
+#import "ZODownloadItem.h"
 #import <UIKit/UIKit.h>
+#import "ZODownloadUnit.h"
 #import "AppDelegate.h"
 #import "ZODownloadRepositoryInterface.h"
 
@@ -48,7 +49,7 @@
 ///    - errorBlock:Call back with a returned error
 ///
 
-- (void)startDownloadWithUnit:(ZODownloadUnit*)unit;
+- (void)startDownloadWithUnit:(id<ZODownloadUnitType>)unit;
 
 /// The action to suspend download of the according URL
 ///
@@ -88,9 +89,4 @@
 ///
 /// - Note: This also clear the temp directory
 - (void)cancelAllDownload;
-
-/// Set the download repository for manager
-///
-/// - Note: Default is UrlSessionDownloadRepository
--(void)setDownloadRepository:(id<ZODownloadRepositoryInterface>)repository;
 @end

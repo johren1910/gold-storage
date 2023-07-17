@@ -139,12 +139,10 @@
 - (void)compressThenCache: (UIImage*)image withKey:(NSString*) key {
     
     __weak StorageManager *weakself = self;
-    dispatch_async(_storageQueue, ^{
-        [CompressorHelper compressImage:image quality:Thumbnail completionBlock:^(UIImage* compressedImage){
-            
-            [weakself.cacheService cacheImageByKey:image withKey:key];
-        }];
-    });
+    [CompressorHelper compressImage:image quality:Thumbnail completionBlock:^(UIImage* compressedImage){
+        
+        [weakself.cacheService cacheImageByKey:image withKey:key];
+    }];
 }
 
 - (void)createFile:(FileData*) fileData withNSData:(NSData*)data completionBlock:(ZOCompletionBlock)completionBlock {

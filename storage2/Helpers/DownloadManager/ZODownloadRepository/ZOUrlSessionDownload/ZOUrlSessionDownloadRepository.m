@@ -11,9 +11,11 @@
 
 @interface ZOUrlSessionDownloadRepository () <NSURLSessionDelegate, NSURLSessionDownloadDelegate>
 
-@property (nonatomic, strong) NSURLSession *defaultUrlSession;
-@property (nonatomic, strong) NSURLSession *backgroundUrlSession;
-@property (nonatomic, strong) NSMutableDictionary *currentDownloadUnits;
+@property (nonatomic) NSURLSession *defaultUrlSession;
+@property (nonatomic) NSURLSession *backgroundUrlSession;
+@property (nonatomic) NSURLSessionDownloadTask* _downloadTask;
+@property (nonatomic) id<ZODownloadItemType> _downloadItem;
+@property (nonatomic) NSURLSession *_currentSession;
 
 @end
 
@@ -21,134 +23,79 @@
 
 - (instancetype)init {
     if (self == [super init]) {
-        self.currentDownloadUnits = [[NSMutableDictionary alloc] init];
     }
     return self;
 }
 
-- (void)cancelDownloadOfUrl:(NSString *)url {
-    __weak ZOUrlSessionDownloadRepository* weakself = self;
-    ZOUrlSessionDownloadUnit *unit = [weakself.currentDownloadUnits objectForKey:url];
-    
-    if (unit) {
-        if (unit.downloadState == ZODownloadStateDone) {
-            return;
-        } else {
-            
-            [unit.task cancel];
-            unit.task = nil;
-            unit.completionBlock = nil;
-            unit.errorBlock = nil;
-            unit.otherCompletionBlocks = nil;
-            unit.otherErrorBlocks = nil;
-        }
-        [weakself.currentDownloadUnits removeObjectForKey:url];
+- (void)cancle {
+    [self._downloadTask cancel];
+    self._downloadTask = nil;
+}
+
+- (void)resume {
+    if(self._downloadTask && self._downloadTask.state != NSURLSessionTaskStateCompleted) {
+        [self._downloadTask resume];
     }
 }
 
-- (void)cancelAllDownload {
-    [self.currentDownloadUnits enumerateKeysAndObjectsUsingBlock:^(id key, ZOUrlSessionDownloadUnit* value, BOOL* stop) {
-        [value.task cancel];
-        value.task = nil;
-        value.completionBlock = nil;
-        value.errorBlock = nil;
-        value.otherCompletionBlocks = nil;
-        value.otherErrorBlocks = nil;
-        [FileHelper removeItemAtPath:value.tempFilePath];
-    }];
-
-    [self.currentDownloadUnits removeAllObjects];
-}
-
-- (void)resumeAllDownload {
-    __weak ZOUrlSessionDownloadRepository* weakself = self;
-    [weakself.currentDownloadUnits enumerateKeysAndObjectsUsingBlock:^(id key, ZODownloadUnit* value, BOOL* stop) {
-        if (value.downloadState != ZODownloadStateError || value.downloadState != ZODownloadStateDone || value.downloadState != ZODownloadStateDownloading ) {
-            value.downloadState = ZODownloadStatePending;
-        }
-    }];
+- (void)startDownloadWithItem:(id<ZODownloadItemType>)item {
     
-}
-
-- (void)resumeDownloadOfUrl:(NSString *)url {
-    if (url.length == 0) {
-        return;
-    }
     __weak ZOUrlSessionDownloadRepository* weakself = self;
-    ZOUrlSessionDownloadUnit *unit = [weakself.currentDownloadUnits objectForKey:url];
-    if (unit) {
-        if (unit.task) {
-            if (unit.downloadError) {
-                [unit.task cancel];
-                unit.task = nil;
-                unit.downloadError = nil;
-            }
-        }
-    }
-}
-
-- (void)startDownloadWithUnit:(ZODownloadUnit *)unit completionBlock:(void(^)(BOOL isDownloadStarted) )completionBlock {
-    
-    ZOUrlSessionDownloadUnit* sessionUnit = [[ZOUrlSessionDownloadUnit alloc] initWithUnit:unit];
-    __weak ZOUrlSessionDownloadRepository* weakself = self;
-    sessionUnit.downloadState = ZODownloadStateDownloading;
-    
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
+    weakself._downloadItem = item;
+    weakself._currentSession = [weakself _getUrlSessionBasedOnItem:item];
     
-    if (sessionUnit.isBackgroundSession) {
-        [[weakself _getUrlSessionBasedOnUnit:sessionUnit] getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
-            [downloadTasks enumerateObjectsUsingBlock:^(id task, NSUInteger idx, BOOL *stop) {
-                NSURLSessionTask *sessionTask = (NSURLSessionTask*) task;
-                if ([sessionUnit.requestUrl isEqualToString:sessionTask.originalRequest.URL.absoluteString]) {
-                    
-                    if (sessionTask.state == NSURLSessionTaskStateCompleted
-                        && sessionTask.error) {
-                        // App terminated manully by user. All background session download cleared, create new download
-                        [sessionTask cancel];
-                    } else {
-                        sessionUnit.task = (NSURLSessionDownloadTask*)sessionTask;
-                        [weakself.currentDownloadUnits setObject:unit forKey:sessionUnit.requestUrl];
-                        if (sessionTask.state == NSURLSessionTaskStateSuspended) {
-                            [sessionTask resume];
-                            completionBlock(TRUE);
-                        }
-                    }
-                }
-            }];
-            
-            if (!sessionUnit.task) {
-                NSURLSessionDownloadTask *downloadTask = [weakself _createDownloadTaskWithUnit:unit];
-                
-                sessionUnit.task = downloadTask;
-                [weakself.currentDownloadUnits setObject:sessionUnit forKey:sessionUnit.requestUrl];
-                [downloadTask resume];
-                completionBlock(TRUE);
-                
-            }
+    if (item.isBackgroundSession) {
+        [weakself._currentSession getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
+            [weakself handleBackgroundSessionDownload:downloadTasks];
         }];
     } else {
-        NSURLSessionDownloadTask *downloadTask = [weakself _createDownloadTaskWithUnit:sessionUnit];
-        sessionUnit.task = downloadTask;
-        [weakself.currentDownloadUnits setObject:sessionUnit forKey:sessionUnit.requestUrl];
-        completionBlock(TRUE);
-        [downloadTask resume];
+        NSURLSessionDownloadTask *downloadTask = [weakself _createDownloadTaskWithItem:item];
+        weakself._downloadTask = downloadTask;
+        [weakself._downloadTask resume];
     }
 }
 
-- (void)suspendDownloadOfUrl:(NSString *)url {
-    ZOUrlSessionDownloadUnit *unit = [self.currentDownloadUnits objectForKey:url];
-    if (unit) {
-        [unit.task cancelByProducingResumeData:^(NSData * _Nullable resumeData) {
+-(void)handleBackgroundSessionDownload:(NSArray*)downloadTasks {
+    
+    __weak ZOUrlSessionDownloadRepository* weakself = self;
+    [downloadTasks enumerateObjectsUsingBlock:^(id task, NSUInteger idx, BOOL *stop) {
+        NSURLSessionTask *sessionTask = (NSURLSessionTask*) task;
+        if ([weakself._downloadItem.requestUrl isEqualToString:sessionTask.originalRequest.URL.absoluteString]) {
+            
+            if (sessionTask.state == NSURLSessionTaskStateCompleted
+                && sessionTask.error) {
+                // App terminated manully by user. All background session download cleared, create new download
+                [sessionTask cancel];
+            } else {
+                weakself._downloadTask = (NSURLSessionDownloadTask*)sessionTask;
+              
+                if (sessionTask.state == NSURLSessionTaskStateSuspended) {
+                    [sessionTask resume];
+                }
+            }
+        }
+    }];
+    
+    if (!weakself._downloadTask) {
+        NSURLSessionDownloadTask *downloadTask = [weakself _createDownloadTaskWithItem:weakself._downloadItem];
+        
+        weakself._downloadTask = downloadTask;
+    }
+    
+    [weakself._downloadTask resume];
+}
+
+-(void)pause {
+    
+    __weak ZOUrlSessionDownloadRepository* weakself = self;
+    if (weakself._downloadTask) {
+        [weakself._downloadTask cancelByProducingResumeData:^(NSData * _Nullable resumeData) {
             if (resumeData) {
-                unit.resumeData = resumeData;
+                weakself._downloadItem.resumeData = resumeData;
             }
         }];
-        unit.downloadState = ZODownloadStateSuspended;
     }
-}
-
-- (void)suspendAllDownload {
-    
 }
 
 @synthesize errorBlock;
@@ -156,8 +103,8 @@
 
 #pragma mark - Private helpers
 
-- (NSURLSession*) _getUrlSessionBasedOnUnit:(ZODownloadUnit*)unit {
-    if (unit.isBackgroundSession) {
+- (NSURLSession*) _getUrlSessionBasedOnItem:(id<ZODownloadItemType>)item {
+    if (item.isBackgroundSession) {
         return self._getBackgroundUrlSession;
     } else {
         return self._getDefaultUrlSession;
@@ -185,36 +132,26 @@
     return _defaultUrlSession;
 }
 
-- (NSURLSessionDownloadTask *)_createDownloadTaskWithUnit:(ZODownloadUnit *)unit {
-    NSURL *url = [NSURL URLWithString:unit.requestUrl];
+- (NSURLSessionDownloadTask *)_createDownloadTaskWithItem:(id<ZODownloadItemType>)item {
+    NSURL *url = [NSURL URLWithString:item.requestUrl];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:url];
     NSURLSessionDownloadTask *downloadTask;
-    if (unit.resumeData) {
-        downloadTask = [[self _getUrlSessionBasedOnUnit:unit] downloadTaskWithResumeData:unit.resumeData];
+    if (item.resumeData) {
+        downloadTask = [self._currentSession downloadTaskWithResumeData:item.resumeData];
     } else {
-        downloadTask = [[self _getUrlSessionBasedOnUnit:unit] downloadTaskWithRequest:request];
+        downloadTask = [self._currentSession downloadTaskWithRequest:request];
     }
     return downloadTask;
 }
 
-- (NSUInteger)remainingTimeForDownload:(ZODownloadUnit *)unit
-                      bytesTransferred:(int64_t)bytesTransferred
+- (NSUInteger)remainingTimeForDownload:(int64_t)bytesTransferred
              totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
-    NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:unit.startDate];
+    NSTimeInterval timeInterval = [[NSDate date] timeIntervalSinceDate:self._downloadItem.startDate];
     CGFloat speed = (CGFloat)bytesTransferred / (CGFloat)timeInterval;
     CGFloat remainingBytes = totalBytesExpectedToWrite - bytesTransferred;
     CGFloat remainingTime = remainingBytes / speed;
     
     return (NSUInteger)remainingTime;
-}
-
-- (void)_cancelTaskOfUnit:(ZOUrlSessionDownloadUnit *)unit {
-    
-    if (unit.task) {
-        [unit.task cancel];
-        unit.task = nil;
-    }
-    unit.downloadError = nil;
 }
 
 - (BOOL)_retryWithUrl:(NSString *)url {
@@ -230,38 +167,35 @@ didFinishDownloadingToURL:(NSURL *)location {
     if (!urlString) {
         urlString = downloadTask.originalRequest.URL.absoluteString;
     }
-    
-    ZOUrlSessionDownloadUnit *unit = [weakself.currentDownloadUnits objectForKey:urlString];
-    unit.tempFilePath = location.path;
-    if (unit) {
-        NSError *error;
-        if (unit.destinationDirectoryPath) {
-            NSString* destinationPath = [unit.destinationDirectoryPath stringByAppendingPathComponent:[urlString lastPathComponent]];
-            NSURL *dstUrl = [FileHelper urlForItemAtPath:destinationPath];
-            [FileHelper createDirectoriesForFileAtPath:destinationPath];
-            [FileHelper copyItemAtPath:location toPath:dstUrl error:&error];
-            [FileHelper removeItemAtPath:location.path];
-            completionBlock(destinationPath, unit);
-        } else {
-            NSString* fileName = [urlString lastPathComponent];
-            NSString* tempFolder = [location.path stringByDeletingLastPathComponent];
-            NSString* newFilePath = [tempFolder stringByAppendingPathComponent:fileName];
-            NSURL *dstUrl = [FileHelper urlForItemAtPath:newFilePath];
-            
-            [FileHelper copyItemAtPath:location toPath:dstUrl error:&error];
-            [FileHelper removeItemAtPath:location.path];
-            // If no destinationDirectoryPath, return temp file path.
-            completionBlock(newFilePath, unit);
-        }
-        
-        [weakself.currentDownloadUnits removeObjectForKey:unit.requestUrl];
-        
-        [unit.task cancel];
-        unit.task = nil;
-        unit.downloadState = ZODownloadStateDone;
+    NSString *resultPath = nil;
+    NSError *error;
+    if (weakself._downloadItem.destinationDirectoryPath) {
+        NSString* destinationPath = [weakself._downloadItem.destinationDirectoryPath stringByAppendingPathComponent:[urlString lastPathComponent]];
+        NSURL *dstUrl = [FileHelper urlForItemAtPath:destinationPath];
+        [FileHelper createDirectoriesForFileAtPath:destinationPath];
+        [FileHelper copyItemAtPath:location toPath:dstUrl error:&error];
+        [FileHelper removeItemAtPath:location.path];
+        resultPath = destinationPath;
     } else {
-        [downloadTask cancel];
+        NSString* fileName = [urlString lastPathComponent];
+        NSString* tempFolder = [location.path stringByDeletingLastPathComponent];
+        NSString* newFilePath = [tempFolder stringByAppendingPathComponent:fileName];
+        NSURL *dstUrl = [FileHelper urlForItemAtPath:newFilePath];
+        
+        [FileHelper copyItemAtPath:location toPath:dstUrl error:&error];
+        [FileHelper removeItemAtPath:location.path];
+        resultPath = newFilePath;
     }
+    
+    [weakself._currentSession finishTasksAndInvalidate];
+    [weakself.defaultUrlSession finishTasksAndInvalidate];
+    [weakself.backgroundUrlSession finishTasksAndInvalidate];
+    weakself.defaultUrlSession = nil;
+    weakself.backgroundUrlSession = nil;
+    weakself._currentSession = nil;
+    weakself._downloadTask = nil;
+    weakself._downloadItem = nil;
+    completionBlock(resultPath);
 }
 
 - (void)URLSession:(NSURLSession *)session
@@ -275,8 +209,6 @@ didCompleteWithError:(NSError *)error {
     if (!urlString) {
         urlString = task.originalRequest.URL.absoluteString;
     }
-    
-    ZOUrlSessionDownloadUnit* unit = [weakself.currentDownloadUnits objectForKey:urlString];
     
     switch (error.code) {
         case ZODownloadErrorCancelled:
@@ -293,10 +225,11 @@ didCompleteWithError:(NSError *)error {
                 // Try resume data
                 NSData* resumeData = [error.userInfo objectForKey:NSURLSessionDownloadTaskResumeData];
                 if (resumeData) {
-                    unit.task = [[weakself _getUrlSessionBasedOnUnit:unit] downloadTaskWithResumeData:resumeData];
-                    [task resume];
+                    
+                   weakself._downloadTask = [weakself._currentSession downloadTaskWithResumeData:resumeData];
+                    [weakself._downloadTask resume];
                 } else {
-                    [task cancel];
+                    [weakself._downloadTask cancel];
                 }
                 
             }
@@ -307,9 +240,8 @@ didCompleteWithError:(NSError *)error {
             // Add retry count
             // Dispatch retry after an interval
             
-            unit.downloadState = ZODownloadStateError;
             if (![weakself _retryWithUrl:urlString]){
-                errorBlock(error, unit);
+                errorBlock(error);
             }
             
             break;
@@ -319,22 +251,19 @@ didCompleteWithError:(NSError *)error {
         {
             // Add retry count
             // Dispatch retry after an interval
-            unit.downloadState = ZODownloadStateError;
             if (![weakself _retryWithUrl:urlString]){
-                errorBlock(error, unit);
+                errorBlock(error);
             }
             break;
         }
         case ZODownloadErrorNetworkConnectionList:{
-            unit.downloadState = ZODownloadStateError;
             if (![weakself _retryWithUrl:urlString]){
-                errorBlock(error, unit);
+                errorBlock(error);
             }
             break;
         }
         default: {
-            unit.downloadState = ZODownloadStateError;
-            errorBlock(error, unit);
+            errorBlock(error);
             break;
         }
     }
@@ -359,14 +288,14 @@ totalBytesExpectedToWrite:(int64_t)totalBytesExpectedToWrite {
         urlString = downloadTask.currentRequest.URL.absoluteString;
     }
     
-    ZOUrlSessionDownloadUnit* unit = [self.currentDownloadUnits objectForKey:urlString];
-    
     CGFloat progress = (CGFloat)totalBytesWritten/ (CGFloat)totalBytesExpectedToWrite;
-    NSUInteger remainingTime = [self remainingTimeForDownload:unit bytesTransferred:totalBytesWritten totalBytesExpectedToWrite:totalBytesExpectedToWrite];
+    NSUInteger remainingTime = [self remainingTimeForDownload:totalBytesWritten totalBytesExpectedToWrite:totalBytesExpectedToWrite];
     NSUInteger speed = bytesWritten/1024;
-    if (unit.progressBlock) {
-        unit.progressBlock(progress, speed, remainingTime);
+    if (self.progressBlock) {
+        self.progressBlock(progress, speed, remainingTime);
     }
 }
+
+@synthesize progressBlock;
 
 @end

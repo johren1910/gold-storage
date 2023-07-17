@@ -2,44 +2,87 @@
 //  ZODownloadUnit.m
 //  storage2
 //
-//  Created by LAP14885 on 25/06/2023.
+//  Created by LAP14885 on 17/07/2023.
 //
 
+#import <Foundation/Foundation.h>
 #import "ZODownloadUnit.h"
 
-@implementation ZODownloadUnit
-
--(instancetype)init {
-    if (self == [super init]){
-        _downloadId = [[NSUUID UUID] UUIDString];
+@implementation ZODOwnloadUnit
+-(instancetype)initWithItem:(id<ZODownloadItemType>)item {
+    if (self == [super init]) {
+        self.downloadItem = item;
     }
     return self;
 }
+-(void)setRepository:(id<ZODownloadRepositoryInterface>)downloadRepository {
+    self.downloadRepository = downloadRepository;
+}
+    
+-(void)start:(void(^)(NSString* filePath))completionBlock errorBlock:(void(^)(NSError* error))errorBlock progressBlock:(void(^)(CGFloat progress, NSUInteger speed, NSUInteger remainingSeconds))progressBlock {
+    self.downloadRepository.completionBlock = completionBlock;
+    self.downloadRepository.errorBlock = errorBlock;
+    self.downloadRepository.progressBlock = progressBlock;
+    [self.downloadRepository startDownloadWithItem:self.downloadItem];
+}
+- (void)pause {
+    switch (downloadItem.downloadState) {
+        case ZODownloadStatePending:
+        case ZODownloadStateDownloading:
+        case ZODownloadStateSuspended:
+            [self.downloadRepository pause];
+            break;
+        case ZODownloadErrorCancelled:
+        case ZODownloadStateDone:
+            break;
+        default:
+            break;
+    }
+}
+- (void)cancle {
+    switch (downloadItem.downloadState) {
+        case ZODownloadStatePending:
+        case ZODownloadStateError:
+        case ZODownloadStateDownloading:
+        case ZODownloadStateSuspended:
+            [self.downloadRepository pause];
+            break;
+        case ZODownloadErrorCancelled:
+        case ZODownloadStateDone:
+            break;
+        default:
+            break;
+    }
+    [self.downloadRepository cancle];
+    
+}
+- (void)resume {
+    switch (downloadItem.downloadState) {
+        case ZODownloadStatePending:
+        case ZODownloadStateError:
+        case ZODownloadStateSuspended:
+            [self.downloadRepository resume];
+            break;
+        case ZODownloadStateDownloading:
+        case ZODownloadErrorCancelled:
+        case ZODownloadStateDone:
+            break;
+        default:
+            break;
+    }
+}
 
-- (NSComparisonResult)compare:(ZODownloadUnit *)object {
-    if (_priority > object.priority) {
+- (NSComparisonResult)compare:(id<ZODownloadUnitType>)object {
+    if (self.downloadItem.priority > object.downloadItem.priority) {
         return NSOrderedDescending;
-    } else if (_priority < object.priority) {
+    } else if (self.downloadItem.priority < object.downloadItem.priority) {
         return NSOrderedAscending;
     } else {
         return NSOrderedSame;
     }
 }
 
-- (BOOL)isEqual:(ZODownloadUnit*)object {
-    if (object == self)
-        return YES;
-    if (!object || ![object isKindOfClass:[self class]])
-        return NO;
-    return (_downloadId == object.downloadId);
-}
-
--(id)copyWithZone:(NSZone *)zone
-{
-    ZODownloadUnit *clone = [[[self class] allocWithZone:zone] init];
-    // other statements
-    return clone;
-}
+@synthesize downloadItem;
+@synthesize downloadRepository;
 
 @end
-

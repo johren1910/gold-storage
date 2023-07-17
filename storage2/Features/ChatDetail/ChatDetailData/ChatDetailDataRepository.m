@@ -18,31 +18,33 @@
 
 @implementation ChatDetailDataRepository
 
-- (void)startDownloadWithUnit:(ZODownloadUnit*)unit
+- (void)startDownloadWithItem:(ZODownloadItem*)item
                    forMessage: (ChatMessageData*)message completionBlock:(void(^)(FileData* fileData, UIImage* thumbnail))completionBlock {
     __weak ChatDetailDataRepository* weakself = self;
-    __weak ZODownloadUnit* weakunit = unit;
-    unit.completionBlock = ^(NSString *filePath) {
+    __weak ZODownloadItem* weakItem = item;
+    item.completionBlock = ^(NSString *filePath) {
         FileDataProvider* fileProvider = (FileDataProvider*)weakself.fileDataProvider;
         FileType fileType = [fileProvider getFileTypeOfFilePath:filePath];
         NSString *currentFilePath = filePath;
-        if (!weakunit.destinationDirectoryPath) {
+        if (!weakItem.destinationDirectoryPath) {
             currentFilePath = [fileProvider moveFileToGeneralFolders:filePath forFileType:fileType andSetName:[message.file.filePath lastPathComponent]];
         }
         message.messageState = Sent;
         [weakself.chatMessageProvider updateMessage:message completionBlock:^(BOOL isFinish){
             NSLog(@"updated");
+            [weakself _saveMedia:currentFilePath forMessage:message completionBlock:completionBlock];
         }];
-        [weakself _saveMedia:currentFilePath forMessage:message completionBlock:completionBlock];
+        
         NSLog(@"destinationPath download: %@", currentFilePath);
     };
     
-    unit.errorBlock = ^(NSError *error) {
+    item.errorBlock = ^(NSError *error) {
         
         NSLog(@"error");
     };
     
-    [_downloadManager startDownloadWithUnit:unit];
+    ZODOwnloadUnit *downloadUnit = [[ZODOwnloadUnit alloc] initWithItem:item];
+    [_downloadManager startDownloadWithUnit:downloadUnit];
 }
 
 -(instancetype) initWithDownloadManager:(id<ZODownloadManagerType>)downloadManager andFileDataProvider:(id<FileDataProviderType>)fileDataProvider
@@ -78,7 +80,9 @@
                     thumbnail = [UIImage imageWithData:fileData];
                     NSData* compressed = UIImageJPEGRepresentation(thumbnail, 0.5);
                     thumbnail = [UIImage imageWithData:compressed];
-                    [weakself.storageManager compressThenCache:thumbnail withKey:checkSum];
+                    [weakself.storageManager cacheImageByKey:thumbnail withKey:checkSum];
+//                    [weakself.storageManager compressThenCache:thumbnail withKey:checkSum];
+                    NSLog(@"LOG 4");
                 }
                 
                 break;
@@ -87,7 +91,9 @@
                 duration = mediaInfo.duration;
                 if (!thumbnail) {
                     thumbnail = mediaInfo.thumbnail;
-                    [weakself.storageManager compressThenCache:thumbnail withKey:checkSum];
+                    [weakself.storageManager cacheImageByKey:thumbnail withKey:checkSum];
+//                    [weakself.storageManager compressThenCache:thumbnail withKey:checkSum];
+                    NSLog(@"LOG 4");
                 }
                 
                 break;

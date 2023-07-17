@@ -28,7 +28,6 @@
     if (_window == nil) {
         return;
     }
-    _appEnvironment = [[AppEnvironment alloc] init];
     _appDI = [AppDI shared];
     
     _rootViewController = [[UINavigationController alloc] init];
