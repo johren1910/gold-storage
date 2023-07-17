@@ -15,7 +15,7 @@
 #import "StorageViewController.h"
 #import "AppDI.h"
 
-@interface ChatRoomCoordinator () <ChatRoomViewModelCoordinatorDelegate>
+@interface ChatRoomCoordinator () <ChatRoomViewModelCoordinatorDelegate, ChatDetailCoordinatorDelegate>
 
 @property (strong, nonatomic) UINavigationController * navigationController;
 
@@ -45,11 +45,19 @@
 
 #pragma mark - HomeViewModelCoordinatorDelegate
 
--(void)didTapChatRoom: (ChatRoomEntity*) chatRoom {
+-(void)didTapChatRoom:(ChatRoomEntity*)chatRoom {
     
     ChatDetailViewController *viewController = (ChatDetailViewController*)[_appDI getChatDetailViewController:chatRoom withBuilder:[_appDI defaultDetailBuilder]];
     viewController.title = chatRoom.name;
     [viewController setDetailBuilder:[_appDI defaultDetailBuilder]];
+    
+    
+    UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Back"
+                                                             style:UIBarButtonItemStylePlain
+                                                            target:self
+                                                            action:@selector(chatDetailDidTapBack:)];
+    
+    [viewController.navigationItem setLeftBarButtonItem:item];
     
     [self.navigationController pushViewController:viewController animated:true];
 }
@@ -61,6 +69,12 @@
     viewController.title = @"Storage";
     
     [self.navigationController pushViewController:viewController animated:true];
+}
+
+#pragma mark - Action
+
+- (void)chatDetailDidTapBack:(id)sender{
+    [self.navigationController popToRootViewControllerAnimated:true];
 }
 
 @end
