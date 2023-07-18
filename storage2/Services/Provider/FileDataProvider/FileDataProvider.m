@@ -129,4 +129,13 @@
     completionBlock(array);
 }
 
+-(void)getAllFilesByType:(FileType)fileType completionBlock:(void (^)(NSArray* objects))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
+    [_storageManager getFilesOfType:fileType completionBlock:completionBlock];
+}
+
+- (void)deleteFile:(FileData*)file completionBlock:(void(^)(BOOL isFinish))completionBlock {
+    
+    [_storageManager deleteFileData:file completionBlock:completionBlock];
+}
+
 @end

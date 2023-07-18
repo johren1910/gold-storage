@@ -30,6 +30,7 @@
 
 - (void)createFile:(FileData*) fileData withNSData:(NSData*)data completionBlock:(ZOCompletionBlock)completionBlock;
 - (void)deleteFileData:(FileData*) file completionBlock:(ZOCompletionBlock)completionBlock;
+- (void)getFilesOfType:(FileType)fileType completionBlock:(ZOFetchCompletionBlock)completionBlock;
 - (void) getFileOfMessageId:(NSString*)messageId completionBlock:(ZOFetchCompletionBlock)completionBlock;
 - (void)updateFileData:(FileData*) fileData completionBlock:(ZOCompletionBlock)completionBlock;
 

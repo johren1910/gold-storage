@@ -102,17 +102,26 @@
                                 <viewLayoutGuide key="contentLayoutGuide" id="yGE-A9-NLh"/>
                                 <viewLayoutGuide key="frameLayoutGuide" id="Lgz-u9-Tb5"/>
                             </scrollView>
+                            <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="large" translatesAutoresizingMaskIntoConstraints="NO" id="YYT-Lb-d9P">
+                                <rect key="frame" x="0.0" y="0.0" width="393" height="852"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="0.42030718537414968" colorSpace="custom" customColorSpace="displayP3"/>
+                            </activityIndicatorView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
                             <constraint firstItem="ASt-9O-ysU" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" id="EdJ-eo-Hx0"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="ASt-9O-ysU" secondAttribute="trailing" id="JDZ-J6-HID"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="YYT-Lb-d9P" secondAttribute="trailing" id="Vh0-B8-UD1"/>
                             <constraint firstItem="ASt-9O-ysU" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="Wbi-jr-0EU"/>
+                            <constraint firstAttribute="bottom" secondItem="YYT-Lb-d9P" secondAttribute="bottom" id="eOT-e9-RKK"/>
+                            <constraint firstItem="YYT-Lb-d9P" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="ltI-1O-nax"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="ASt-9O-ysU" secondAttribute="bottom" id="pU8-aa-hfB"/>
+                            <constraint firstItem="YYT-Lb-d9P" firstAttribute="top" secondItem="5EZ-qb-Rvc" secondAttribute="top" id="tfu-y7-c53"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="activityIndicator" destination="YYT-Lb-d9P" id="srV-NO-ybC"/>
                         <outlet property="circleGraphHolder" destination="Uxw-xo-8aX" id="rhP-3C-o0w"/>
                         <outlet property="clearBtn" destination="eG5-5U-uwL" id="RYi-V6-5ty"/>
                         <outlet property="percentageBar" destination="DOC-TH-55N" id="XRD-VE-DR9"/>

@@ -16,7 +16,6 @@
 - (void)deleteChatMessagesOf:(NSArray*)messages completionBlock:(void(^)(BOOL isFinish))completionBlock;
 - (void)updateMessage:(ChatMessageData*)message completionBlock:(void(^)(BOOL isFinish))completionBlock;
 - (void)saveMessage:(ChatMessageData*)message completionBlock:(void(^)(id entity))completionBlock;
-- (void)deleteAllChatMessageOfType:(FileType)fileType completionBlock:(void(^)(BOOL isFinish))completionBlock;
 @end
 
 @interface ChatMessageProvider : NSObject <ChatMessageProviderType>

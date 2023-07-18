@@ -10,11 +10,14 @@
 
 @protocol FileDataProviderType
 -(instancetype)initWithStorageManager:(id<StorageManagerType>)storageManager;
+-(void)getAllFilesByType:(FileType)fileType completionBlock:(void (^)(NSArray* objects))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
 -(FileType)getFileTypeOfFilePath:(NSString*)filePath;
 - (NSString*)moveFileToGeneralFolders:(NSString*) currentfilePath forFileType:(FileType)fileType andSetName:(NSString*)name;
 - (void)updateFile:(FileData*)fileData completionBlock:(void(^)(BOOL isFinish))completionBlock;
 - (void)saveFileData:(FileDataWrapper*)data completionBlock:(void(^)(id entity))completionBlock;
 - (void) saveImageWithData:(NSData*)data ofRoomId:(NSString*)roomId completionBlock:(void(^)(ChatDetailEntity* entity)) completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
+
+- (void)deleteFile:(FileData*)file completionBlock:(void(^)(BOOL isFinish))completionBlock;
 
 - (void)getPhoneSize:(void (^)(long long size))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;
 - (void)getAppSize:(void (^)(long long size))completionBlock errorBlock:(void (^)(NSError *error))errorBlock;

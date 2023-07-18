@@ -19,7 +19,7 @@
 @property (strong, nonatomic) IBOutlet UIProgressView *percentageBar;
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *tableViewHeightConstraint;
 @property (strong, nonatomic) IBOutlet UIButton *clearBtn;
-
+@property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
 @end
 
 @implementation StorageViewController
@@ -45,6 +45,8 @@
             forCellReuseIdentifier:@"StorageTableCell"];
     [self.storageTable setDataSource:self];
     [self.storageTable setDelegate:self];
+    
+    self.activityIndicator.hidesWhenStopped = YES;
 }
 
 
@@ -93,6 +95,8 @@
                 [weakself.clearBtn setEnabled:true];
             }
         }
+        
+        [weakself.activityIndicator stopAnimating];
     });
 }
 
@@ -186,6 +190,7 @@
 }
 
 - (IBAction)onDeleteBtnTouched:(id)sender {
+    [ self.activityIndicator startAnimating];
     [_viewModel didTouchDeleteBtn];
 }
 

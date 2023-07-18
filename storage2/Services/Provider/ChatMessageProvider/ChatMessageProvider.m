@@ -55,14 +55,19 @@
 }
 - (void)deleteChatMessagesOf:(NSArray*)messages completionBlock:(void(^)(BOOL isFinish))completionBlock {
     
+    __block int completionCount = 0;
+    NSUInteger totalMessages = messages.count;
     for (ChatDetailEntity* entity in messages) {
         ChatMessageData* messageData = [[ChatMessageData alloc] initWithMessage:entity.messageId messageId:entity.messageId chatRoomId:nil];
         messageData.file = entity.file;
         
-        [_storageManager deleteChatMessage:messageData completionBlock:nil];
+        [_storageManager deleteChatMessage:messageData completionBlock:^(BOOL isDelete) {
+            completionCount++;
+            if(completionCount >= totalMessages) {
+                completionBlock(true);
+            }
+        }];
     }
-    
-    completionBlock(true);
 }
 - (void)updateMessage:(ChatMessageData*)message completionBlock:(void(^)(BOOL isFinish))completionBlock {
     [_storageManager updateMessageData:message completionBlock:completionBlock];
@@ -72,9 +77,4 @@
         completionBlock([message toChatDetailEntity]);
     }];
 }
-
-- (void)deleteAllChatMessageOfType:(FileType)fileType completionBlock:(void(^)(BOOL isFinish))completionBlock {
-    
-}
-
 @end

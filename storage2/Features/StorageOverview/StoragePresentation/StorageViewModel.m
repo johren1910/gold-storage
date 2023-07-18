@@ -71,8 +71,10 @@
             [items addObject:item];
         }
     }
+    
+    __weak StorageViewModel* weakself = self;
     [_storageBusinessModel deleteAllMediaTypes:items completionBlock:^(BOOL isFinish) {
-        
+        [weakself _loadData];
     } errorBlock:nil];
 }
 

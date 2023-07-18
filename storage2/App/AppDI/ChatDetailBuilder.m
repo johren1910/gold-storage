@@ -23,7 +23,7 @@
 @property (nonatomic) id<FileDataProviderType> fileDataProvider;
 @property (nonatomic) id<ChatDetailRepositoryInterface> chatDetailRepository;
 @property (nonatomic) id<ChatDetailBusinessModelInterface> chatDetailBusinessModel;
-@property (nonatomic) id<ChatDetailViewModelType> chatDetailViewModel;
+@property (nonatomic) NSMutableArray<id<ChatDetailViewModelType>>* chatDetailViewModels;
 @end
 
 @implementation ChatDetailBuilder
@@ -31,6 +31,7 @@
 -(instancetype) init:(id<AppEnvironmentType>)environment {
     if (self == [super init]) {
         self.environment = environment;
+        self.chatDetailViewModels = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -86,14 +87,24 @@
     
 }
 -(id<ChatDetailViewModelType>) getChatDetailViewModel:(id<ChatRoomEntityType>)roomEntity {
-    if(_chatDetailViewModel) {
-        [_chatDetailViewModel setChatRoom:roomEntity];
-        _chatDetailViewModel.filteredChats = @[];
-        return _chatDetailViewModel;
+    id<ChatDetailViewModelType> resultViewModel;
+    if(_chatDetailViewModels.count>0) {
+        for (id<ChatDetailViewModelType> viewModel in _chatDetailViewModels) {
+            if(viewModel.filteredChats.count==0){
+                resultViewModel = viewModel;
+                break;
+            }
+        }
     }
+    
+    if(resultViewModel) {
+        [resultViewModel setChatRoom:roomEntity];
+        return resultViewModel;
+    }
+    
     ChatDetailViewModel *chatDetailViewModel = [[ChatDetailViewModel alloc] initWithChatRoom:roomEntity andBusinessModel:[self getChatDetailBusinessModel]];
-    _chatDetailViewModel = chatDetailViewModel;
-    return _chatDetailViewModel;
+    [_chatDetailViewModels addObject:chatDetailViewModel];
+    return chatDetailViewModel;
 }
 -(id<ViewControllerType>) getChatDetailViewController:(id<ChatRoomEntityType>)roomEntity {
     ChatDetailViewController *viewController = [[ChatDetailViewController alloc] initWithViewModel:[self getChatDetailViewModel:roomEntity]];

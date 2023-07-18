@@ -156,6 +156,23 @@
         completionBlock(result);
     });
 }
+
+- (void)getFilesOfType:(FileType)fileType completionBlock:(ZOFetchCompletionBlock)completionBlock {
+    __weak StorageManager* weakself = self;
+    dispatch_async(_databaseQueue, ^{
+
+        NSString* whereStr = [NSString stringWithFormat:@"type=\"%ld\"",(long)fileType];
+        NSArray* objects = [[weakself.databaseService getFileDBRepository] getObjectsWhere:whereStr isDistinct:false];
+        NSMutableArray* result = [[NSMutableArray alloc] init];
+        for (int i=0; i<objects.count; i++) {
+            
+            ChatMessageData* messageData = (ChatMessageData*) objects[i];
+            [result addObject:messageData];
+        }
+        completionBlock(result);
+    });
+}
+
 - (void)deleteFileData:(FileData*) file completionBlock:(ZOCompletionBlock)completionBlock {
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{

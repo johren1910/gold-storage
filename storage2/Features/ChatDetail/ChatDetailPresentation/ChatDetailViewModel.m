@@ -182,27 +182,31 @@
     
     __weak ChatDetailViewModel* weakself = self;
     [_chatDetailBusinessModel requestDownloadFileWithUrl:url forRoom:_chatRoom completionBlock:^(ChatDetailEntity* entity, BOOL isDownloaded) {
-        if (!isDownloaded && entity) {
-            [weakself.messageModels insertObject:entity atIndex:0];
-            weakself.filteredChats = weakself.messageModels;
-            [weakself.delegate didUpdateData];
-            return;
-        }
         
-        if (isDownloaded) {
-            __block NSUInteger index = 0;
-            [weakself.messageModels enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
-                if ([((ChatDetailEntity *)obj).messageId isEqualToString:entity.messageId]) {
-                    index = idx;
-                    *stop = YES;
-                }
-
-            }];
+        dispatch_async(weakself.backgroundQueue, ^{
+            if (!isDownloaded && entity) {
+                [weakself.messageModels insertObject:entity atIndex:0];
+                weakself.filteredChats = weakself.messageModels;
+                [weakself.delegate didUpdateData];
+                return;
+            }
             
-            [weakself.messageModels replaceObjectAtIndex:index withObject:entity];
-            weakself.filteredChats = weakself.messageModels;
-            [weakself.delegate didUpdateData];
-        }
+            if (isDownloaded) {
+                __block NSUInteger index = 0;
+                [weakself.messageModels enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+                    if ([((ChatDetailEntity *)obj).messageId isEqualToString:entity.messageId]) {
+                        index = idx;
+                        *stop = YES;
+                    }
+
+                }];
+                
+                [weakself.messageModels replaceObjectAtIndex:index withObject:entity];
+                weakself.filteredChats = weakself.messageModels;
+                [weakself.delegate didUpdateData];
+            }
+        });
+       
     } errorBlock:^(NSError *error){
         
     }];

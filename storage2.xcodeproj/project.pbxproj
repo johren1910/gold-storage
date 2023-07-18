@@ -1165,6 +1165,9 @@
 				DEVELOPMENT_TEAM = 38Z2ARUML2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = storage2/App/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Photo Library Access Warning";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "storage2 needs permission to access photos on your device";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "storage2 needs permission to access photos on your device";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;
@@ -1195,6 +1198,9 @@
 				DEVELOPMENT_TEAM = 38Z2ARUML2;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = storage2/App/Info.plist;
+				INFOPLIST_KEY_NSCameraUsageDescription = "Photo Library Access Warning";
+				INFOPLIST_KEY_NSPhotoLibraryAddUsageDescription = "storage2 needs permission to access photos on your device";
+				INFOPLIST_KEY_NSPhotoLibraryUsageDescription = "storage2 needs permission to access photos on your device";
 				INFOPLIST_KEY_UIApplicationSupportsIndirectInputEvents = YES;
 				INFOPLIST_KEY_UILaunchStoryboardName = LaunchScreen;
 				INFOPLIST_KEY_UIMainStoryboardFile = Main;

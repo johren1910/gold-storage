@@ -58,23 +58,30 @@
         for (StorageSpaceItem* item in items) {
             
             switch (item.fileType) {
-                case Picture:
-                    
-                    // Get all unique file with fileType
-                    // Delete all chatMessage associate with messageId
-                    // Delete all fileData with fileType
-                    // Clear folder
-                    break;
                 case Video:
-                    
+                case Picture: {
+                    [weakself _handleDeleteMediaFileType:item.fileType completionBlock:completionBlock];
                     break;
+                }
                 case Misc:
-                    
+                    completionBlock(true);
                     break;
             }
         }
     });
-    
+}
+
+-(void)_handleDeleteMediaFileType:(FileType)fileType completionBlock:(void (^)(BOOL isFinish))completionBlock{
+    [self.storageRepository.fileDataProvider getAllFilesByType:fileType completionBlock:^(NSArray* objects) {
+        
+        NSMutableArray* messages = [[NSMutableArray alloc] init];
+        for (FileData* file in objects) {
+            ChatMessageData* tmpMessageData = [[ChatMessageData alloc] initWithMessage:file.messageId messageId:file.messageId chatRoomId:nil];
+            tmpMessageData.file = file;
+            [messages addObject:tmpMessageData];
+        }
+        
+        [self.storageRepository.chatMessageProvider deleteChatMessagesOf:messages completionBlock:completionBlock];
+    } errorBlock:nil];
 }
 @end
-
