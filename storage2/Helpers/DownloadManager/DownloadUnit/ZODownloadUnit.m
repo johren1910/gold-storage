@@ -9,9 +9,10 @@
 #import "ZODownloadUnit.h"
 
 @implementation ZODOwnloadUnit
--(instancetype)initWithItem:(id<ZODownloadItemType>)item {
+-(instancetype)initWithItem:(id<ZODownloadItemType>)item andRepository:(id<ZODownloadRepositoryInterface>)downloadRepository {
     if (self == [super init]) {
         self.downloadItem = item;
+        self.downloadRepository = downloadRepository;
     }
     return self;
 }

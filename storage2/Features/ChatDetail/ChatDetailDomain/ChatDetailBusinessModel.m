@@ -48,12 +48,11 @@
 
 
 - (void)requestDownloadFileWithUrl:(NSString *)url forRoom:(ChatRoomEntity*)roomData completionBlock:(void (^)(ChatDetailEntity *entity, BOOL isDownloaded))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
-    
+   
     dispatch_async(_backgroundQueue, ^{
         __weak ChatDetailBusinessModel* weakself = self;
         NSString *messageId = [[NSUUID UUID] UUIDString];
         NSString *fileId = [[NSUUID UUID] UUIDString];
-
         __block ChatMessageData *newMessageData = [[ChatMessageData alloc] initWithMessage:messageId messageId:messageId chatRoomId:roomData.roomId];
         newMessageData.messageState = Downloading;
 
@@ -119,24 +118,28 @@
 - (void)_startDownload:(NSString *)url forMessage:(ChatMessageData*)message
                 ofRoom:(ChatRoomEntity*)model completionBlock:(void(^)(ChatDetailEntity* entity))completionBlock {
     
-    ZODownloadItem* item = [[ZODownloadItem alloc] init];
-    item.requestUrl = url;
-    item.destinationDirectoryPath = nil;
-    item.isBackgroundSession = false;
-    item.priority = ZODownloadPriorityHigh;
-    item.progressBlock = ^(CGFloat progress, NSUInteger speed, NSUInteger remainingSeconds) {
-        NSLog(@"progress: %f\nspeed: %ld\nremainSeconds:%ld", progress,speed,remainingSeconds);
-    };
-    
-    [_chatDetailRepository startDownloadWithItem:item forMessage:message completionBlock:^(FileData* fileData, UIImage* thumbnail){
+    __weak ChatDetailBusinessModel* weakself = self;
+    dispatch_async(_backgroundQueue, ^{
+        ZODownloadItem* item = [[ZODownloadItem alloc] init];
+        item.requestUrl = url;
+        item.destinationDirectoryPath = nil;
+        item.isBackgroundSession = false;
+        item.priority = ZODownloadPriorityHigh;
+        item.progressBlock = ^(CGFloat progress, NSUInteger speed, NSUInteger remainingSeconds) {
+            NSLog(@"progress: %f\nspeed: %ld\nremainSeconds:%ld", progress,speed,remainingSeconds);
+        };
         
-        message.file = fileData;
-        message.messageState = Sent;
-        ChatDetailEntity* result = [message toChatDetailEntity];
-        result.thumbnail = thumbnail;
-        completionBlock(result);
-        message.file = nil;
-    }];
+        [weakself.chatDetailRepository startDownloadWithItem:item forMessage:message completionBlock:^(FileData* fileData, UIImage* thumbnail){
+            
+            message.file = fileData;
+            message.messageState = Sent;
+            ChatDetailEntity* result = [message toChatDetailEntity];
+            result.thumbnail = thumbnail;
+            completionBlock(result);
+            message.file = nil;
+        }];
+    });
+    
 }
 
 @end

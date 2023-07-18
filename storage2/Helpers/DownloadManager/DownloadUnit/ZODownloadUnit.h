@@ -11,7 +11,7 @@
 @protocol ZODownloadUnitType
 @property (nonatomic) id<ZODownloadItemType> downloadItem;
 @property (nonatomic) id<ZODownloadRepositoryInterface> downloadRepository;
--(instancetype)initWithItem:(id<ZODownloadItemType>)item;
+-(instancetype)initWithItem:(id<ZODownloadItemType>)item andRepository:(id<ZODownloadRepositoryInterface>)downloadRepository;
 -(void)setRepository:(id<ZODownloadRepositoryInterface>)downloadRepository;
     
 -(void)start:(void(^)(NSString* filePath))completionBlock errorBlock:(void(^)(NSError* error))errorBlock progressBlock:(void(^)(CGFloat progress, NSUInteger speed, NSUInteger remainingSeconds))progressBlock;

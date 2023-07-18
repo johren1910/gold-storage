@@ -21,7 +21,7 @@
 @property (nonatomic, strong) ReachabilityHelper *reachabilityHelper;
 
 @property (nonatomic, strong) ZOPriorityQueue* priorityQueue;
-@property (nonatomic, strong) NSMutableDictionary<NSString*, ZODOwnloadUnit*> *currentDownloadUnits;
+@property (nonatomic, strong) NSMutableDictionary<NSString*, id<ZODownloadUnitType>> *currentDownloadUnits;
 @end
 
 @implementation ZODownloadManager
@@ -49,12 +49,13 @@
     __weak ZODownloadManager* weakself = self;
     
     if(!unit.downloadRepository){
+        // Assign default download repository if not assigned.
         ZOUrlSessionDownloadRepository* repository = [[ZOUrlSessionDownloadRepository alloc] init];
         [unit setRepository:repository];
     }
     
     dispatch_async(_serialDispatchQueue, ^{
-        ZODOwnloadUnit *existUnit = [weakself.currentDownloadUnits objectForKey:unit.downloadItem.requestUrl];
+        id<ZODownloadUnitType> existUnit = [weakself.currentDownloadUnits objectForKey:unit.downloadItem.requestUrl];
         if (existUnit &&  (existUnit.downloadItem.downloadState == ZODownloadStateDownloading || existUnit.downloadItem.downloadState == ZODownloadStatePending)) {
             [existUnit.downloadItem.otherCompletionBlocks addObject:unit.downloadItem.completionBlock];
             [existUnit.downloadItem.otherErrorBlocks addObject:unit.downloadItem.errorBlock];
@@ -124,7 +125,7 @@
 - (void)suspendDownloadOfUrl:(NSString *)url{
     __weak ZODownloadManager* weakself = self;
     dispatch_async(_serialDispatchQueue, ^{
-        ZODOwnloadUnit* unit = [weakself.currentDownloadUnits objectForKey:url];
+        id<ZODownloadUnitType> unit = [weakself.currentDownloadUnits objectForKey:url];
         if (unit.downloadItem.downloadState == ZODownloadStateDownloading) {
             weakself.currentDownloadingCount--;
         }
@@ -136,7 +137,7 @@
 - (void)suspendAllDownload{
     __weak ZODownloadManager* weakself = self;
     dispatch_async(_serialDispatchQueue, ^{
-        [weakself.currentDownloadUnits enumerateKeysAndObjectsUsingBlock:^(id key, ZODOwnloadUnit* value, BOOL* stop) {
+        [weakself.currentDownloadUnits enumerateKeysAndObjectsUsingBlock:^(id key, id<ZODownloadUnitType> value, BOOL* stop) {
             [value pause];
         }];
         weakself.currentDownloadingCount = 0;
@@ -146,7 +147,7 @@
 - (void)resumeDownloadOfUrl:(NSString *)url{
     __weak ZODownloadManager* weakself = self;
     dispatch_async(_serialDispatchQueue, ^{
-        ZODOwnloadUnit *unit = [weakself.currentDownloadUnits objectForKey:url];
+        id<ZODownloadUnitType> unit = [weakself.currentDownloadUnits objectForKey:url];
         if (unit.downloadItem.downloadState != ZODownloadStateDone && unit.downloadItem.downloadState != ZODownloadStateDownloading ) {
             [unit resume];
             [weakself _addPendingUnit:unit];
@@ -158,9 +159,7 @@
 - (void)resumeAllDownload{
     __weak ZODownloadManager* weakself = self;
     dispatch_async(_serialDispatchQueue, ^{
-        
-        __weak ZODownloadManager* weakself = self;
-        [weakself.currentDownloadUnits enumerateKeysAndObjectsUsingBlock:^(id key, ZODOwnloadUnit* value, BOOL* stop) {
+        [weakself.currentDownloadUnits enumerateKeysAndObjectsUsingBlock:^(id key, id<ZODownloadUnitType> value, BOOL* stop) {
             [value resume];
         }];
     });
@@ -169,7 +168,7 @@
 - (void)cancelDownloadOfUrl:(NSString *)url {
     __weak ZODownloadManager* weakself = self;
     dispatch_async(_serialDispatchQueue, ^{
-        ZODOwnloadUnit* unit = [weakself.currentDownloadUnits objectForKey:url];
+        id<ZODownloadUnitType> unit = [weakself.currentDownloadUnits objectForKey:url];
         if (unit.downloadItem.downloadState == ZODownloadStateDownloading) {
             weakself.currentDownloadingCount--;
         }
@@ -188,7 +187,7 @@
     
     __weak ZODownloadManager* weakself = self;
     dispatch_async(_serialDispatchQueue, ^{
-        [weakself.currentDownloadUnits enumerateKeysAndObjectsUsingBlock:^(id key, ZODOwnloadUnit* value, BOOL* stop) {
+        [weakself.currentDownloadUnits enumerateKeysAndObjectsUsingBlock:^(id key, id<ZODownloadUnitType> value, BOOL* stop) {
             value.downloadItem.completionBlock = nil;
             value.downloadItem.otherCompletionBlocks = nil;
             value.downloadItem.errorBlock = nil;
@@ -244,7 +243,7 @@
     [_priorityQueue enqueue:unit];
 }
 
-- (ZODOwnloadUnit *)_getNextDownloadUnit {
+- (id<ZODownloadUnitType>)_getNextDownloadUnit {
     return [_priorityQueue dequeue];
 }
 
@@ -272,48 +271,53 @@
     return false;
 }
 
-- (void)_startDownloadItem:(ZODOwnloadUnit *)unit {
-    if (unit.downloadItem.requestUrl.length == 0) {
-        return;
-    }
+- (void)_startDownloadItem:(id<ZODownloadUnitType>)unit {
     __weak ZODownloadManager* weakself = self;
-    unit.downloadItem.downloadState = ZODownloadStateDownloading;
-    NSLog(@"LOG 3");
-    weakself.currentDownloadingCount++;
-    __weak ZODOwnloadUnit *weakUnit = unit;
-    [unit start:^(NSString* resultPath){
-        dispatch_async(weakself.serialDispatchQueue, ^{
-            if (!resultPath)
-                return;
-            unit.downloadRepository = nil;
-            [weakself.currentDownloadUnits removeObjectForKey:unit.downloadItem.requestUrl];
-
-            unit.downloadItem.downloadState = ZODownloadStateDone;
+    __weak id<ZODownloadUnitType> weakUnit = unit;
+    
+    dispatch_async(self.serialDispatchQueue, ^{
+        if (weakUnit.downloadItem.requestUrl.length == 0) {
+            return;
+        }
+        weakUnit.downloadItem.downloadState = ZODownloadStateDownloading;
+        NSLog(@"LOG 3 START DOWNLOAD");
+        weakself.currentDownloadingCount++;
+        
+        [weakUnit start:^(NSString* resultPath){
             
-            unit.downloadItem.completionBlock(resultPath);
-            for (ZODownloadCompletionBlock block in unit.downloadItem.otherCompletionBlocks) {
-                block(resultPath);
-            }
-            
-            unit.downloadRepository = nil;
-            unit.downloadItem = nil;
-            weakself.currentDownloadingCount--;
-            [weakself checkDownloadPipeline];
-        });
-    } errorBlock:^(NSError* error) {
-        dispatch_async(weakself.serialDispatchQueue, ^{
-            if (unit) {
-                unit.downloadItem.errorBlock(error);
-                for (ZODownloadErrorBlock block in unit.downloadItem.otherErrorBlocks) {
-                    block(error);
+            dispatch_async(weakself.serialDispatchQueue, ^{
+                if (!resultPath || !weakUnit.downloadItem) {
+                    return;
                 }
-                unit.downloadItem.downloadState = ZODownloadStateError;
+                weakUnit.downloadItem.downloadState = ZODownloadStateDone;
+                weakUnit.downloadItem.completionBlock(resultPath);
+                for (ZODownloadCompletionBlock block in weakUnit.downloadItem.otherCompletionBlocks) {
+                    block(resultPath);
+                }
+            
                 weakself.currentDownloadingCount--;
+                [weakself.currentDownloadUnits removeObjectForKey:weakUnit.downloadItem.requestUrl];
+                weakUnit.downloadRepository = nil;
+                weakUnit.downloadItem = nil;
                 [weakself checkDownloadPipeline];
-            }
-        });
-        
-        
-    } progressBlock:weakUnit.downloadItem.progressBlock];
+            });
+
+        } errorBlock:^(NSError* error) {
+            dispatch_async(weakself.serialDispatchQueue, ^{
+                if (weakUnit) {
+                    weakUnit.downloadItem.errorBlock(error);
+                    for (ZODownloadErrorBlock block in weakUnit.downloadItem.otherErrorBlocks) {
+                        block(error);
+                    }
+                    weakUnit.downloadItem.downloadState = ZODownloadStateError;
+                    weakself.currentDownloadingCount--;
+                    [weakself checkDownloadPipeline];
+                }
+            });
+            
+            
+        } progressBlock:weakUnit.downloadItem.progressBlock];
+    });
+    
 }
 @end

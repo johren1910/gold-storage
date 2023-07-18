@@ -30,6 +30,7 @@
 }
 
 - (void)application:(UIApplication *)application handleEventsForBackgroundURLSession:(NSString *)identifier completionHandler:(void (^)(void))completionHandler {
+    NSLog(@"LOG 6 - handleEventsForBackgroundURLSession");
     _backgroundSessionCompleteHandler = completionHandler;
 }
 @end

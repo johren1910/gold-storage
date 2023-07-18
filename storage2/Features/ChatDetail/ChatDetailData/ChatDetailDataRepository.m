@@ -22,20 +22,25 @@
                    forMessage: (ChatMessageData*)message completionBlock:(void(^)(FileData* fileData, UIImage* thumbnail))completionBlock {
     __weak ChatDetailDataRepository* weakself = self;
     __weak ZODownloadItem* weakItem = item;
+    __weak __block ChatMessageData* weakMessage = message;
+    
     item.completionBlock = ^(NSString *filePath) {
-        FileDataProvider* fileProvider = (FileDataProvider*)weakself.fileDataProvider;
-        FileType fileType = [fileProvider getFileTypeOfFilePath:filePath];
-        NSString *currentFilePath = filePath;
-        if (!weakItem.destinationDirectoryPath) {
-            currentFilePath = [fileProvider moveFileToGeneralFolders:filePath forFileType:fileType andSetName:[message.file.filePath lastPathComponent]];
-        }
-        message.messageState = Sent;
-        [weakself.chatMessageProvider updateMessage:message completionBlock:^(BOOL isFinish){
-            NSLog(@"updated");
-            [weakself _saveMedia:currentFilePath forMessage:message completionBlock:completionBlock];
-        }];
+        dispatch_async(weakself.backgroundQueue, ^{
+            FileDataProvider* fileProvider = (FileDataProvider*)weakself.fileDataProvider;
+            FileType fileType = [fileProvider getFileTypeOfFilePath:filePath];
+            NSString *currentFilePath = filePath;
+            if (!weakItem.destinationDirectoryPath) {
+                currentFilePath = [fileProvider moveFileToGeneralFolders:filePath forFileType:fileType andSetName:[filePath lastPathComponent]];
+            }
+            weakMessage.messageState = Sent;
+            [weakself.chatMessageProvider updateMessage:weakMessage completionBlock:^(BOOL isFinish){
+                [weakself _saveMedia:currentFilePath forMessage:weakMessage completionBlock:completionBlock];
+            }];
+            
+            NSLog(@"destinationPath download: %@", currentFilePath);
+        });
         
-        NSLog(@"destinationPath download: %@", currentFilePath);
+        
     };
     
     item.errorBlock = ^(NSError *error) {
@@ -43,7 +48,7 @@
         NSLog(@"error");
     };
     
-    ZODOwnloadUnit *downloadUnit = [[ZODOwnloadUnit alloc] initWithItem:item];
+    ZODOwnloadUnit *downloadUnit = [[ZODOwnloadUnit alloc] initWithItem:item andRepository:nil];
     [_downloadManager startDownloadWithUnit:downloadUnit];
 }
 

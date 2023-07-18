@@ -44,11 +44,18 @@
     [[NSURLCache sharedURLCache] removeAllCachedResponses];
     weakself._downloadItem = item;
     weakself._currentSession = [weakself _getUrlSessionBasedOnItem:item];
-    
     if (item.isBackgroundSession) {
         [weakself._currentSession getTasksWithCompletionHandler:^(NSArray *dataTasks, NSArray *uploadTasks, NSArray *downloadTasks) {
             [weakself handleBackgroundSessionDownload:downloadTasks];
+            
+            if (!weakself._downloadTask) {
+                NSURLSessionDownloadTask *downloadTask = [weakself _createDownloadTaskWithItem:weakself._downloadItem];
+                
+                weakself._downloadTask = downloadTask;
+            }
+            [weakself._downloadTask resume];
         }];
+        
     } else {
         NSURLSessionDownloadTask *downloadTask = [weakself _createDownloadTaskWithItem:item];
         weakself._downloadTask = downloadTask;
@@ -76,14 +83,6 @@
             }
         }
     }];
-    
-    if (!weakself._downloadTask) {
-        NSURLSessionDownloadTask *downloadTask = [weakself _createDownloadTaskWithItem:weakself._downloadItem];
-        
-        weakself._downloadTask = downloadTask;
-    }
-    
-    [weakself._downloadTask resume];
 }
 
 -(void)pause {
@@ -105,15 +104,17 @@
 
 - (NSURLSession*) _getUrlSessionBasedOnItem:(id<ZODownloadItemType>)item {
     if (item.isBackgroundSession) {
-        return self._getBackgroundUrlSession;
+        return [self _getBackgroundUrlSession:item.requestUrl];
     } else {
         return self._getDefaultUrlSession;
     }
 }
 
-- (NSURLSession *)_getBackgroundUrlSession {
+- (NSURLSession *)_getBackgroundUrlSession:(NSString*)uniqueIdentifier {
     if (!_backgroundUrlSession) {
-        NSURLSessionConfiguration *backgroundConfig = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:@"com.zodownloadmanager.backgroundsession"];
+        
+        NSString* identifier = [[NSString alloc] initWithFormat:@"com.zodownloadmanager.backgroundsession.%@", uniqueIdentifier];
+        NSURLSessionConfiguration *backgroundConfig = [NSURLSessionConfiguration backgroundSessionConfigurationWithIdentifier:identifier];
         backgroundConfig.discretionary = true;
         backgroundConfig.sessionSendsLaunchEvents = true;
         _backgroundUrlSession = [NSURLSession sessionWithConfiguration:backgroundConfig delegate:self delegateQueue:nil];
@@ -194,14 +195,12 @@ didFinishDownloadingToURL:(NSURL *)location {
     weakself.backgroundUrlSession = nil;
     weakself._currentSession = nil;
     weakself._downloadTask = nil;
-    weakself._downloadItem = nil;
     completionBlock(resultPath);
 }
 
 - (void)URLSession:(NSURLSession *)session
               task:(NSURLSessionTask *)task
 didCompleteWithError:(NSError *)error {
-    
     if (!error) return;
     
     __weak ZOUrlSessionDownloadRepository* weakself = self;
@@ -272,7 +271,8 @@ didCompleteWithError:(NSError *)error {
 - (void)URLSessionDidFinishEventsForBackgroundURLSession:(NSURLSession *)session {
     dispatch_async(dispatch_get_main_queue(), ^{
         AppDelegate *appDelegate = (AppDelegate*) UIApplication.sharedApplication.delegate;
-        appDelegate.backgroundSessionCompleteHandler();
+        if(appDelegate.backgroundSessionCompleteHandler)
+            appDelegate.backgroundSessionCompleteHandler();
         appDelegate.backgroundSessionCompleteHandler = nil;
     });
 }
