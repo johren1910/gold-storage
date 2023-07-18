@@ -3,7 +3,7 @@
 Simple Storage Management.
 
 Overview Diagram:
-![image](https://github.com/johren1910/gold-storage/assets/132887874/796c9d16-15f4-4bc3-872c-3e103f36953e)
+![revampedArchitect drawio (2)](https://github.com/johren1910/gold-storage/assets/132887874/35faa7b8-cd2f-4701-8765-bbbaba733cca)
 
 ## Description
 
@@ -15,7 +15,7 @@ Simple app that support download media like Pictures & Videos.
 
 ☑️ Simple DatabaseService with Repository & Unit-of-Work Pattern
 
-☑️ Simple Download Manager. Utilising PriorityQueue. Current support URLSessionDownloadRepository.
+☑️ Simple Download Manager. Support PriorityQueue. Include URLSessionDownloadRepository.
 
 ☑️ Simple State management with ZOStatePresentable.
 
@@ -39,6 +39,7 @@ TODO:
 - Auto retry download
 - Storage space management
 - Decouple ZOStatePresentable for better handling.
+- Media Viewer
 - Error handling
 - Support File
 - Expand DownloadRepository
@@ -65,6 +66,10 @@ TODO:
 Quannm10@vng.com.vn
 
 ## Version History
+* 0.7
+    * Revamp DownloadManager with ZODownloadUnit that control download
+    * Fix leaks
+    * Include sqlite3 header for real device build
 * 0.65
     * Revamp DI Flow
     * Finish conceptualize Storage flow
