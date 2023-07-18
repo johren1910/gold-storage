@@ -73,13 +73,7 @@
 }
 
 - (NSComparisonResult)compare:(id<ZODownloadUnitType>)object {
-    if (self.downloadItem.priority > object.downloadItem.priority) {
-        return NSOrderedDescending;
-    } else if (self.downloadItem.priority < object.downloadItem.priority) {
-        return NSOrderedAscending;
-    } else {
-        return NSOrderedSame;
-    }
+    return [self.downloadItem compare:object.downloadItem];
 }
 
 @synthesize downloadItem;

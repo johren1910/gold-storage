@@ -15,7 +15,7 @@
 #import "StorageViewController.h"
 #import "AppDI.h"
 
-@interface ChatRoomCoordinator () <ChatRoomViewModelCoordinatorDelegate, ChatDetailCoordinatorDelegate>
+@interface ChatRoomCoordinator () <ChatRoomViewModelCoordinatorDelegate>
 
 @property (strong, nonatomic) UINavigationController * navigationController;
 
@@ -50,7 +50,6 @@
     ChatDetailViewController *viewController = (ChatDetailViewController*)[_appDI getChatDetailViewController:chatRoom withBuilder:[_appDI defaultDetailBuilder]];
     viewController.title = chatRoom.name;
     [viewController setDetailBuilder:[_appDI defaultDetailBuilder]];
-    
     
     UIBarButtonItem *item = [[UIBarButtonItem alloc] initWithTitle:@"Back"
                                                              style:UIBarButtonItemStylePlain

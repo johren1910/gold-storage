@@ -81,7 +81,6 @@
                     NSData* compressed = UIImageJPEGRepresentation(thumbnail, 0.5);
                     thumbnail = [UIImage imageWithData:compressed];
                     [weakself.storageManager cacheImageByKey:thumbnail withKey:checkSum];
-//                    [weakself.storageManager compressThenCache:thumbnail withKey:checkSum];
                     NSLog(@"LOG 4");
                 }
                 
@@ -92,7 +91,6 @@
                 if (!thumbnail) {
                     thumbnail = mediaInfo.thumbnail;
                     [weakself.storageManager cacheImageByKey:thumbnail withKey:checkSum];
-//                    [weakself.storageManager compressThenCache:thumbnail withKey:checkSum];
                     NSLog(@"LOG 4");
                 }
                 
