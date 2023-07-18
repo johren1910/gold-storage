@@ -13,6 +13,7 @@
 
 - (void) didUpdateData:(StorageEntity*)entity;
 - (void) reloadTable;
+- (void) didFinishUpdate;
 
 @end
 

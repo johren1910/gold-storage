@@ -88,11 +88,16 @@
 }
 -(id<ChatDetailViewModelType>) getChatDetailViewModel:(id<ChatRoomEntityType>)roomEntity {
     id<ChatDetailViewModelType> resultViewModel;
+    id<ChatDetailViewModelType> availableForReuseViewModel;
     if(_chatDetailViewModels.count>0) {
         for (id<ChatDetailViewModelType> viewModel in _chatDetailViewModels) {
-            if(viewModel.filteredChats.count==0){
+            if([viewModel getChatRoom].roomId == roomEntity.roomId){
                 resultViewModel = viewModel;
                 break;
+            }
+            
+            if(viewModel.filteredChats.count == 0 && availableForReuseViewModel) {
+                availableForReuseViewModel = viewModel;
             }
         }
     }
@@ -100,6 +105,11 @@
     if(resultViewModel) {
         [resultViewModel setChatRoom:roomEntity];
         return resultViewModel;
+    }
+    
+    if (availableForReuseViewModel) {
+        [availableForReuseViewModel setChatRoom:roomEntity];
+        return availableForReuseViewModel;
     }
     
     ChatDetailViewModel *chatDetailViewModel = [[ChatDetailViewModel alloc] initWithChatRoom:roomEntity andBusinessModel:[self getChatDetailBusinessModel]];

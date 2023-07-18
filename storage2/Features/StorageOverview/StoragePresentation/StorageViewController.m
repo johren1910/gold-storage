@@ -96,7 +96,7 @@
             }
         }
         
-        [weakself.activityIndicator stopAnimating];
+        
     });
 }
 
@@ -107,6 +107,13 @@
         [weakself.storageTable reloadData];
     });
     
+}
+                   
+-(void)didFinishUpdate {
+    __weak StorageViewController* weakself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakself.activityIndicator stopAnimating];
+    });
 }
 
 -(void)_updateCircle:(StorageEntity*)entity {

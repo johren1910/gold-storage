@@ -22,25 +22,25 @@
 @property (nonatomic, weak) id <ChatDetailViewModelDelegate> delegate;
 -(instancetype) initWithChatRoom:(id<ChatRoomEntityType>)chatRoom andBusinessModel:(id<ChatDetailBusinessModelInterface>)chatDetailBusinessModel;
 -(void)setChatRoom:(id<ChatRoomEntityType>)chatRoom;
-- (void) onViewDidLoad;
-
+-(void)onViewDidLoad;
+-(id<ChatRoomEntityType>)getChatRoom;
 #pragma mark - Actions
-- (void)selectChatMessage:(ChatDetailEntity *) chat;
-- (void)deselectChatMessage:(ChatDetailEntity *) chat;
-- (void)retryWithModel:(ChatDetailEntity *)model;
-- (void)deleteSelected;
-- (void)setCheat:(BOOL)isOn;
-- (void)changeSegment: (NSInteger) index;
+-(void)selectChatMessage:(ChatDetailEntity *) chat;
+-(void)deselectChatMessage:(ChatDetailEntity *) chat;
+-(void)retryWithModel:(ChatDetailEntity *)model;
+-(void)deleteSelected;
+-(void)setCheat:(BOOL)isOn;
+-(void)changeSegment: (NSInteger) index;
 
-- (void)requestAddImage:(NSData *)data;
-- (void)requestDownloadFileWithUrl:(NSString *)url;
+-(void)requestAddImage:(NSData *)data;
+-(void)requestDownloadFileWithUrl:(NSString *)url;
 @property (copy,nonatomic) NSArray<ChatDetailEntity *> *filteredChats;
 @end
 
 @interface ChatDetailViewModel : NSObject<ChatDetailViewModelType>
 
 @property (nonatomic) id<ChatDetailBusinessModelInterface> chatDetailBusinessModel;
-- (ChatDetailEntity *)itemAtIndexPath:(NSIndexPath *)indexPath;
-- (NSUInteger) numberOfSections;
+-(ChatDetailEntity *)itemAtIndexPath:(NSIndexPath *)indexPath;
+-(NSUInteger) numberOfSections;
 
 @end

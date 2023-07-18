@@ -59,6 +59,10 @@
     [self _loadData];
 }
 
+-(id<ChatRoomEntityType>)getChatRoom {
+    return _chatRoom;
+}
+
 - (void)_loadData {
     __weak ChatDetailViewModel *weakself = self;
     [_chatDetailBusinessModel getChatDetailsOfRoomId:_chatRoom.roomId completionBlock:^(NSArray<ChatDetailEntity*>* entities) {

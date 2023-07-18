@@ -54,6 +54,7 @@
             
             [weakself.delegate didUpdateData:weakself.currentStorageEntity];
             [weakself.delegate reloadTable];
+            [weakself.delegate didFinishUpdate];
         } errorBlock:nil];
     } errorBlock:nil];
 }
