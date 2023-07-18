@@ -6,6 +6,7 @@
 //
 
 #import "ChatDetailViewController.h"
+#import "ZOStatePresentable.h"
 
 @interface ChatDetailViewController () <IGListAdapterDataSource, UIDocumentPickerDelegate, UIImagePickerControllerDelegate, ChatDetailViewModelDelegate>
 
@@ -15,7 +16,9 @@
 @property (strong, nonatomic) IBOutlet UISwitch *cheatSwitch;
 @property (nonatomic, strong) id<ChatDetailViewModelType> viewModel;
 @property (nonatomic, readonly) NSInteger selectedIndex;
+@property (strong, nonatomic) IBOutlet UIView *collectionViewHolder;
 @property (nonatomic) id<ChatDetailBuilderType> builder;
+@property (nonatomic, strong) id<ZOStatePresentable> statePresenter;
 
 @end
 
@@ -38,6 +41,8 @@
     
     UINib *cellNib = [UINib nibWithNibName:@"ChatMessageCell" bundle:nil];
     [self.collectionView registerNib:cellNib forCellWithReuseIdentifier:@"ChatMessageCell"];
+    
+    self.statePresenter = [[ZOStatePresenter alloc] init:self.collectionViewHolder loadingStateView:self.loadingStateView emptyStateView:nil errorStateView:nil];
 }
 
 - (id<ViewModelType>)getViewModel {
@@ -112,6 +117,17 @@
     
 }
 
+- (void) startLoading {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.statePresenter startLoading:YES completionHandler:nil];
+    });
+}
+- (void) endLoading {
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [self.statePresenter endLoading:true hasContent:true completionHandler:nil];
+    });
+}
+
 - (void)didUpdateData {
     __weak ChatDetailViewController *weakself = self;
     dispatch_async(dispatch_get_main_queue(), ^{
@@ -126,6 +142,22 @@
         [weakself.adapter reloadDataWithCompletion:nil];
     });
 }
+
+#pragma mark - StatePresentable
+- (SkeletonView*) loadingStateView {
+    SkeletonView *loadingView = [[SkeletonView alloc] init];
+    [loadingView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [loadingView removeConstraints:loadingView.constraints];
+    return loadingView;
+}
+
+- (UIView*) emptyStateView {
+    UIView *emptyView = [[UIView alloc] init];
+    [emptyView setTranslatesAutoresizingMaskIntoConstraints:NO];
+    [emptyView removeConstraints:emptyView.constraints];
+    return emptyView;
+}
+
 
 
 #pragma mark - Action

@@ -51,12 +51,24 @@
                                     <constraint firstAttribute="trailing" secondItem="49b-8G-5pp" secondAttribute="trailing" constant="16" id="nz7-QO-ymB"/>
                                 </constraints>
                             </view>
-                            <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="la0-Rz-Zut">
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="tDe-Ef-75b" userLabel="collectionViewHolder">
                                 <rect key="frame" x="0.0" y="139" width="393" height="583"/>
+                                <subviews>
+                                    <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="la0-Rz-Zut">
+                                        <rect key="frame" x="0.0" y="0.0" width="393" height="583"/>
+                                        <color key="backgroundColor" systemColor="systemBackgroundColor"/>
+                                        <collectionViewLayout key="collectionViewLayout" id="4V5-7I-MKM" customClass="IGListCollectionViewLayout"/>
+                                        <cells/>
+                                    </collectionView>
+                                </subviews>
                                 <color key="backgroundColor" systemColor="systemBackgroundColor"/>
-                                <collectionViewLayout key="collectionViewLayout" id="4V5-7I-MKM" customClass="IGListCollectionViewLayout"/>
-                                <cells/>
-                            </collectionView>
+                                <constraints>
+                                    <constraint firstAttribute="bottom" secondItem="la0-Rz-Zut" secondAttribute="bottom" id="FAk-hy-M32"/>
+                                    <constraint firstItem="la0-Rz-Zut" firstAttribute="leading" secondItem="tDe-Ef-75b" secondAttribute="leading" id="R9c-fS-oug"/>
+                                    <constraint firstItem="la0-Rz-Zut" firstAttribute="top" secondItem="tDe-Ef-75b" secondAttribute="top" id="SIm-bB-LSx"/>
+                                    <constraint firstAttribute="trailing" secondItem="la0-Rz-Zut" secondAttribute="trailing" id="eEz-no-MwU"/>
+                                </constraints>
+                            </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9WB-iT-fcy">
                                 <rect key="frame" x="0.0" y="722" width="393" height="96"/>
                                 <subviews>
@@ -139,27 +151,28 @@
                         <viewLayoutGuide key="safeArea" id="vDu-zF-Fre"/>
                         <color key="backgroundColor" systemColor="systemBackgroundColor"/>
                         <constraints>
-                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="la0-Rz-Zut" secondAttribute="trailing" id="2zO-cZ-gCd"/>
-                            <constraint firstItem="la0-Rz-Zut" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="5sE-QW-DFT"/>
                             <constraint firstItem="nx0-cp-T62" firstAttribute="top" secondItem="vDu-zF-Fre" secondAttribute="top" constant="16" id="B7H-xE-FIH"/>
                             <constraint firstItem="9WB-iT-fcy" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="TnS-M3-AZn"/>
-                            <constraint firstItem="9WB-iT-fcy" firstAttribute="top" secondItem="la0-Rz-Zut" secondAttribute="bottom" id="YIf-sd-Mqu"/>
+                            <constraint firstItem="9WB-iT-fcy" firstAttribute="top" secondItem="tDe-Ef-75b" secondAttribute="bottom" id="bVs-QQ-ltt"/>
+                            <constraint firstItem="tDe-Ef-75b" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="cec-7S-UKa"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="nx0-cp-T62" secondAttribute="trailing" id="dVq-mb-Vah"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="bottom" secondItem="9WB-iT-fcy" secondAttribute="bottom" id="i4I-o0-u2l"/>
-                            <constraint firstItem="la0-Rz-Zut" firstAttribute="top" secondItem="nx0-cp-T62" secondAttribute="bottom" id="jmv-nV-UVV"/>
                             <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="9WB-iT-fcy" secondAttribute="trailing" id="kr4-YI-v6K"/>
+                            <constraint firstItem="vDu-zF-Fre" firstAttribute="trailing" secondItem="tDe-Ef-75b" secondAttribute="trailing" id="qWN-D9-dYi"/>
+                            <constraint firstItem="tDe-Ef-75b" firstAttribute="top" secondItem="nx0-cp-T62" secondAttribute="bottom" id="rKu-du-eLi"/>
                             <constraint firstItem="nx0-cp-T62" firstAttribute="leading" secondItem="vDu-zF-Fre" secondAttribute="leading" id="zoa-hg-rXP"/>
                         </constraints>
                     </view>
                     <connections>
                         <outlet property="cheatSwitch" destination="nmA-xs-Unj" id="B7V-gH-MQn"/>
                         <outlet property="collectionView" destination="la0-Rz-Zut" id="OHh-jo-hWI"/>
+                        <outlet property="collectionViewHolder" destination="tDe-Ef-75b" id="Ygb-Fn-lfk"/>
                         <outlet property="segmentBar" destination="49b-8G-5pp" id="OZd-1f-kBx"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Ief-a0-LHa" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="117" y="-49"/>
+            <point key="canvasLocation" x="116.79389312977099" y="-49.295774647887328"/>
         </scene>
     </scenes>
     <resources>

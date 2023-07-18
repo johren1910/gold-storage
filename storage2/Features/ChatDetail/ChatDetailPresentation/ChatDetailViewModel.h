@@ -15,6 +15,8 @@
 - (void) didUpdateData;
 - (void) didUpdateObject:(ChatDetailEntity* )model;
 - (void) didReloadData;
+- (void) startLoading;
+- (void) endLoading;
 
 @end
 
