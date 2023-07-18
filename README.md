@@ -9,7 +9,9 @@ Overview Diagram:
 
 Simple app that support download media like Pictures & Videos.
 
-☑️ Simple Clean Architecture: ChatDetail
+☑️ Simple Clean Architecture
+
+☑️ Simple Storage Management: Clear downloaded files. Storage visualization.
 
 ☑️ Simple Coordinator Pattern
 
@@ -37,7 +39,7 @@ Simple app that support download media like Pictures & Videos.
 
 TODO:
 - Auto retry download
-- Storage space management
++ ✔️ Storage space management
 - Decouple ZOStatePresentable for better handling.
 - Media Viewer
 - Error handling
@@ -66,6 +68,10 @@ TODO:
 Quannm10@vng.com.vn
 
 ## Version History
+* 0.75
+    * Simple storage management
+    * Fix backgroundSession download unique identifier
+    * Upgrade Storage visualization
 * 0.7
     * Revamp DownloadManager with ZODownloadUnit that control download
     * Fix leaks
