@@ -41,6 +41,7 @@ TODO:
 - Auto retry download
 + ✔️ Storage space management
 - Decouple ZOStatePresentable for better handling.
++ ✔️ Heavy files management
 - Media Viewer
 - Error handling
 - Support File
@@ -68,6 +69,10 @@ TODO:
 Quannm10@vng.com.vn
 
 ## Version History
+* 0.76
+    * Add heavy files management for Storage View
+    * Add state management to chat detail screen
+    * Fix bugs
 * 0.75
     * Simple storage management
     * Fix backgroundSession download unique identifier
