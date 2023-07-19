@@ -14,6 +14,8 @@
 - (void) didUpdateData:(StorageEntity*)entity;
 - (void) reloadTable;
 - (void) didFinishUpdate;
+- (void) needUpdateHeavyCollection;
+- (void) didUpdateObject:(ChatDetailEntity* )model;
 
 @end
 
@@ -22,8 +24,14 @@
 @property (nonatomic, weak) id <StorageViewModelDelegate> delegate;
 -(instancetype)initWithBusinessModel:(id<StorageBusinessModelInterface>)storageBusinessModel;
 @property (nonatomic) StorageEntity* currentStorageEntity;
--(void)didTouchCell:(NSInteger)row;
--(void)didTouchDeleteBtn;
+-(void)didTouchTypeCell:(NSInteger)row;
+-(void)didTouchDeleteTypeBtn;
+
+-(void)didTouchHeavyCell:(ChatDetailEntity*)file;
+-(void)didTouchDeleteHeavyBtn;
+
+@property (retain,nonatomic) NSMutableArray<ChatDetailEntity *> *messageModels;
+@property (retain,nonatomic) NSMutableArray<ChatDetailEntity *> *selectedModels;
 @end
 
 @interface StorageViewModel : NSObject <StorageViewModelType>

@@ -11,7 +11,10 @@
 #import "CircleGraphView.h"
 #import "StorageTableCell.h"
 
-@interface StorageViewController () <StorageViewModelDelegate, UITableViewDelegate, UITableViewDataSource>
+#import "ChatDetailSectionController.h"
+
+@interface StorageViewController () <StorageViewModelDelegate, UITableViewDelegate, UITableViewDataSource,
+    IGListAdapterDataSource, ChatDetailSectionControllerDelegate>
 @property (nonatomic, strong) id<StorageViewModelType> viewModel;
 @property (strong, nonatomic) IBOutlet UIView *circleGraphHolder;
 @property (strong, nonatomic) IBOutlet UILabel *percentageUsedLabel;
@@ -20,6 +23,11 @@
 @property (strong, nonatomic) IBOutlet NSLayoutConstraint *tableViewHeightConstraint;
 @property (strong, nonatomic) IBOutlet UIButton *clearBtn;
 @property (strong, nonatomic) IBOutlet UIActivityIndicatorView *activityIndicator;
+
+@property (nonatomic, strong) IGListAdapter *adapter;
+@property (strong, nonatomic) IBOutlet UIButton *deleteHeavyFileBtn;
+@property (strong, nonatomic) IBOutlet IGListCollectionView *heavyCollectionView;
+@property (strong, nonatomic) IBOutlet NSLayoutConstraint *heavyCollectionViewHeight;
 @end
 
 @implementation StorageViewController
@@ -41,12 +49,22 @@
     self.viewModel.delegate = self;
     [self.viewModel onViewDidLoad];
     
+    self.adapter = [[IGListAdapter alloc] initWithUpdater:[[IGListAdapterUpdater alloc] init] viewController:self];
+    self.adapter.collectionView = self.heavyCollectionView;
+    self.adapter.dataSource = self;
+    
+    UINib *cellNib = [UINib nibWithNibName:@"ChatMessageCell" bundle:nil];
+    [self.heavyCollectionView registerNib:cellNib forCellWithReuseIdentifier:@"ChatMessageCell"];
+    
     [self.storageTable registerNib:[UINib nibWithNibName:@"StorageTableCell" bundle:nil]
             forCellReuseIdentifier:@"StorageTableCell"];
     [self.storageTable setDataSource:self];
     [self.storageTable setDelegate:self];
     
     self.activityIndicator.hidesWhenStopped = YES;
+    
+    [self.deleteHeavyFileBtn setTitle:@"Clear Selected File" forState:normal];
+    [self.deleteHeavyFileBtn setEnabled:false];
 }
 
 
@@ -113,6 +131,35 @@
     __weak StorageViewController* weakself = self;
     dispatch_async(dispatch_get_main_queue(), ^{
         [weakself.activityIndicator stopAnimating];
+    });
+}
+                   
+-(void)needUpdateHeavyCollection {
+    __weak StorageViewController* weakself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakself.adapter performUpdatesAnimated:true completion:nil];
+    });
+}
+                   
+-(void)didUpdateObject:(ChatDetailEntity*)model {
+    __weak StorageViewController *weakself = self;
+    dispatch_async(dispatch_get_main_queue(), ^{
+        [weakself.adapter reloadObjects:@[model]];
+        
+        if (weakself.viewModel.selectedModels.count == 0) {
+            
+            [weakself.deleteHeavyFileBtn setEnabled:false];
+            [weakself.deleteHeavyFileBtn setTitle:@"Clear Selected" forState:normal];
+        } else {
+            [weakself.deleteHeavyFileBtn setEnabled:true];
+            
+            double totalSize = 0;
+            for (ChatDetailEntity* entity in weakself.viewModel.selectedModels) {
+                totalSize += (entity.file.size * 1000 * 1000);
+            }
+            
+            [weakself.deleteHeavyFileBtn setTitle:[NSString stringWithFormat:@"Clear Selected %@", [FileHelper sizeStringFormatterFromBytes:totalSize]] forState:normal];
+        }
     });
 }
 
@@ -193,12 +240,62 @@
     StorageTableCell *cell = [tableView cellForRowAtIndexPath:indexPath];
     [cell didTouch];
     NSInteger row = [indexPath row];
-    [_viewModel didTouchCell:row];
+    [_viewModel didTouchTypeCell:row];
 }
 
 - (IBAction)onDeleteBtnTouched:(id)sender {
     [ self.activityIndicator startAnimating];
-    [_viewModel didTouchDeleteBtn];
+    [_viewModel didTouchDeleteTypeBtn];
+}
+                   
+- (IBAction)onHeavyDeleteBtnTouched:(id)sender {
+        [ self.activityIndicator startAnimating];
+        [_viewModel didTouchDeleteHeavyBtn];
+}
+#pragma mark - IGListAdapterDataSource
+
+- (NSArray<id<IGListDiffable>> *)objectsForListAdapter:(IGListAdapter *)listAdapter {
+        __weak StorageViewController* weakself = self;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            double rowHeight = weakself.heavyCollectionView.bounds.size.width/3;
+            
+            long row = weakself.viewModel.messageModels.count/3 + 1;
+            double height = rowHeight * row;
+            weakself.heavyCollectionViewHeight.constant = height;
+            
+        });
+    return self.viewModel.messageModels;
+}
+
+- (IGListSectionController *)listAdapter:(IGListAdapter *)listAdapter sectionControllerForObject:(id)object {
+    ChatDetailSectionController *chatSection = [ChatDetailSectionController new];
+    chatSection.delegate = self;
+    return chatSection;
+}
+
+- (UIView *)emptyViewForListAdapter:(IGListAdapter *)listAdapter {
+    return nil;
+}
+                   
+#pragma mark - ChatDetailSectionControllerDelegate
+
+- (void) didSelect: (ChatDetailEntity*) chat {
+    [_viewModel didTouchHeavyCell:chat];
+    
+}
+
+- (void) didDeselect: (ChatDetailEntity*) chat {
+    [_viewModel didTouchHeavyCell:chat];
+        
+}
+
+
+- (void) updateRamCache: (UIImage*)image withKey:(NSString*)key {
+    
+}
+
+- (void) retryWithModel:(ChatDetailEntity *)model {
+    
 }
 
 @end

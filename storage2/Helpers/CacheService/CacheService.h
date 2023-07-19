@@ -13,6 +13,8 @@
 -(void)cacheImageByKey:(UIImage*)image withKey:(NSString*)key;
 -(UIImage*)getImageByKey:(NSString*)key;
 -(void)deleteImageByKey:(NSString*)key;
+-(void)clearCacheDirectory:(void(^)(BOOL isFinish))completionBlock;
+-(void)clearTmpDirectory:(void(^)(BOOL isFinish))completionBlock;
 
 @end
 

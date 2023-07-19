@@ -59,7 +59,7 @@
 - (void) getChatRoomsByPage:(int)page completionBlock:(ZOFetchCompletionBlock)completionBlock {
     __weak StorageManager* weakself = self;
     dispatch_async(_databaseQueue, ^{
-        NSArray* result = [[weakself.databaseService getChatRoomDBRepository] getObjectsWhere:nil isDistinct:false];
+        NSArray* result = [[weakself.databaseService getChatRoomDBRepository] getObjectsWhere:nil select:nil isDistinct:false groupBy:nil orderBy:nil];
         completionBlock(result);
     });
 }
@@ -162,7 +162,7 @@
     dispatch_async(_databaseQueue, ^{
 
         NSString* whereStr = [NSString stringWithFormat:@"type=\"%ld\"",(long)fileType];
-        NSArray* objects = [[weakself.databaseService getFileDBRepository] getObjectsWhere:whereStr isDistinct:false];
+        NSArray* objects = [[weakself.databaseService getFileDBRepository] getObjectsWhere:whereStr select:nil isDistinct:false groupBy:nil orderBy:nil];
         NSMutableArray* result = [[NSMutableArray alloc] init];
         for (int i=0; i<objects.count; i++) {
             
@@ -284,6 +284,14 @@
     });
 }
 
+- (void)getFilesWhere:(NSString*)where select:(NSString*)select isDistinct:(BOOL)isDistinct groupBy:(NSString*)groupBy orderBy:(NSString*)orderBy completionBlock:(ZOFetchCompletionBlock)completionBlock {
+    __weak StorageManager* weakself = self;
+    dispatch_async(_databaseQueue, ^{
+        NSArray* items = [[weakself.databaseService getFileDBRepository] getObjectsWhere:where select:select isDistinct:isDistinct groupBy:groupBy orderBy:orderBy];
+        completionBlock(items);
+    });
+}
+
 #pragma mark - Local file operation
 -(void)writeToFilePath:(NSString*)filePath withData:(NSData*)data {
     [FileHelper createDirectoriesForFileAtPath:filePath];
@@ -301,12 +309,16 @@
     [_cacheService deleteImageByKey:key];
 }
 
+-(id<CacheServiceType>)getCacheService {
+    return _cacheService;
+}
+
 # pragma mark - Private methods
 -(void)_deleteFileIfValid:(ChatMessageData*)messageData {
     
     __weak StorageManager* weakself = self;
     NSString *whereStr = [NSString stringWithFormat:@"checksum = \"%@\"", messageData.file.checksum];
-    NSArray* objects = [[weakself.databaseService getFileDBRepository] getObjectsWhere:whereStr isDistinct:false];
+    NSArray* objects = [[weakself.databaseService getFileDBRepository] getObjectsWhere:whereStr select:nil isDistinct:false groupBy:nil orderBy:nil];
     if (objects.count == 0) {
         [weakself.cacheService deleteImageByKey:messageData.file.checksum];
         NSError* error;

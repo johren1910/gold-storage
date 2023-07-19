@@ -10,6 +10,9 @@
 #import "FileHelper.h"
 #import "CacheService.h"
 #import "FileData.h"
+#import <UIKit/UIKit.h>
+#import <Foundation/Foundation.h>
+#import "FileHelper.h"
 
 @interface StorageBusinessModel ()
 @property (nonatomic) dispatch_queue_t backgroundQueue;
@@ -54,21 +57,68 @@
 
 - (void)deleteAllMediaTypes:(NSArray<StorageSpaceItem*>*)items completionBlock:(void (^)(BOOL isFinish))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
     __weak StorageBusinessModel* weakself = self;
+    
+    __block int totalOperation = 0;
     dispatch_async(_backgroundQueue, ^{
         for (StorageSpaceItem* item in items) {
             
             switch (item.fileType) {
                 case Video:
                 case Picture: {
-                    [weakself _handleDeleteMediaFileType:item.fileType completionBlock:completionBlock];
+                    [weakself _handleDeleteMediaFileType:item.fileType completionBlock:^(BOOL isFinish) {
+                        totalOperation += 1;
+                        if(totalOperation==items.count){
+                            completionBlock(true);
+                        }
+                    }];
                     break;
                 }
                 case Misc:
-                    completionBlock(true);
+                    [weakself.storageRepository.cacheService clearCacheDirectory:^(BOOL isDeleted){
+                        [weakself.storageRepository.cacheService clearTmpDirectory:^(BOOL isDeleted){
+                            totalOperation+=1;
+                            if(totalOperation==items.count){
+                                completionBlock(true);
+                            }
+                        }];
+                    }];
                     break;
             }
         }
     });
+}
+
+- (void)deleteFiles:(NSArray<FileData*>*)items completionBlock:(void (^)(BOOL isFinish))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
+    
+    __weak StorageBusinessModel* weakself = self;
+    
+    NSString* whereStr = @"checksum in (";
+    for (FileData* item in items) {
+        
+        NSString* checksumStr = [NSString stringWithFormat:@"\"%@\"", item.checksum];
+        whereStr = [whereStr stringByAppendingString:checksumStr];
+        if(item != items.lastObject) {
+            whereStr = [whereStr stringByAppendingString:@","];
+        }
+    }
+    whereStr = [whereStr stringByAppendingString:@")"];
+    
+    [_storageRepository.fileDataProvider getFilesWhere:whereStr select:nil isDistinct:false groupBy:nil orderBy:nil completionBlock:^(NSArray* items) {
+        
+        NSMutableArray<ChatMessageData*>* messages = [[NSMutableArray alloc] init];
+        
+        for (FileData* item in items) {
+            ChatMessageData* message = [[ChatMessageData alloc] initWithMessage:item.messageId messageId:item.messageId chatRoomId:nil];
+            message.file = item;
+            
+            [messages addObject:message];
+        }
+        
+        [weakself.storageRepository.chatMessageProvider deleteChatMessagesOf:messages completionBlock:^(BOOL isFinish) {
+            completionBlock(isFinish);
+        }];
+        
+    } errorBlock:nil];
 }
 
 -(void)_handleDeleteMediaFileType:(FileType)fileType completionBlock:(void (^)(BOOL isFinish))completionBlock{
@@ -84,4 +134,52 @@
         [self.storageRepository.chatMessageProvider deleteChatMessagesOf:messages completionBlock:completionBlock];
     } errorBlock:nil];
 }
+
+- (void)getHeavyFiles:(void (^)(NSArray* items))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
+    __weak StorageBusinessModel* weakself = self;
+    [self.storageRepository.fileDataProvider getFilesWhere:nil select:nil isDistinct:true groupBy:@"checksum" orderBy:@"size" completionBlock:^(NSArray *items){
+        
+        dispatch_async(weakself.backgroundQueue, ^{
+            NSMutableArray* entities = [[NSMutableArray alloc] init];
+            
+            for (FileData* item in items) {
+                ChatDetailEntity* entity = [[ChatDetailEntity alloc] init];
+                entity.file = item;
+                entity.messageId = [[NSUUID UUID] UUIDString];
+                UIImage *thumbnail = nil;
+                thumbnail = [weakself.storageRepository.cacheService getImageByKey:item.checksum];
+                
+                if(!thumbnail) {
+                    ZOMediaInfo *mediaInfo = nil;
+                    switch (item.type) {
+                        case Picture: {
+                            NSData *fileData = [FileHelper readFileAtPathAsData:[FileHelper absolutePath:item.filePath]];
+                            
+                            thumbnail = [UIImage imageWithData:fileData];
+                            NSData* compressed = UIImageJPEGRepresentation(thumbnail, 0.5);
+                            thumbnail = [UIImage imageWithData:compressed];
+                            [weakself.storageRepository.cacheService cacheImageByKey:thumbnail withKey:item.checksum];
+                            break;
+                        }
+                        case Video:
+                            mediaInfo = [FileHelper getMediaInfoOfFilePath:[FileHelper absolutePath:item.filePath]];
+                            thumbnail = mediaInfo.thumbnail;
+                            [weakself.storageRepository.cacheService cacheImageByKey:thumbnail withKey:item.checksum];
+                            
+                            break;
+                        default:
+                            break;
+                    }
+                }
+                
+                entity.thumbnail = thumbnail;
+                [entities addObject:entity];
+            }
+            
+            completionBlock(entities);
+        });
+            
+    } errorBlock:nil];
+}
+
 @end

@@ -25,11 +25,11 @@
     return self;
 }
 
-- (void)updateFile:(FileData*)fileData completionBlock:(void(^)(BOOL isFinish))completionBlock {
+-(void)updateFile:(FileData*)fileData completionBlock:(void(^)(BOOL isFinish))completionBlock {
     [_storageManager updateFileData:fileData completionBlock:completionBlock];
 }
 
-- (void)saveFileData:(FileDataWrapper*)data completionBlock:(void(^)(id entity))completionBlock {
+-(void)saveFileData:(FileDataWrapper*)data completionBlock:(void(^)(id entity))completionBlock {
     [_storageManager createFile:data.fileData withNSData:data.nsData completionBlock:^(BOOL isSuccess){
         completionBlock(nil);
     }];
@@ -56,7 +56,7 @@
     return type;
 }
 
-- (NSString*)moveFileToGeneralFolders:(NSString*) currentfilePath forFileType:(FileType)fileType andSetName:(NSString*)name {
+-(NSString*)moveFileToGeneralFolders:(NSString*) currentfilePath forFileType:(FileType)fileType andSetName:(NSString*)name {
     
     NSString* folderPath = [FileHelper getDefaultDirectoryByFileType:fileType];
     NSString* fileRelativePath = [folderPath stringByAppendingPathComponent:name];
@@ -76,7 +76,7 @@
     return fileRelativePath;
 }
 
-- (void)saveImageWithData:(NSData*)data ofRoomId:(NSString*)roomId completionBlock:(void(^)(ChatDetailEntity* entity)) completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
+-(void)saveImageWithData:(NSData*)data ofRoomId:(NSString*)roomId completionBlock:(void(^)(ChatDetailEntity* entity)) completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
     
     __weak FileDataProvider* weakself = self;
     [_storageManager uploadImage:data withRoomId:roomId completionBlock:^(id object) {
@@ -87,15 +87,15 @@
     }];
 }
 
-- (void)getPhoneSize:(void (^)(long long size))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
+-(void)getPhoneSize:(void (^)(long long size))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
     long long phoneSize = [FileHelper totalDiskSpaceInBytes];
     completionBlock(phoneSize);
 }
-- (void)getAppSize:(void (^)(long long size))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
+-(void)getAppSize:(void (^)(long long size))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
     long long appSize = [FileHelper getApplicationSize];
     completionBlock(appSize);
 }
-- (void)getAllStorageItem:(void (^)(NSArray* items))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
+-(void)getAllStorageItem:(void (^)(NSArray* items))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
     NSMutableArray* array = [[NSMutableArray alloc] init];
     
     long long pictureSize = [FileHelper getPictureFolderSize];
@@ -133,9 +133,13 @@
     [_storageManager getFilesOfType:fileType completionBlock:completionBlock];
 }
 
-- (void)deleteFile:(FileData*)file completionBlock:(void(^)(BOOL isFinish))completionBlock {
+-(void)deleteFile:(FileData*)file completionBlock:(void(^)(BOOL isFinish))completionBlock {
     
     [_storageManager deleteFileData:file completionBlock:completionBlock];
+}
+
+- (void)getFilesWhere:(NSString*)where select:(NSString*)select isDistinct:(BOOL)isDistinct groupBy:(NSString*)groupBy orderBy:(NSString*)orderBy completionBlock:(void (^)(NSArray* items))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
+    [_storageManager getFilesWhere:where select:select isDistinct:isDistinct groupBy:groupBy orderBy:orderBy completionBlock:completionBlock];
 }
 
 @end

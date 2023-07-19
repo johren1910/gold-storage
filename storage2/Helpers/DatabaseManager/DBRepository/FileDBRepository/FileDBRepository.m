@@ -30,8 +30,8 @@ static sqlite3_stmt *statement = nil;
     return [self _getFileWhere:where];
 }
 
-- (NSArray*)getObjectsWhere:(NSString*)where isDistinct:(BOOL)isDistinct {
-    return [self _getFilesWhere:where isDistinct:isDistinct];
+- (NSArray*)getObjectsWhere:(NSString*)where select:(NSString*)select isDistinct:(BOOL)isDistinct groupBy:(NSString*)groupBy orderBy:(NSString*)orderBy {
+    return [self _getFilesWhere:where select:select isDistinct:isDistinct groupBy:groupBy orderBy:orderBy];
 }
 
 - (NSArray *)getObjectsWhere:(NSString *)where orderBy:(NSString *)orderByAttribute ascending:(BOOL)ascending {
@@ -180,16 +180,37 @@ static sqlite3_stmt *statement = nil;
     return result;
 }
 
-- (NSArray*)_getFilesWhere:(NSString*)where isDistinct:(BOOL)isDistinct {
+- (NSArray*)_getFilesWhere:(NSString*)where select:(NSString*)select isDistinct:(BOOL)isDistinct groupBy:(NSString*)groupBy orderBy:(NSString*)orderBy {
     const char *dbpath = [_databasePath UTF8String];
     NSMutableArray<FileData*>* result = [@[] mutableCopy];
     NSString* selectStr = @"select";
     if(isDistinct) {
-        [selectStr stringByAppendingString:@" distinct"];
+        selectStr = [selectStr stringByAppendingString:@" distinct "];
     }
+    
+    if(select){
+        selectStr = [selectStr stringByAppendingString:select];
+    } else {
+        selectStr = [selectStr stringByAppendingString:@"*"];
+    }
+    
+    if (!orderBy) {
+        orderBy = @"createdAt";
+    }
+    
+    NSString* whereStr = @"";
+    if(where) {
+        whereStr = [NSString stringWithFormat:@"where %@",where];
+    }
+    
+    NSString* groupByStr = @"";
+    if(groupBy){
+        groupByStr = [NSString stringWithFormat:@"group by %@",groupBy];
+    }
+    
     if (sqlite3_open_v2(dbpath, &database, SQLITE_OPEN_READWRITE, NULL) == SQLITE_OK) {
         NSString *querySQL = [NSString stringWithFormat:
-                              @"%@ * from file where %@ order by createdAt DESC",selectStr, where];
+                              @"%@ from file %@ %@ order by %@ DESC",selectStr, whereStr, groupByStr, orderBy];
         const char *query_stmt = [querySQL UTF8String];
         
         if (sqlite3_prepare_v2(database, query_stmt, -1, &statement, NULL) == SQLITE_OK) {
@@ -208,9 +229,8 @@ static sqlite3_stmt *statement = nil;
                 double duration = (double) sqlite3_column_double(statement, 7);
                 double lastModified = (double) sqlite3_column_double(statement, 8);
                 double lastAccessed = (double) sqlite3_column_double(statement, 9);
-                int fileType = (double) sqlite3_column_int(statement, 4);
+                int fileType = (int) sqlite3_column_int(statement, 10);
 
-                
                 FileData *fileData = [[FileData alloc] init];
                 fileData.fileId = fileId;
                 fileData.fileName = fileName;

@@ -133,4 +133,26 @@
     });
 }
 
+-(void)clearCacheDirectory:(void(^)(BOOL isFinish))completionBlock {
+    __weak CacheService *weakself = self;
+    dispatch_async(_cacheQueue, ^{
+        
+        BOOL isDeleted = [FileHelper clearCachesDirectory];
+        if (isDeleted) {
+            [weakself.diskImageCaches removeAllObjects];
+        }
+    
+        completionBlock(isDeleted);
+    });
+}
+
+-(void)clearTmpDirectory:(void(^)(BOOL isFinish))completionBlock {
+    __weak CacheService *weakself = self;
+    dispatch_async(_cacheQueue, ^{
+        
+        BOOL isDeleted = [FileHelper clearTemporaryDirectory];
+        completionBlock(isDeleted);
+    });
+}
+
 @end

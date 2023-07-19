@@ -33,6 +33,7 @@
 - (void)getFilesOfType:(FileType)fileType completionBlock:(ZOFetchCompletionBlock)completionBlock;
 - (void) getFileOfMessageId:(NSString*)messageId completionBlock:(ZOFetchCompletionBlock)completionBlock;
 - (void)updateFileData:(FileData*) fileData completionBlock:(ZOCompletionBlock)completionBlock;
+- (void)getFilesWhere:(NSString*)where select:(NSString*)select isDistinct:(BOOL)isDistinct groupBy:(NSString*)groupBy orderBy:(NSString*)orderBy completionBlock:(ZOFetchCompletionBlock)completionBlock;
 
 - (void)uploadImage:(NSData*) data withRoomId:(NSString*)roomId completionBlock:(ZOFetchCompletionBlock)completionBlock;
 
@@ -44,5 +45,7 @@
 -(UIImage*)getImageByKey:(NSString*)key;
 -(void)deleteImageByKey:(NSString*)key;
 - (void)compressThenCache: (UIImage*)image withKey:(NSString*) key;
+
+-(id<CacheServiceType>)getCacheService;
 
 @end

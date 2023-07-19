@@ -21,6 +21,8 @@
     self = [super init];
     if (self) {
         self.currentStorageEntity = [[StorageEntity alloc] init];
+        self.messageModels = [[NSMutableArray alloc] init];
+        self.selectedModels = [[NSMutableArray alloc] init];
         self.backgroundQueue = dispatch_queue_create("com.storage.viewmodel.backgroundqueue", DISPATCH_QUEUE_SERIAL);
         self.storageBusinessModel = storageBusinessModel;
     }
@@ -57,15 +59,20 @@
             [weakself.delegate didFinishUpdate];
         } errorBlock:nil];
     } errorBlock:nil];
+    
+    [weakself.storageBusinessModel getHeavyFiles:^(NSArray* items){
+        weakself.messageModels = [items mutableCopy];
+        [weakself.delegate needUpdateHeavyCollection];
+    } errorBlock:nil];
 }
 
--(void)didTouchCell:(NSInteger) row {
+-(void)didTouchTypeCell:(NSInteger) row {
     StorageSpaceItem* item = currentStorageEntity.storageSpaceItems[row];
     item.selected = !item.selected;
     [delegate didUpdateData:currentStorageEntity];
 }
 
--(void)didTouchDeleteBtn {
+-(void)didTouchDeleteTypeBtn {
     NSMutableArray<StorageSpaceItem*>* items = [[NSMutableArray alloc] init];
     for (StorageSpaceItem* item in currentStorageEntity.storageSpaceItems) {
         if (item.selected) {
@@ -79,7 +86,43 @@
     } errorBlock:nil];
 }
 
+-(void)didTouchHeavyCell:(ChatDetailEntity*)file {
+    BOOL selected = true;
+    if(![self.selectedModels containsObject:file]) {
+        selected = true;
+        [self.selectedModels addObject:file];
+    } else {
+        selected = false;
+        [self.selectedModels removeObject:file];
+    }
+    
+    for (ChatDetailEntity *model in messageModels) {
+        if (file.messageId == model.messageId) {
+            
+            model.selected = selected;
+            break;
+        }
+    }
+    [self.delegate didUpdateObject:file];
+}
+-(void)didTouchDeleteHeavyBtn {
+    
+    __weak StorageViewModel* weakself = self;
+    NSMutableArray<FileData*>* files = [[NSMutableArray alloc] init];
+    for (ChatDetailEntity* entity in self.selectedModels) {
+        [files addObject:entity.file];
+    }
+    
+    [_storageBusinessModel deleteFiles:files completionBlock:^(BOOL isFinish) {
+        [weakself.messageModels removeObjectsInArray:self.selectedModels];
+        [weakself.selectedModels removeAllObjects];
+        [weakself _loadData];
+    } errorBlock:nil];
+}
+
 @synthesize delegate;
 @synthesize currentStorageEntity;
+@synthesize messageModels;
+@synthesize selectedModels;
 
 @end

@@ -11,6 +11,7 @@
 @protocol StorageRepositoryInterface
 
 @property (nonatomic) id<FileDataProviderType> fileDataProvider;
+@property (nonatomic) id<CacheServiceType> cacheService;
 @property (nonatomic) id<ChatMessageProviderType> chatMessageProvider;
 @end
 

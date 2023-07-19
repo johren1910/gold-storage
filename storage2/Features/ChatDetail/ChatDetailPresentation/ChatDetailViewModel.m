@@ -43,18 +43,6 @@
     _isCheatOn = false;
 }
 
-- (instancetype)init {
-    self = [super init];
-    if (self) {
-        self.messageModels = [[NSMutableArray alloc] init];;
-//        if ([[UICollectionView class] instancesRespondToSelector:@selector(setPrefetchingEnabled:)]) {
-//            [[UICollectionView appearance] setPrefetchingEnabled:NO];
-//        }
-    }
-    
-    return self;
-}
-
 - (void) onViewDidLoad {
     [self.delegate startLoading];
     [self _loadData];

@@ -23,12 +23,13 @@
         self.storageManager = storageManager;
         self.chatMessageProvider = chatMessageProvider;
         self.fileDataProvider = fileDataProvider;
+        self.cacheService = [self.storageManager getCacheService];
         self.backgroundQueue = dispatch_queue_create("com.storage.datarepository.queue", DISPATCH_QUEUE_SERIAL);
     }
     return self;
 }
 @synthesize fileDataProvider;
 @synthesize chatMessageProvider;
-
+@synthesize cacheService;
 @end
 
