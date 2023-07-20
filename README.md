@@ -37,6 +37,8 @@ Simple app that support download media like Pictures & Videos.
 
 ☑️ Thread-safe
 
+☑️ Simple Unit-test
+
 TODO:
 - Auto retry download
 + ✔️ Storage space management
@@ -57,6 +59,9 @@ TODO:
 ### Dependencies
 
 - IGListKit
+- Quick
+- Nimble
+- OCMock
 
 ### Installing
 
@@ -69,6 +74,9 @@ TODO:
 Quannm10@vng.com.vn
 
 ## Version History
+* 0.77
+    * Add Unit-test
+    * Fix scrolling behaviours
 * 0.76
     * Add heavy files management for Storage View
     * Add state management to chat detail screen
