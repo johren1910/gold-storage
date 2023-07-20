@@ -1,0 +1,6 @@
+framework module IGListKit {
+  umbrella header "IGListKit-iOS16.2-umbrella.h"
+
+  export *
+  module * { export * }
+}

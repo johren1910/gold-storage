@@ -28,9 +28,7 @@
 - (void)createChatRoom:(ChatRoomData*)chatRoom completionBlock:(void (^)(BOOL isSuccess))completionBlock errorBlock:(void (^)(NSError *error))errorBlock {
     __weak ChatRoomBusinessModel* weakself = self;
     dispatch_async(_backgroundQueue, ^{
-        [weakself.chatRoomRepository.chatRoomProvider createChatRoom:chatRoom completionBlock:^(BOOL isSuccess){
-            completionBlock(isSuccess);
-        } errorBlock:errorBlock];
+        [weakself.chatRoomRepository.chatRoomProvider createChatRoom:chatRoom completionBlock:completionBlock errorBlock:errorBlock];
     });
     
 }

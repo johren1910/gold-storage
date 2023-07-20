@@ -1,0 +1,6 @@
+${PODS_ROOT}/Target Support Files/Pods-storage2Tests/Pods-storage2Tests-frameworks.sh
+${BUILT_PRODUCTS_DIR}/IGListDiffKit-iOS16.2/IGListDiffKit.framework
+${BUILT_PRODUCTS_DIR}/IGListKit-iOS16.2/IGListKit.framework
+${BUILT_PRODUCTS_DIR}/Nimble/Nimble.framework
+${BUILT_PRODUCTS_DIR}/OCMock/OCMock.framework
+${BUILT_PRODUCTS_DIR}/Quick/Quick.framework

@@ -17,7 +17,7 @@
 #import "ZOStatePresentable.h"
 
 
-@interface ChatRoomViewController () <IGListAdapterDataSource, ChatRoomViewModelDelegate>
+@interface ChatRoomViewController ()
 
 @property (nonatomic, strong) IGListAdapter *adapter;
 @property (nonatomic, strong) id<ChatRoomViewModelType> viewModel;

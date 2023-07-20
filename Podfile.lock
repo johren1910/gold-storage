@@ -2,19 +2,31 @@ PODS:
   - IGListDiffKit (4.0.0)
   - IGListKit (4.0.0):
     - IGListDiffKit (= 4.0.0)
+  - Nimble (12.1.0)
+  - OCMock (3.9.1)
+  - Quick (7.1.0)
 
 DEPENDENCIES:
   - IGListKit (~> 4.0.0)
+  - Nimble
+  - OCMock
+  - Quick
 
 SPEC REPOS:
   trunk:
     - IGListDiffKit
     - IGListKit
+    - Nimble
+    - OCMock
+    - Quick
 
 SPEC CHECKSUMS:
   IGListDiffKit: 665d6cf43ce726e676013db9c7d6c4294259b6b2
   IGListKit: fd5a5d21935298f5849fa49d426843cff97b77c7
+  Nimble: 7badc051fbff5e14e3798e2392b9389de67f75ea
+  OCMock: 9491e4bec59e0b267d52a9184ff5605995e74be8
+  Quick: bfee1bc96e9cdc4aeb89ecd5997aee7f4b394956
 
-PODFILE CHECKSUM: 224d509a0774e4fde2bf76d672d8ba94e19b1984
+PODFILE CHECKSUM: 69e5f1e0e96448603a73f2c018217989330e087c
 
 COCOAPODS: 1.12.1

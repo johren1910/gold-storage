@@ -7,8 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		185BA10F8DE3F80B8E6FFB42 /* Pods_storage2Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 421B467652D3084D3371185D /* Pods_storage2Tests.framework */; };
 		F60BD33C2A5EA49D006DCF69 /* Pods_storage2.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E19C3CDB4D176A0EF12B2065 /* Pods_storage2.framework */; };
 		F61179222A64EC7F00D69175 /* ZODownloadUnit.m in Sources */ = {isa = PBXBuildFile; fileRef = F61179212A64EC7F00D69175 /* ZODownloadUnit.m */; };
+		F61179322A68DF3B00D69175 /* ChatRoomViewControllerSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F61179312A68DF3B00D69175 /* ChatRoomViewControllerSpec.m */; };
 		F61F70C52A6136FD006D6892 /* libsqlite3.0.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F60BD33B2A5EA492006DCF69 /* libsqlite3.0.tbd */; };
 		F61F70C62A613A4F006D6892 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = F60BD33A2A5EA48D006DCF69 /* libsqlite3.tbd */; };
 		F64BAB692A3DA456002B923F /* DatabaseService.m in Sources */ = {isa = PBXBuildFile; fileRef = F64BAB682A3DA456002B923F /* DatabaseService.m */; };
@@ -44,6 +46,8 @@
 		F65879872A5D052F00293FFD /* ChatMessageProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = F65879862A5D052F00293FFD /* ChatMessageProvider.m */; };
 		F658798D2A5D0E7B00293FFD /* FileDataProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = F658798C2A5D0E7B00293FFD /* FileDataProvider.m */; };
 		F65879912A5D32F800293FFD /* ChatRoomProvider.m in Sources */ = {isa = PBXBuildFile; fileRef = F65879902A5D32F800293FFD /* ChatRoomProvider.m */; };
+		F6AFE4C92A690ED900F96784 /* ChatRoomViewModelSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F6AFE4C82A690ED900F96784 /* ChatRoomViewModelSpec.m */; };
+		F6AFE4CB2A69274900F96784 /* ChatRoomBusinessModelSpec.m in Sources */ = {isa = PBXBuildFile; fileRef = F6AFE4CA2A69274900F96784 /* ChatRoomBusinessModelSpec.m */; };
 		F6C43EF42A3AEF0D001D8715 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */; };
 		F6C43EF72A3AEF0D001D8715 /* SceneDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF62A3AEF0D001D8715 /* SceneDelegate.m */; };
 		F6C43EFA2A3AEF0D001D8715 /* ChatRoomViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = F6C43EF92A3AEF0D001D8715 /* ChatRoomViewController.m */; };
@@ -81,14 +85,29 @@
 		F6FF76912A5E8F74003A1EF4 /* StorageTableCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = F6FF76902A5E8F74003A1EF4 /* StorageTableCell.xib */; };
 /* End PBXBuildFile section */
 
+/* Begin PBXContainerItemProxy section */
+		F611792B2A68DC2500D69175 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = F6C43EE72A3AEF0D001D8715 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = F6C43EEE2A3AEF0D001D8715;
+			remoteInfo = storage2;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		2428DBFDEBA3038772A072A5 /* Pods-storage2.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-storage2.debug.xcconfig"; path = "Target Support Files/Pods-storage2/Pods-storage2.debug.xcconfig"; sourceTree = "<group>"; };
 		41FF497A3D8960B438AD9763 /* Pods-storage2.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-storage2.release.xcconfig"; path = "Target Support Files/Pods-storage2/Pods-storage2.release.xcconfig"; sourceTree = "<group>"; };
+		421B467652D3084D3371185D /* Pods_storage2Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_storage2Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		7533EC51DD13963F41659BAE /* Pods-storage2Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-storage2Tests.release.xcconfig"; path = "Target Support Files/Pods-storage2Tests/Pods-storage2Tests.release.xcconfig"; sourceTree = "<group>"; };
+		C56F6E674C3D4EE4AE59D3A7 /* Pods-storage2Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-storage2Tests.debug.xcconfig"; path = "Target Support Files/Pods-storage2Tests/Pods-storage2Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		E19C3CDB4D176A0EF12B2065 /* Pods_storage2.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_storage2.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		F60BD33A2A5EA48D006DCF69 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		F60BD33B2A5EA492006DCF69 /* libsqlite3.0.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.0.tbd; path = usr/lib/libsqlite3.0.tbd; sourceTree = SDKROOT; };
 		F61179202A64EC7600D69175 /* ZODownloadUnit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ZODownloadUnit.h; sourceTree = "<group>"; };
 		F61179212A64EC7F00D69175 /* ZODownloadUnit.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ZODownloadUnit.m; sourceTree = "<group>"; };
+		F61179272A68DC2500D69175 /* storage2Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = storage2Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		F61179312A68DF3B00D69175 /* ChatRoomViewControllerSpec.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatRoomViewControllerSpec.m; sourceTree = "<group>"; };
 		F61F70C82A613C92006D6892 /* sqlite3ext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3ext.h; sourceTree = "<group>"; };
 		F61F70C92A613C92006D6892 /* sqlite3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sqlite3.h; sourceTree = "<group>"; };
 		F64BAB672A3DA448002B923F /* DatabaseService.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = DatabaseService.h; sourceTree = "<group>"; };
@@ -159,6 +178,8 @@
 		F658798C2A5D0E7B00293FFD /* FileDataProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = FileDataProvider.m; sourceTree = "<group>"; };
 		F658798F2A5D32EE00293FFD /* ChatRoomProvider.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ChatRoomProvider.h; sourceTree = "<group>"; };
 		F65879902A5D32F800293FFD /* ChatRoomProvider.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatRoomProvider.m; sourceTree = "<group>"; };
+		F6AFE4C82A690ED900F96784 /* ChatRoomViewModelSpec.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatRoomViewModelSpec.m; sourceTree = "<group>"; };
+		F6AFE4CA2A69274900F96784 /* ChatRoomBusinessModelSpec.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ChatRoomBusinessModelSpec.m; sourceTree = "<group>"; };
 		F6C43EEF2A3AEF0D001D8715 /* storage2.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = storage2.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F6C43EF22A3AEF0D001D8715 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		F6C43EF32A3AEF0D001D8715 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -230,6 +251,14 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		F61179242A68DC2500D69175 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				185BA10F8DE3F80B8E6FFB42 /* Pods_storage2Tests.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F6C43EEC2A3AEF0D001D8715 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -249,6 +278,7 @@
 				F60BD33B2A5EA492006DCF69 /* libsqlite3.0.tbd */,
 				F60BD33A2A5EA48D006DCF69 /* libsqlite3.tbd */,
 				E19C3CDB4D176A0EF12B2065 /* Pods_storage2.framework */,
+				421B467652D3084D3371185D /* Pods_storage2Tests.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -258,8 +288,28 @@
 			children = (
 				2428DBFDEBA3038772A072A5 /* Pods-storage2.debug.xcconfig */,
 				41FF497A3D8960B438AD9763 /* Pods-storage2.release.xcconfig */,
+				C56F6E674C3D4EE4AE59D3A7 /* Pods-storage2Tests.debug.xcconfig */,
+				7533EC51DD13963F41659BAE /* Pods-storage2Tests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		F61179282A68DC2500D69175 /* storage2Tests */ = {
+			isa = PBXGroup;
+			children = (
+				F61179302A68DF2000D69175 /* ChatRoom */,
+			);
+			path = storage2Tests;
+			sourceTree = "<group>";
+		};
+		F61179302A68DF2000D69175 /* ChatRoom */ = {
+			isa = PBXGroup;
+			children = (
+				F61179312A68DF3B00D69175 /* ChatRoomViewControllerSpec.m */,
+				F6AFE4C82A690ED900F96784 /* ChatRoomViewModelSpec.m */,
+				F6AFE4CA2A69274900F96784 /* ChatRoomBusinessModelSpec.m */,
+			);
+			path = ChatRoom;
 			sourceTree = "<group>";
 		};
 		F61F70C72A613C80006D6892 /* SQLite */ = {
@@ -589,6 +639,7 @@
 			isa = PBXGroup;
 			children = (
 				F6C43EF12A3AEF0D001D8715 /* storage2 */,
+				F61179282A68DC2500D69175 /* storage2Tests */,
 				F6C43EF02A3AEF0D001D8715 /* Products */,
 				71F117CF78F9D3E70DB6BD80 /* Pods */,
 				0E2E78DD5F7BA2BF4239FF6F /* Frameworks */,
@@ -599,6 +650,7 @@
 			isa = PBXGroup;
 			children = (
 				F6C43EEF2A3AEF0D001D8715 /* storage2.app */,
+				F61179272A68DC2500D69175 /* storage2Tests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -837,6 +889,26 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		F61179262A68DC2500D69175 /* storage2Tests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = F611792D2A68DC2500D69175 /* Build configuration list for PBXNativeTarget "storage2Tests" */;
+			buildPhases = (
+				837E889F65E6E7B9759A32FD /* [CP] Check Pods Manifest.lock */,
+				F61179232A68DC2500D69175 /* Sources */,
+				F61179242A68DC2500D69175 /* Frameworks */,
+				F61179252A68DC2500D69175 /* Resources */,
+				2AB081DAAF0E11E17117AC27 /* [CP] Embed Pods Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				F611792C2A68DC2500D69175 /* PBXTargetDependency */,
+			);
+			name = storage2Tests;
+			productName = storage2Tests;
+			productReference = F61179272A68DC2500D69175 /* storage2Tests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 		F6C43EEE2A3AEF0D001D8715 /* storage2 */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = F6C43F082A3AEF0D001D8715 /* Build configuration list for PBXNativeTarget "storage2" */;
@@ -865,6 +937,10 @@
 				BuildIndependentTargetsInParallel = 1;
 				LastUpgradeCheck = 1420;
 				TargetAttributes = {
+					F61179262A68DC2500D69175 = {
+						CreatedOnToolsVersion = 14.2;
+						TestTargetID = F6C43EEE2A3AEF0D001D8715;
+					};
 					F6C43EEE2A3AEF0D001D8715 = {
 						CreatedOnToolsVersion = 14.2;
 					};
@@ -884,11 +960,19 @@
 			projectRoot = "";
 			targets = (
 				F6C43EEE2A3AEF0D001D8715 /* storage2 */,
+				F61179262A68DC2500D69175 /* storage2Tests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		F61179252A68DC2500D69175 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F6C43EED2A3AEF0D001D8715 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -948,9 +1032,58 @@
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-storage2/Pods-storage2-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
+		2AB081DAAF0E11E17117AC27 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-storage2Tests/Pods-storage2Tests-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-storage2Tests/Pods-storage2Tests-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-storage2Tests/Pods-storage2Tests-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		837E889F65E6E7B9759A32FD /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-storage2Tests-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		F61179232A68DC2500D69175 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				F6AFE4C92A690ED900F96784 /* ChatRoomViewModelSpec.m in Sources */,
+				F61179322A68DF3B00D69175 /* ChatRoomViewControllerSpec.m in Sources */,
+				F6AFE4CB2A69274900F96784 /* ChatRoomBusinessModelSpec.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		F6C43EEB2A3AEF0D001D8715 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1019,6 +1152,14 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXTargetDependency section */
+		F611792C2A68DC2500D69175 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = F6C43EEE2A3AEF0D001D8715 /* storage2 */;
+			targetProxy = F611792B2A68DC2500D69175 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
 /* Begin PBXVariantGroup section */
 		F6C43EFB2A3AEF0D001D8715 /* Main.storyboard */ = {
 			isa = PBXVariantGroup;
@@ -1039,6 +1180,64 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		F611792E2A68DC2500D69175 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = C56F6E674C3D4EE4AE59D3A7 /* Pods-storage2Tests.debug.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 38Z2ARUML2;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/Nimble\"",
+					"\"${PODS_ROOT}/Headers/Public/Quick\"",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/usr/lib",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = probation.zalo.storage2Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/storage2.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/storage2";
+			};
+			name = Debug;
+		};
+		F611792F2A68DC2500D69175 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = 7533EC51DD13963F41659BAE /* Pods-storage2Tests.release.xcconfig */;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = 38Z2ARUML2;
+				GENERATE_INFOPLIST_FILE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"${PODS_ROOT}/Headers/Public\"",
+					"\"${PODS_ROOT}/Headers/Public/Nimble\"",
+					"\"${PODS_ROOT}/Headers/Public/Quick\"",
+				);
+				IPHONEOS_DEPLOYMENT_TARGET = 16.2;
+				LIBRARY_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/usr/lib",
+				);
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = probation.zalo.storage2Tests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/storage2.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/storage2";
+			};
+			name = Release;
+		};
 		F6C43F062A3AEF0D001D8715 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -1223,6 +1422,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		F611792D2A68DC2500D69175 /* Build configuration list for PBXNativeTarget "storage2Tests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				F611792E2A68DC2500D69175 /* Debug */,
+				F611792F2A68DC2500D69175 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		F6C43EEA2A3AEF0D001D8715 /* Build configuration list for PBXProject "storage2" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

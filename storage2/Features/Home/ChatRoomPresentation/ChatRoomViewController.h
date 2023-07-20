@@ -10,7 +10,7 @@
 #import "ChatRoomViewModel.h"
 #import "ZOStatePresentable.h"
 
-@interface ChatRoomViewController : UIViewController <ChatRoomSectionControllerDelegate, ViewControllerType>
+@interface ChatRoomViewController : UIViewController <ChatRoomSectionControllerDelegate, ViewControllerType, IGListAdapterDataSource, ChatRoomViewModelDelegate>
 
 @property (strong, nonatomic) IBOutlet UICollectionView *homeCollectionView;
 
