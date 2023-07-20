@@ -66,7 +66,7 @@
             break;
     }
     [_nameLabel setText:name];
-    NSString *percentText = [NSString stringWithFormat:@"%.1f%%", (item.percent*100)];
+    NSString *percentText = [NSString stringWithFormat:@"%.2f%%", (item.percent*100)];
     [_percentLabel setText:percentText];
     [_sizeLabel setText: [FileHelper sizeStringFormatterFromBytes:item.size]];
     NSString* iconName = @"check-icon";

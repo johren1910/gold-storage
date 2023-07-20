@@ -120,7 +120,7 @@
         if (_chat.file.size == 0){
             [self.sizeLabel setHidden: TRUE];
         } else {
-            self.sizeLabel.text = [NSString stringWithFormat:@"%.1f MB", _chat.file.size];
+            self.sizeLabel.text = [NSString stringWithFormat:@"%.2f MB", _chat.file.size];
             [self.sizeLabel setHidden:FALSE];
         }
         

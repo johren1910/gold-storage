@@ -65,6 +65,7 @@
     
     [self.deleteHeavyFileBtn setTitle:@"Clear Selected File" forState:normal];
     [self.deleteHeavyFileBtn setEnabled:false];
+    self.heavyCollectionView.scrollEnabled = false;
 }
 
 
@@ -80,7 +81,7 @@
         if (entity.appSize && entity.phoneSize) {
             float percentage = (float)entity.appSize/(float)entity.phoneSize;
             
-            NSString* informText = [NSString stringWithFormat:@"Zalo uses %.1f%% of your disk space", (percentage*100)];
+            NSString* informText = [NSString stringWithFormat:@"Zalo uses %.2f%% of your disk space", (percentage*100)];
             [weakself.percentageUsedLabel setText:informText];
             weakself.percentageBar.progress = percentage;
             weakself.percentageBar.progressTintColor = UIColor.systemBlueColor;
